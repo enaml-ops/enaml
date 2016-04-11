@@ -1,0 +1,22 @@
+box: golang
+build:
+  steps:
+    - setup-go-workspace
+    #- wercker/golint:
+    #    exclude: "^vendor\\|enaml"
+
+    # Gets the dependencies
+    - script:
+        name: go get
+        code: |
+          cd $WERCKER_SOURCE_DIR
+          go version
+          go get github.com/Masterminds/glide
+          export PATH=$WERCKER_SOURCE_DIR/bin:$PATH
+          glide install
+
+    # Test the project
+    - script:
+        name: go test
+        code: |
+          go test $(glide novendor) -v -cover -race
