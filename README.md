@@ -15,7 +15,7 @@ helpers**
 **github.com/xchapter7x/enaml-concourse-sample***
 
 
-### how your deployment will look
+### how your deployment could look
 ```golang
 
 package main
