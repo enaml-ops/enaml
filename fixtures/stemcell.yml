@@ -1,0 +1,3 @@
+stemcell:
+  name: fake-string
+  version: 12

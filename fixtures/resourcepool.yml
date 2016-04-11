@@ -1,0 +1,9 @@
+resource_pools:
+- name: fake-string
+  network: fake-string
+  stemcell:
+    name: fake-string
+    version: 12
+  cloud_properties:
+    availability_zone: fake-string
+    instance_type: fake-string

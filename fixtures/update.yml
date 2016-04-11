@@ -1,0 +1,5 @@
+update:
+  canaries: 12
+  max_in_flight: 12
+  canary_watch_time: fake-string
+  update_watch_time: fake-string

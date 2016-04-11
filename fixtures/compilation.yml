@@ -1,0 +1,7 @@
+compilation:
+  workers: 12
+  network: fake-string
+  reuse_compilation_vms: true
+  cloud_properties:
+    availability_zone: fake-string
+    instance_type: fake-string

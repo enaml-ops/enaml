@@ -1,0 +1,6 @@
+releases:
+- name: fake-string
+  url: fake-string
+  sha1: fake-string
+- name: fake-string
+  url: fake-string

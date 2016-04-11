@@ -1,0 +1,3 @@
+stemcell:
+  url: fake-string
+  sha1: fake-string

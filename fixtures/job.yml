@@ -1,0 +1,14 @@
+- name: fake-string
+  templates: [{name: fake-string, release: fake-string}]
+  persistent_disk: fake-string
+  resource_pool: fake-string
+  instances: 12
+  networks:
+  - name: fake-string
+- name: fake-string
+  templates: [{name: fake-string, release: fake-string}]
+  persistent_disk: fake-string
+  resource_pool: fake-string
+  instances: 12
+  networks:
+  - name: fake-string

@@ -1,0 +1,15 @@
+vcenter:
+  address: fake-string
+  user: fake-string
+  password: fake-string
+  datacenters:
+  - name: fake-string
+    vm_folder: fake-string
+    template_folder: fake-string
+    datastore_pattern: fake-string
+    persistent_datastore_pattern: fake-string
+    disk_path: fake-string
+    clusters: [fake-string]
+agent: {mbus: fake-string}
+blobstore: {path: fake-string, provider: fake-string}
+ntp: [fake-string, fake-string]

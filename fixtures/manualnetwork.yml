@@ -1,0 +1,9 @@
+networks:
+- name: fake-string
+  type: fake-string
+  subnets:
+  - range: fake-string
+    gateway: fake-string
+    dns: fake-string
+    cloud_properties:
+      name: fake-string

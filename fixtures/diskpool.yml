@@ -1,0 +1,5 @@
+disk_pools:
+- name: fake-string
+  disk_size: 12
+  cloud_properties:
+    type: fake-string
