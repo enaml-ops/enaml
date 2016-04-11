@@ -1,5 +1,5 @@
 package: github.com/xchapter7x/enaml
 import:
-- package: github.com/go-yaml/yaml
 - package: github.com/onsi/ginkgo
 - package: github.com/onsi/gomega
+- package: gopkg.in/yaml.v2
