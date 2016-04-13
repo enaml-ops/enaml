@@ -1,29 +1,28 @@
 package vsphere
 
-type CloudProviderProperties struct {
-	VCenter   VCenter
-	Agent     Agent     `yaml:",flow"`
-	Blobstore Blobstore `yaml:",flow"`
-	NTP       NTP       `yaml:",flow"`
+func NewCloudProviderProperties(vcenter *VCenter) *CloudProviderProperties {
+	return &CloudProviderProperties{
+		VCenter: vcenter,
+	}
 }
 
-type Agent map[string]string
-type Blobstore map[string]string
-type NTP []string
-
-type VCenter struct {
-	Address     string
-	User        string
-	Password    string
-	DataCenters []DataCenter
+func (s *CloudProviderProperties) AddAgent(key string, value string) (err error) {
+	if s.Agent == nil {
+		s.Agent = make(Agent)
+	}
+	s.Agent[key] = value
+	return
 }
 
-type DataCenter struct {
-	Name                       string
-	VMFolder                   string   `yaml:"vm_folder"`
-	TemplateFolder             string   `yaml:"template_folder"`
-	DatastorePattern           string   `yaml:"datastore_pattern"`
-	PersistentDatastorePattern string   `yaml:"persistent_datastore_pattern"`
-	DiskPath                   string   `yaml:"disk_path"`
-	Clusters                   []string `yaml:",flow"`
+func (s *CloudProviderProperties) AddBlobstore(key string, value string) (err error) {
+	if s.Blobstore == nil {
+		s.Blobstore = make(Blobstore)
+	}
+	s.Blobstore[key] = value
+	return
+}
+
+func (s *CloudProviderProperties) AddNTP(ntp string) (err error) {
+	s.NTP = append(s.NTP, ntp)
+	return
 }

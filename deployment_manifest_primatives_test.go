@@ -213,7 +213,7 @@ var _ = Describe("DeploymentManifest Primatives", func() {
 				Template: Template{Name: fakeString, Release: fakeString},
 				MBus:     fakeString,
 				Properties: vsphere.CloudProviderProperties{
-					VCenter: vsphere.VCenter{
+					VCenter: &vsphere.VCenter{
 						Address:  fakeString,
 						User:     fakeString,
 						Password: fakeString,
