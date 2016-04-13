@@ -3,7 +3,7 @@ resource_pools:
   network: fake-string
   stemcell:
     name: fake-string
-    version: 12
+    version: fake-string
   cloud_properties:
     availability_zone: fake-string
     instance_type: fake-string

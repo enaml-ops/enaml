@@ -94,7 +94,7 @@ type Stemcell struct {
 	Alias   string `yaml:"alias,omitempty"`
 	OS      string `yaml:"os,omitempty"`
 	Name    string `yaml:"name,omitempty"`
-	Version int    `yaml:"version,omitempty"`
+	Version string `yaml:"version,omitempty"`
 	URL     string `yaml:"url,omitempty"`
 	SHA1    string `yaml:"sha1,omitempty"`
 }

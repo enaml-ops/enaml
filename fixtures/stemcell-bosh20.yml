@@ -1,4 +1,4 @@
 stemcell:
   alias: fake-string
   os: fake-string
-  version: 12
+  version: fake-string

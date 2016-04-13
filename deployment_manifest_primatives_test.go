@@ -144,7 +144,7 @@ var _ = Describe("DeploymentManifest Primatives", func() {
 			ResourcePool{
 				Name:     fakeString,
 				Network:  fakeString,
-				Stemcell: Stemcell{Name: fakeString, Version: fakeInt},
+				Stemcell: Stemcell{Name: fakeString, Version: fakeString},
 				CloudProperties: CloudProperties{
 					"instance_type":     fakeString,
 					"availability_zone": fakeString,
@@ -156,13 +156,13 @@ var _ = Describe("DeploymentManifest Primatives", func() {
 	Describe("Given a Stemcell", func() {
 		Context("when using a standard stemcell format", func() {
 			testMarshalledYaml("./fixtures/stemcell.yml", struct{ Stemcell Stemcell }{
-				Stemcell: Stemcell{Name: fakeString, Version: fakeInt},
+				Stemcell: Stemcell{Name: fakeString, Version: fakeString},
 			})
 		})
 
 		Context("when using a BOSH 2.0 stemcell format", func() {
 			testMarshalledYaml("./fixtures/stemcell-bosh20.yml", struct{ Stemcell Stemcell }{
-				Stemcell: Stemcell{Alias: fakeString, OS: fakeString, Version: fakeInt},
+				Stemcell: Stemcell{Alias: fakeString, OS: fakeString, Version: fakeString},
 			})
 		})
 
