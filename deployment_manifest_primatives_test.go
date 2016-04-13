@@ -35,10 +35,10 @@ var _ = Describe("DeploymentManifest Primatives", func() {
 	Describe("Given a Instance", func() {
 		Context("when used to generate a cloud_config manifest", func() {
 			testMarshalledYaml("./fixtures/instancegroups.yml", struct {
-				InstanceGroups []Instance `yaml:"instance_groups"`
+				InstanceGroups []InstanceGroup `yaml:"instance_groups"`
 			}{
-				InstanceGroups: []Instance{
-					Instance{
+				InstanceGroups: []InstanceGroup{
+					InstanceGroup{
 						Name:      fakeString,
 						Instances: fakeInt,
 						VMType:    fakeString,
@@ -59,10 +59,10 @@ var _ = Describe("DeploymentManifest Primatives", func() {
 
 		Context("when used to generate a bosh-lite manifest", func() {
 			testMarshalledYaml("./fixtures/instancegroups-lite.yml", struct {
-				InstanceGroups []Instance `yaml:"instance_groups"`
+				InstanceGroups []InstanceGroup `yaml:"instance_groups"`
 			}{
-				InstanceGroups: []Instance{
-					Instance{
+				InstanceGroups: []InstanceGroup{
+					InstanceGroup{
 						Name:           fakeString,
 						Instances:      fakeInt,
 						ResourcePool:   fakeString,

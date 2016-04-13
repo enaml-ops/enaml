@@ -40,6 +40,11 @@ func (s *DeploymentManifest) SetUpdate(u Update) (err error) {
 	return
 }
 
+func (s *DeploymentManifest) AddInstanceGroup(i InstanceGroup) (err error) {
+	s.InstanceGroups = append(s.InstanceGroups, i)
+	return
+}
+
 func (s *DeploymentManifest) AddJob(j Job) (err error) {
 	s.Jobs = append(s.Jobs, j)
 	return

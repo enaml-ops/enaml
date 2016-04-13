@@ -13,7 +13,7 @@ type DeploymentManifest struct {
 	DirectorUUID   string              `yaml:"director_uuid,omitempty"`
 	Releases       []Release           `yaml:"releases,omitempty"`
 	Stemcells      []Stemcell          `yaml:"stemcells",omitempty`
-	InstanceGroups []Instance          `yaml:"instance_groups,omitempty"`
+	InstanceGroups []InstanceGroup     `yaml:"instance_groups,omitempty"`
 	Networks       []DeploymentNetwork `yaml:"networks,omitempty"`
 	ResourcePools  []ResourcePool      `yaml:"resource_pools,omitempty"`
 	DiskPools      []DiskPool          `yaml:"disk_pools,omitempty"`
@@ -24,7 +24,7 @@ type DeploymentManifest struct {
 	CloudProvider  CloudProvider       `yaml:"cloud_provider,omitempty"`
 }
 
-type Instance struct {
+type InstanceGroup struct {
 	Name           string                   `yaml:"name"`
 	ResourcePool   string                   `yaml:"resource_pool,omitempty"`
 	PersistentDisk int                      `yaml:"persistent_disk,omitempty"`
