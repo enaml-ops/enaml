@@ -1,0 +1,4 @@
+stemcell:
+  alias: fake-string
+  os: fake-string
+  version: 12

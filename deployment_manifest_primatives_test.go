@@ -160,6 +160,12 @@ var _ = Describe("DeploymentManifest Primatives", func() {
 			})
 		})
 
+		Context("when using a BOSH 2.0 stemcell format", func() {
+			testMarshalledYaml("./fixtures/stemcell-bosh20.yml", struct{ Stemcell Stemcell }{
+				Stemcell: Stemcell{Alias: fakeString, OS: fakeString, Version: fakeInt},
+			})
+		})
+
 		Context("when using a custom bosh-init stemcell format", func() {
 			testMarshalledYaml("./fixtures/stemcellcustom.yml", struct{ Stemcell Stemcell }{
 				Stemcell: Stemcell{URL: fakeString, SHA1: fakeString},

@@ -92,6 +92,7 @@ type ResourcePool struct {
 
 type Stemcell struct {
 	Alias   string `yaml:"alias,omitempty"`
+	OS      string `yaml:"os,omitempty"`
 	Name    string `yaml:"name,omitempty"`
 	Version int    `yaml:"version,omitempty"`
 	URL     string `yaml:"url,omitempty"`
