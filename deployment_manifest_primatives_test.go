@@ -56,6 +56,29 @@ var _ = Describe("DeploymentManifest Primatives", func() {
 				},
 			})
 		})
+
+		Context("when used to generate a bosh-lite manifest", func() {
+			testMarshalledYaml("./fixtures/instancegroups-lite.yml", struct {
+				InstanceGroups []Instance `yaml:"instance_groups"`
+			}{
+				InstanceGroups: []Instance{
+					Instance{
+						Name:           fakeString,
+						Instances:      fakeInt,
+						ResourcePool:   fakeString,
+						PersistentDisk: fakeInt,
+						Networks: []map[string]interface{}{
+							map[string]interface{}{
+								fakeString: fakeString,
+							},
+						},
+						Jobs: []InstanceJob{
+							InstanceJob{Name: fakeString, Release: fakeString},
+						},
+					},
+				},
+			})
+		})
 	})
 
 	XDescribe("Given a DeploymentManifest", func() {

@@ -1,0 +1,10 @@
+instance_groups:
+- name: fake-string
+  resource_pool: fake-string
+  persistent_disk: 12
+  instances: 12
+  networks: [{fake-string: fake-string}]
+  jobs:
+  - name: fake-string
+    release: fake-string
+    properties: {}
