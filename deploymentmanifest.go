@@ -20,6 +20,11 @@ func (s *DeploymentManifest) AddResourcePool(r ResourcePool) (err error) {
 	return
 }
 
+func (s *DeploymentManifest) AddStemcell(stemcell Stemcell) (err error) {
+	s.Stemcells = append(s.Stemcells, stemcell)
+	return
+}
+
 func (s *DeploymentManifest) AddDiskPool(d DiskPool) (err error) {
 	s.DiskPools = append(s.DiskPools, d)
 	return
