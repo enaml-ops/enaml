@@ -9,17 +9,35 @@ type Deployment interface {
 }
 
 type DeploymentManifest struct {
-	Name          string              `yaml:"name"`
-	DirectorUUID  string              `yaml:"director_uuid,omitempty"`
-	Releases      []Release           `yaml:"releases"`
-	Networks      []DeploymentNetwork `yaml:"networks"`
-	ResourcePools []ResourcePool      `yaml:"resource_pools"`
-	DiskPools     []DiskPool          `yaml:"disk_pools"`
-	Compilation   Compilation         `yaml:"compilation"`
-	Update        Update              `yaml:"update"`
-	Jobs          []Job               `yaml:"jobs"`
-	Properties    Properties          `yaml:"properties"`
-	CloudProvider CloudProvider       `yaml:"cloud_provider"`
+	Name           string              `yaml:"name"`
+	DirectorUUID   string              `yaml:"director_uuid,omitempty"`
+	Releases       []Release           `yaml:"releases,omitempty"`
+	Stemcells      []Stemcell          `yaml:"stemcells",omitempty`
+	InstanceGroups []Instance          `yaml:"instance_groups,omitempty"`
+	Networks       []DeploymentNetwork `yaml:"networks,omitempty"`
+	ResourcePools  []ResourcePool      `yaml:"resource_pools,omitempty"`
+	DiskPools      []DiskPool          `yaml:"disk_pools,omitempty"`
+	Compilation    Compilation         `yaml:"compilation,omitempty"`
+	Update         Update              `yaml:"update,omitempty"`
+	Jobs           []Job               `yaml:"jobs,omitempty"`
+	Properties     Properties          `yaml:"properties,omitempty"`
+	CloudProvider  CloudProvider       `yaml:"cloud_provider,omitempty"`
+}
+
+type Instance struct {
+	Name      string                   `yaml:"name"`
+	Instances int                      `yaml:"instances"`
+	VMType    string                   `yaml:"vm_type"`
+	Stemcell  string                   `yaml:"stemcell"`
+	AZs       []string                 `yaml:"azs,flow"`
+	Networks  []map[string]interface{} `yaml:"networks,flow"`
+	Jobs      []InstanceJob            `yaml:"jobs"`
+}
+
+type InstanceJob struct {
+	Name       string     `yaml:"name"`
+	Release    string     `yaml:"release"`
+	Properties Properties `yaml:"properties"`
 }
 
 type DeploymentNetwork interface{}
@@ -70,9 +88,8 @@ type ResourcePool struct {
 	Env             map[string]interface{} `yaml:"env,omitempty"`
 }
 
-type CloudProperties map[string]interface{}
-
 type Stemcell struct {
+	Alias   string `yaml:"alias,omitempty"`
 	Name    string `yaml:"name,omitempty"`
 	Version int    `yaml:"version,omitempty"`
 	URL     string `yaml:"url,omitempty"`
@@ -130,3 +147,4 @@ type CloudProvider struct {
 }
 type CloudProviderProperties interface{}
 type Properties map[string]interface{}
+type CloudProperties map[string]interface{}

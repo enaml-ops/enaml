@@ -1,0 +1,11 @@
+instance_groups:
+- name: fake-string
+  instances: 12
+  vm_type: fake-string
+  stemcell: fake-string
+  azs: [fake-string]
+  networks: [{fake-string: fake-string}]
+  jobs:
+  - name: fake-string
+    release: fake-string
+    properties: {}
