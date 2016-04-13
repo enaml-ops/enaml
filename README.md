@@ -47,36 +47,28 @@ var (
 
 type Deployment struct {
 	enaml.Deployment
-	enaml.DeploymentManifest
+	*enaml.DeploymentManifest
 }
 
 func NewDeployment() (deployment Deployment) {
 	deployment = Deployment{}
-	deployment.DeploymentManifest = enaml.DeploymentManifest{
-		Name: DefaultName,
-	}
-	deployment.DeploymentManifest.Releases = []enaml.Release{
-		releases.NewConcourse(ConcourseVersion, ConcourseSHA),
-		releases.NewGarden(GardenVersion, GardenSHA),
-	}
-	deployment.DeploymentManifest.Networks = []enaml.DeploymentNetwork{
-		networks.NewFooNetworkExternal(DefaultName),
-	}
-	deployment.DeploymentManifest.ResourcePools = []enaml.ResourcePool{
-		resourcepools.NewSmallResource(DefaultName, DefaultName),
-	}
-	deployment.DiskPools = []enaml.DiskPool{
-		diskpools.NewDiskPool("db", 10240),
-	}
+	deployment.DeploymentManifest = new(enaml.DeploymentManifest)
+	deployment.DeploymentManifest.SetName(DefaultName)
+	deployment.DeploymentManifest.AddRelease(releases.NewConcourse(ConcourseVersion, ConcourseSHA))
+	deployment.DeploymentManifest.AddRelease(releases.NewGarden(GardenVersion, GardenSHA))
+	deployment.DeploymentManifest.AddNetwork(networks.NewFooNetworkExternal(DefaultName))
+	deployment.DeploymentManifest.AddResourcePool(resourcepools.NewSmallResource(DefaultName, DefaultName))
+	deployment.DeploymentManifest.AddDiskPool(diskpools.NewDiskPool("db", 10240))
 	return
 }
 
 func (s Deployment) VSphere() enaml.DeploymentManifest {
-	s.Releases = append(s.Releases, releases.NewBoshVSphereCPI(VSphereCPIVersion, VSphereCPISHA))
+	s.DeploymentManifest.AddRelease(releases.NewBoshVSphereCPI(VSphereCPIVersion, VSphereCPISHA))
+
 	for i := range s.ResourcePools {
 		s.ResourcePools[i].Stemcell = stemcells.NewUbuntuTrusty(VSphereStemcellVersion, VSphereStemcellSHA)
 	}
-	return s.DeploymentManifest
+	return *s.DeploymentManifest
 }
 
 func (s Deployment) AWS() enaml.DeploymentManifest {
