@@ -89,7 +89,7 @@ var _ = Describe("DeploymentManifest Primatives", func() {
 		Context("when using standard release blocks", func() {
 			testMarshalledYaml("./fixtures/release.yml", struct{ Releases []Release }{
 				Releases: []Release{
-					Release{Name: fakeString, Version: fakeInt},
+					Release{Name: fakeString, Version: fakeString},
 				},
 			})
 		})

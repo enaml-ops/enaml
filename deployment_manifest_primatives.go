@@ -46,7 +46,7 @@ type DeploymentNetwork interface{}
 
 type Release struct {
 	Name    string `yaml:"name"`
-	Version int    `yaml:"version,omitempty"`
+	Version string `yaml:"version,omitempty"`
 	URL     string `yaml:"url,omitempty"`
 	SHA1    string `yaml:"sha1,omitempty"`
 }
