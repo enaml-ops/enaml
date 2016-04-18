@@ -25,3 +25,4 @@ _testmain.go
 
 vendor/
 .cache
+cmd/enaml/enaml

@@ -42,8 +42,7 @@ func main() {
 			Aliases: []string{"gj"},
 			Usage:   "generate golang structs for the jobs in a given release",
 			Action: func(c *cli.Context) {
-				filename := downloadFromURL(c.Args().First())
-				processFile(filename)
+				GenerateReleaseJobsPackage(c.Args().First())
 				println("completed generating release job structs for ", c.Args().First())
 			},
 		},
@@ -67,6 +66,12 @@ func main() {
 		},
 	}
 	app.Run(os.Args)
+}
+
+func GenerateReleaseJobsPackage(releaseURL string) (err error) {
+	filename := downloadFromURL(releaseURL)
+	processFile(filename)
+	return
 }
 
 func downloadFromURL(url string) (filename string) {
