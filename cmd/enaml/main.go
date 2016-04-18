@@ -8,9 +8,14 @@ import (
 )
 
 func init() {
-	if c := os.Getenv("CACHE_DIR"); c != "" {
+	if c := os.Getenv("ENAML_CACHE_DIR"); c != "" {
 		cacheDir = c
 	}
+
+	if o := os.Getenv("ENAML_OUTPUT_DIR"); o != "" {
+		outputDir = o
+	}
+
 	os.MkdirAll(cacheDir, 0755)
 }
 
@@ -20,7 +25,8 @@ const (
 )
 
 var (
-	cacheDir = CacheDir
+	cacheDir  = CacheDir
+	outputDir = OutputDir
 )
 
 func main() {
