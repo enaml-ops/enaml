@@ -129,12 +129,12 @@ func (s *ReleaseJobsGenerator) processJobManifest(jobTarball io.Reader, tarballF
 
 func (s *ReleaseJobsGenerator) parseElementName(name string) string {
 	f := strings.FieldsFunc(name, func(r rune) bool {
-		return r == '_' || r == '.'
+		return r == '_'
 	})
 	for i := range f {
 		f[i] = strings.ToUpper(f[i][:1]) + f[i][1:]
 	}
-	return strings.Join(f, "")
+	return strings.Replace(strings.Join(f, ""), ".", "_", -1)
 }
 
 func (s *ReleaseJobsGenerator) getTarballReader(reader io.Reader) *tar.Reader {
