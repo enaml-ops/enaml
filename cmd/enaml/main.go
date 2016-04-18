@@ -15,7 +15,8 @@ func init() {
 }
 
 const (
-	CacheDir = ".cache"
+	CacheDir  = ".cache"
+	OutputDir = "./releasejobs"
 )
 
 var (
@@ -30,7 +31,7 @@ func main() {
 			Aliases: []string{"gj"},
 			Usage:   "generate golang structs for the jobs in a given release",
 			Action: func(c *cli.Context) {
-				generators.GenerateReleaseJobsPackage(c.Args().First(), cacheDir)
+				generators.GenerateReleaseJobsPackage(c.Args().First(), cacheDir, OutputDir)
 				println("completed generating release job structs for ", c.Args().First())
 			},
 		},

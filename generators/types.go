@@ -19,3 +19,8 @@ type jobStructTemplate struct {
 	JobName  string
 	Elements []elementStruct
 }
+
+type ReleaseJobsGenerator struct {
+	CacheDir  string
+	OutputDir string
+}
