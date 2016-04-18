@@ -138,33 +138,3 @@ func getTarballReader(reader io.Reader) *tar.Reader {
 	}
 	return tar.NewReader(gzf)
 }
-
-type JobManifest struct {
-	Properties map[string]JobManifestProperty `yaml:"properties"`
-}
-
-type JobManifestProperty struct {
-	Description string      `yaml:"description"`
-	Default     interface{} `yaml:"default"`
-}
-
-type elementStruct struct {
-	ElementName     string
-	ElementType     string
-	ElementYamlName string
-}
-
-type jobStructTemplate struct {
-	JobName  string
-	Elements []elementStruct
-}
-
-const (
-	structTemplate = `package releasejobs
-	type {{.JobName}} struct {
-		{{ range $key, $value := .Elements }}
-		{{ $value.ElementName }} {{ $value.ElementType }} ` + "`" + `yaml:"{{$value.ElementYamlName}},omitempty"` + "`" + `
-		{{ end }}
-	}
-	`
-)
