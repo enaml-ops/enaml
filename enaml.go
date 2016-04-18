@@ -20,7 +20,7 @@ func Paint(deployment Deployment) {
 	case "openstack":
 		deploymentManifest = deployment.OpenStack()
 	default:
-		panic("please define a target iaas (vsphere, aws, openstack, azure)")
+		deploymentManifest = deployment.VSphere()
 	}
 
 	if dmYaml, err := yaml.Marshal(deploymentManifest); err != nil {

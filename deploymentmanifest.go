@@ -1,5 +1,10 @@
 package enaml
 
+func (s *DeploymentManifest) SetDirectorUUID(d string) (err error) {
+	s.DirectorUUID = d
+	return
+}
+
 func (s *DeploymentManifest) SetName(n string) (err error) {
 	s.Name = n
 	return
@@ -7,6 +12,11 @@ func (s *DeploymentManifest) SetName(n string) (err error) {
 
 func (s *DeploymentManifest) AddRelease(r Release) (err error) {
 	s.Releases = append(s.Releases, r)
+	return
+}
+
+func (s *DeploymentManifest) AddReleaseByName(releaseName string) (err error) {
+	s.Releases = append(s.Releases, Release{Name: releaseName, Version: "latest"})
 	return
 }
 
@@ -22,6 +32,11 @@ func (s *DeploymentManifest) AddResourcePool(r ResourcePool) (err error) {
 
 func (s *DeploymentManifest) AddStemcell(stemcell Stemcell) (err error) {
 	s.Stemcells = append(s.Stemcells, stemcell)
+	return
+}
+
+func (s *DeploymentManifest) AddStemcellByName(name, alias string) (err error) {
+	s.Stemcells = append(s.Stemcells, Stemcell{Alias: alias, OS: name, Version: "latest"})
 	return
 }
 
