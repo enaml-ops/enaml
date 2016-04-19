@@ -9,6 +9,30 @@ import (
 )
 
 var _ = Describe("jobdiff", func() {
+
+	Describe("given Diff struct ", func() {
+		var diff *Diff
+		BeforeEach(func() {
+			diff = NewDiff("./fixtures")
+		})
+
+		Context("when calling JobDiffBetweenReleases on 2 releases with unchanged properties", func() {
+			It("then it should return an empty changeset", func() {
+				diff, err := diff.JobDiffBetweenReleases("atc", "url.com/concourse?v=1.1.0", "url.com/concourse?v=1.1.0")
+				Ω(diff).Should(BeEmpty())
+				Ω(err).ShouldNot(HaveOccurred())
+			})
+		})
+
+		Context("when calling JobDiffBetweenReleases on 2 releases with different properties on the given job", func() {
+			It("then it should return the diff set", func() {
+				diff, err := diff.JobDiffBetweenReleases("atc", "url.com/concourse?v=1.0.1", "url.com/concourse?v=1.1.0")
+				Ω(diff).ShouldNot(BeEmpty())
+				Ω(err).ShouldNot(HaveOccurred())
+			})
+		})
+	})
+
 	Describe("Given a JobPropertiesDiff func", func() {
 		Context("When both yaml sets are the same", func() {
 			var jobDiff []string
