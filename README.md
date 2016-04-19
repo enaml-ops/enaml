@@ -42,6 +42,10 @@ var (
 	StemcellAlias = "trusty"
 )
 
+func main() {
+	enaml.Paint(NewDeployment())
+}
+
 type Deployment struct {
 	enaml.Deployment
 	Manifest *enaml.DeploymentManifest
