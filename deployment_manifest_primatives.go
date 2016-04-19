@@ -1,11 +1,7 @@
 package enaml
 
 type Deployment interface {
-	Azure() DeploymentManifest
-	AWS() DeploymentManifest
-	VSphere() DeploymentManifest
-	VCloud() DeploymentManifest
-	OpenStack() DeploymentManifest
+	GetDeployment() DeploymentManifest
 }
 
 type DeploymentManifest struct {
@@ -25,21 +21,21 @@ type DeploymentManifest struct {
 }
 
 type InstanceGroup struct {
-	Name           string                   `yaml:"name"`
-	ResourcePool   string                   `yaml:"resource_pool,omitempty"`
-	PersistentDisk int                      `yaml:"persistent_disk,omitempty"`
-	Instances      int                      `yaml:"instances"`
-	VMType         string                   `yaml:"vm_type,omitempty"`
-	Stemcell       string                   `yaml:"stemcell,omitempty"`
-	AZs            []string                 `yaml:"azs,flow,omitempty"`
-	Networks       []map[string]interface{} `yaml:"networks,flow"`
-	Jobs           []InstanceJob            `yaml:"jobs"`
+	Name           string                 `yaml:"name"`
+	ResourcePool   string                 `yaml:"resource_pool,omitempty"`
+	PersistentDisk int                    `yaml:"persistent_disk,omitempty"`
+	Instances      int                    `yaml:"instances"`
+	VMType         string                 `yaml:"vm_type,omitempty"`
+	Stemcell       string                 `yaml:"stemcell,omitempty"`
+	AZs            []string               `yaml:"azs,flow,omitempty"`
+	Networks       []InstanceGroupNetwork `yaml:"networks,flow"`
+	Jobs           []InstanceJob          `yaml:"jobs"`
 }
 
 type InstanceJob struct {
-	Name       string     `yaml:"name"`
-	Release    string     `yaml:"release"`
-	Properties Properties `yaml:"properties"`
+	Name       string      `yaml:"name"`
+	Release    string      `yaml:"release"`
+	Properties interface{} `yaml:"properties"`
 }
 
 type DeploymentNetwork interface{}
@@ -151,3 +147,4 @@ type CloudProvider struct {
 type CloudProviderProperties interface{}
 type Properties map[string]interface{}
 type CloudProperties map[string]interface{}
+type InstanceGroupNetwork map[string]interface{}

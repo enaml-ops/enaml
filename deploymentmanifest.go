@@ -55,7 +55,7 @@ func (s *DeploymentManifest) SetUpdate(u Update) (err error) {
 	return
 }
 
-func (s *DeploymentManifest) AddInstanceGroup(i InstanceGroup) (err error) {
+func (s *DeploymentManifest) AddInstanceGroup(i *InstanceGroup) (err error) {
 	s.InstanceGroups = append(s.InstanceGroups, i)
 	return
 }
