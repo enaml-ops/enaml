@@ -46,7 +46,7 @@ func (s *DeploymentManifest) AddDiskPool(d DiskPool) (err error) {
 }
 
 func (s *DeploymentManifest) SetCompilation(c Compilation) (err error) {
-	s.Compilation = c
+	s.Compilation = &c
 	return
 }
 
@@ -74,6 +74,6 @@ func (s *DeploymentManifest) AddProperty(k string, val interface{}) (err error) 
 }
 
 func (s *DeploymentManifest) SetCloudProvider(c CloudProvider) (err error) {
-	s.CloudProvider = c
+	s.CloudProvider = &c
 	return
 }

@@ -13,11 +13,11 @@ type DeploymentManifest struct {
 	Networks       []DeploymentNetwork `yaml:"networks,omitempty"`
 	ResourcePools  []ResourcePool      `yaml:"resource_pools,omitempty"`
 	DiskPools      []DiskPool          `yaml:"disk_pools,omitempty"`
-	Compilation    Compilation         `yaml:"compilation,omitempty"`
+	Compilation    *Compilation        `yaml:"compilation,omitempty"`
 	Update         Update              `yaml:"update,omitempty"`
 	Jobs           []Job               `yaml:"jobs,omitempty"`
 	Properties     Properties          `yaml:"properties,omitempty"`
-	CloudProvider  CloudProvider       `yaml:"cloud_provider,omitempty"`
+	CloudProvider  *CloudProvider      `yaml:"cloud_provider,omitempty"`
 }
 
 type InstanceGroup struct {
