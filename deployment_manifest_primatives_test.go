@@ -44,13 +44,13 @@ var _ = Describe("DeploymentManifest Primatives", func() {
 						VMType:    fakeString,
 						Stemcell:  fakeString,
 						AZs:       []string{fakeString},
-						Networks: []map[string]interface{}{
-							map[string]interface{}{
+						Networks: []InstanceGroupNetwork{
+							InstanceGroupNetwork{
 								fakeString: fakeString,
 							},
 						},
 						Jobs: []InstanceJob{
-							InstanceJob{Name: fakeString, Release: fakeString},
+							*NewInstanceJob(fakeString, fakeString, struct{}{}),
 						},
 					},
 				},
@@ -67,13 +67,13 @@ var _ = Describe("DeploymentManifest Primatives", func() {
 						Instances:      fakeInt,
 						ResourcePool:   fakeString,
 						PersistentDisk: fakeInt,
-						Networks: []map[string]interface{}{
-							map[string]interface{}{
+						Networks: []InstanceGroupNetwork{
+							InstanceGroupNetwork{
 								fakeString: fakeString,
 							},
 						},
 						Jobs: []InstanceJob{
-							InstanceJob{Name: fakeString, Release: fakeString},
+							*NewInstanceJob(fakeString, fakeString, struct{}{}),
 						},
 					},
 				},
