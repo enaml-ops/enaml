@@ -15,6 +15,17 @@ helpers**
 **github.com/xchapter7x/enaml-concourse-sample***
 
 
+### how to use enaml as a cli
+```
+#install it using go get
+$ go get github.com/xchapter7x/enaml/cmd/enaml
+
+#create golang structs for job properties from a release
+$ enaml generate-jobs https://bosh.io/d/github.com/concourse/concourse?v=1.1.0
+```
+
+
+
 ### how your deployment could look
 ```golang
 

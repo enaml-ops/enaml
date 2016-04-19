@@ -33,9 +33,10 @@ func main() {
 	app := cli.NewApp()
 	app.Commands = []cli.Command{
 		{
-			Name:    "generate-jobs",
-			Aliases: []string{"gj"},
-			Usage:   "generate golang structs for the jobs in a given release",
+			Name:        "generate-jobs",
+			Aliases:     []string{"gj"},
+			Usage:       "generate-jobs https://bosh.io/d/github.com/concourse/concourse?v=1.1.0",
+			Description: "generate golang structs for the jobs in a given release",
 			Action: func(c *cli.Context) {
 				generators.GenerateReleaseJobsPackage(c.Args().First(), cacheDir, OutputDir)
 				println("completed generating release job structs for ", c.Args().First())
