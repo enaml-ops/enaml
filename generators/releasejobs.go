@@ -103,7 +103,7 @@ func (s *ReleaseJobsGenerator) processJobManifest(jobTarball io.Reader, tarballF
 			myType = fmt.Sprint(reflect.ValueOf(v.Default).Type())
 		}
 		elements = append(elements, elementStruct{
-			ElementName:     s.parseElementName(k),
+			ElementName:     s.convertToCamelCase(k),
 			ElementType:     myType,
 			ElementYamlName: k,
 		})
@@ -111,7 +111,7 @@ func (s *ReleaseJobsGenerator) processJobManifest(jobTarball io.Reader, tarballF
 	jobName := strings.Split(path.Base(tarballFilename), ".")[0]
 	jobName = strings.ToUpper(jobName[:1]) + jobName[1:]
 	job := jobStructTemplate{
-		JobName:  jobName,
+		JobName:  s.convertToCamelCase(jobName),
 		Elements: elements,
 	}
 	tmpl, err := template.New("job").Parse(structTemplate)
@@ -119,7 +119,7 @@ func (s *ReleaseJobsGenerator) processJobManifest(jobTarball io.Reader, tarballF
 		panic(err)
 	}
 	os.MkdirAll(s.OutputDir, 0700)
-	jobPath := path.Join(s.OutputDir, strings.ToLower(jobName)+".go")
+	jobPath := path.Join(s.OutputDir, strings.ToLower(s.convertToCamelCase(jobName))+".go")
 	f, _ := os.Create(jobPath)
 	err = tmpl.Execute(f, job)
 	if err != nil {
@@ -127,9 +127,9 @@ func (s *ReleaseJobsGenerator) processJobManifest(jobTarball io.Reader, tarballF
 	}
 }
 
-func (s *ReleaseJobsGenerator) parseElementName(name string) string {
+func (s *ReleaseJobsGenerator) convertToCamelCase(name string) string {
 	f := strings.FieldsFunc(name, func(r rune) bool {
-		return r == '_'
+		return r == '_' || r == '-'
 	})
 	for i := range f {
 		f[i] = strings.ToUpper(f[i][:1]) + f[i][1:]
