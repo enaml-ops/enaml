@@ -29,68 +29,53 @@ $ enaml generate-jobs https://bosh.io/d/github.com/concourse/concourse?v=1.1.0
 ### how your deployment could look
 ```golang
 
-package main
+package concourse
 
 import (
 	"github.com/xchapter7x/enaml"
-	"github.com/xchapter7x/standard-components/diskpools"
-	"github.com/xchapter7x/standard-components/networks"
-	"github.com/xchapter7x/standard-components/releases"
-	"github.com/xchapter7x/standard-components/resourcepools"
-	"github.com/xchapter7x/standard-components/stemcells"
+	"github.com/xchapter7x/enaml-concourse-sample/releasejobs"
 )
 
-func main() {
-	enaml.Paint(NewDeployment())
-}
-
 var (
-	DefaultName            = "concourse"
-	ConcourseVersion       = os.Getenv("CONCOURSE_VERSION")
-	ConcourseSHA           = os.Getenv("CONCOURSE_SHA1")
-	GardenVersion          = os.Getenv("GARDEN_VERSION")
-	GardenSHA              = os.Getenv("GARDEN_SHA1")
-	VSphereCPIVersion      = os.Getenv("CPI_VERSION")
-	VSphereCPISHA          = os.Getenv("CPI_SHA1")
-	VSphereStemcellVersion = os.Getenv("STEMCELL_VERSION")
-	VSphereStemcellSHA     = os.Getenv("STEMCELL_SHA1")
+	DefaultName   = "concourse"
+	DirectorUUID  = "asdfasdfasdf"
+	StemcellAlias = "trusty"
 )
 
 type Deployment struct {
 	enaml.Deployment
-	*enaml.DeploymentManifest
+	Manifest *enaml.DeploymentManifest
 }
 
-func NewDeployment() (deployment Deployment) {
-	deployment = Deployment{}
-	deployment.DeploymentManifest = new(enaml.DeploymentManifest)
-	deployment.DeploymentManifest.SetName(DefaultName)
-	deployment.DeploymentManifest.AddRelease(releases.NewConcourse(ConcourseVersion, ConcourseSHA))
-	deployment.DeploymentManifest.AddRelease(releases.NewGarden(GardenVersion, GardenSHA))
-	deployment.DeploymentManifest.AddNetwork(networks.NewFooNetworkExternal(DefaultName))
-	deployment.DeploymentManifest.AddResourcePool(resourcepools.NewSmallResource(DefaultName, DefaultName))
-	deployment.DeploymentManifest.AddDiskPool(diskpools.NewDiskPool("db", 10240))
+func NewDeployment() (d Deployment) {
+	d = Deployment{}
+	d.Manifest = new(enaml.DeploymentManifest)
+	d.Manifest.SetName(DefaultName)
+	d.Manifest.SetDirectorUUID(DirectorUUID)
+	d.Manifest.AddReleaseByName("concourse")
+	d.Manifest.AddReleaseByName("garden-linux")
+	d.Manifest.AddStemcellByName("ubuntu-trusty", StemcellAlias)
+	web := enaml.NewInstanceGroup("web", 1, "web", StemcellAlias)
+	web.AddAZ("z1")
+	web.AddNetwork(enaml.InstanceGroupNetwork{"name": "private"})
+	atc := enaml.NewInstanceJob("atc", "concourse", releasejobs.Atc{
+		ExternalUrl:        "something",
+		BasicAuthUsername:  "user",
+		BasicAuthPassword:  "password",
+		PostgresqlDatabase: "&atc_db atc",
+	})
+	tsa := enaml.NewInstanceJob("tsa", "concourse", releasejobs.Tsa{})
+	web.AddJob(atc)
+	web.AddJob(tsa)
+	db := enaml.NewInstanceGroup("db", 1, "database", StemcellAlias)
+	worker := enaml.NewInstanceGroup("worker", 1, "worker", StemcellAlias)
+	d.Manifest.AddInstanceGroup(web)
+	d.Manifest.AddInstanceGroup(db)
+	d.Manifest.AddInstanceGroup(worker)
 	return
 }
 
-func (s Deployment) VSphere() enaml.DeploymentManifest {
-	s.DeploymentManifest.AddRelease(releases.NewBoshVSphereCPI(VSphereCPIVersion, VSphereCPISHA))
-
-	for i := range s.ResourcePools {
-		s.ResourcePools[i].Stemcell = stemcells.NewUbuntuTrusty(VSphereStemcellVersion, VSphereStemcellSHA)
-	}
-	return *s.DeploymentManifest
-}
-
-func (s Deployment) AWS() enaml.DeploymentManifest {
-	panic("un-implemented iaas")
-}
-
-func (s Deployment) Azure() enaml.DeploymentManifest {
-	panic("un-implemented iaas")
-}
-
-func (s Deployment) OpenStack() enaml.DeploymentManifest {
-	panic("un-implemented iaas")
+func (s Deployment) GetDeployment() enaml.DeploymentManifest {
+	return *s.Manifest
 }
 ```
