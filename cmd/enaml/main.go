@@ -1,10 +1,13 @@
 package main
 
 import (
+	"fmt"
 	"os"
 
 	"github.com/codegangsta/cli"
+	"github.com/xchapter7x/enaml/diff"
 	"github.com/xchapter7x/enaml/generators"
+	"github.com/xchapter7x/lo"
 )
 
 func init() {
@@ -35,7 +38,7 @@ func main() {
 		{
 			Name:        "generate-jobs",
 			Aliases:     []string{"gj"},
-			Usage:       "generate-jobs https://bosh.io/d/github.com/concourse/concourse?v=1.1.0",
+			Usage:       "generate-jobs <releaseurl>",
 			Description: "generate golang structs for the jobs in a given release",
 			Action: func(c *cli.Context) {
 				generators.GenerateReleaseJobsPackage(c.Args().First(), cacheDir, OutputDir)
@@ -52,12 +55,26 @@ func main() {
 			},
 		},
 		{
-			Name:    "diff-job",
-			Aliases: []string{"dj"},
-			Usage:   "show diff between jobs across 2 releases",
+			Name:        "diff-job",
+			Aliases:     []string{"dj"},
+			Usage:       "diff-jobs <jobname> <releaseurl-A> <releaseurl-B>",
+			Description: "show diff between jobs across 2 releases",
 			Action: func(c *cli.Context) {
-				println("unimplemented")
-				println("release job properties diff", c.Args().First())
+				diff := diff.NewDiff(cacheDir)
+				if diffset, err := diff.JobDiffBetweenReleases(c.Args()[0], c.Args()[1], c.Args()[2]); err == nil && len(diffset) == 0 {
+					fmt.Println("no differences found")
+
+				} else if len(diffset) > 0 {
+
+					for i, v := range diffset {
+						fmt.Println(i, ": ", v)
+					}
+					os.Exit(1)
+
+				} else {
+					lo.G.Error("error: ", err)
+					os.Exit(2)
+				}
 			},
 		},
 	}
