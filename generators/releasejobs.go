@@ -14,6 +14,7 @@ import (
 	"text/template"
 
 	"github.com/mitchellh/ioprogress"
+	"github.com/xchapter7x/enaml"
 	"gopkg.in/yaml.v2"
 )
 
@@ -53,7 +54,6 @@ func (s *ReleaseJobsGenerator) ProcessFile(srcFile string) {
 	}
 	defer f.Close()
 	tarReader := s.getTarballReader(f)
-	i := 0
 
 	for {
 		header, err := tarReader.Next()
@@ -71,7 +71,6 @@ func (s *ReleaseJobsGenerator) ProcessFile(srcFile string) {
 				s.processJobManifest(jobManifest, name)
 			}
 		}
-		i++
 	}
 }
 
@@ -93,7 +92,7 @@ func (s *ReleaseJobsGenerator) processJobManifest(jobTarball io.Reader, tarballF
 	var defaultElementType = "interface{}"
 	buf := new(bytes.Buffer)
 	buf.ReadFrom(jobTarball)
-	manifestYaml := JobManifest{}
+	manifestYaml := enaml.JobManifest{}
 	yaml.Unmarshal(buf.Bytes(), &manifestYaml)
 
 	for k, v := range manifestYaml.Properties {

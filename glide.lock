@@ -1,8 +1,12 @@
-hash: aff71f177f26a76d1dc4bf2a7f0d48e18e8929fa49101933ea4355de5f14fc74
-updated: 2016-04-18T14:49:03.750128033-04:00
+hash: e17e515f6d49b5f9eec384f256e0fb28d0c7737eb738f17adac91e36f4938f73
+updated: 2016-04-19T10:10:38.678636139-04:00
 imports:
 - name: github.com/codegangsta/cli
   version: 71f57d300dd6a780ac1856c005c4b518cfd498ec
+- name: github.com/kr/pretty
+  version: add1dbc86daf0f983cd4a48ceb39deb95c729b67
+- name: github.com/kr/text
+  version: bb797dc4fb8320488f47bf11de07a733d7233e1f
 - name: github.com/mitchellh/ioprogress
   version: 8163955264568045f462ae7e2d6d07b2001fc997
 - name: github.com/onsi/ginkgo
