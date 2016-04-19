@@ -12,6 +12,5 @@ type jobStructTemplate struct {
 }
 
 type ReleaseJobsGenerator struct {
-	CacheDir  string
 	OutputDir string
 }

@@ -6,44 +6,24 @@ import (
 	"compress/gzip"
 	"fmt"
 	"io"
-	"net/http"
 	"os"
 	"path"
 	"reflect"
 	"strings"
 	"text/template"
 
-	"github.com/mitchellh/ioprogress"
 	"github.com/xchapter7x/enaml"
+	"github.com/xchapter7x/enaml/pull"
 	"gopkg.in/yaml.v2"
 )
 
 func GenerateReleaseJobsPackage(releaseURL string, cacheDir string, outputDir string) (err error) {
 	gen := &ReleaseJobsGenerator{
-		CacheDir:  cacheDir,
 		OutputDir: outputDir,
 	}
-	filename := gen.DownloadFromURL(releaseURL)
+	release := pull.NewRelease(cacheDir)
+	filename := release.Pull(releaseURL)
 	gen.ProcessFile(filename)
-	return
-}
-
-func (s *ReleaseJobsGenerator) DownloadFromURL(url string) (filename string) {
-	name := path.Base(url)
-	filename = s.CacheDir + "/" + name
-
-	if _, err := os.Stat(filename); os.IsNotExist(err) {
-		fmt.Println("Could not find release in local cache. Downloading now.")
-		out, _ := os.Create(filename)
-		resp, _ := http.Get(url)
-		defer resp.Body.Close()
-
-		progressR := &ioprogress.Reader{
-			Reader: resp.Body,
-			Size:   resp.ContentLength,
-		}
-		io.Copy(out, progressR)
-	}
 	return
 }
 
