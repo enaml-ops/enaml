@@ -45,24 +45,26 @@ func (s *Diff) JobDiffBetweenReleases(jobname, releaseURLA, releaseURLB string) 
 	)
 	release := pull.NewRelease(s.CacheDir)
 	filenameA, err = release.Pull(releaseURLA)
+
 	if err != nil {
 		err = fmt.Errorf("An error occurred downloading %s. %s", releaseURLA, err.Error())
 		return
 	}
 	filenameB, err = release.Pull(releaseURLB)
+
 	if err != nil {
 		err = fmt.Errorf("An error occurred downloading %s. %s", releaseURLB, err.Error())
 		return
 	}
-	jobA, ok = ProcessReleaseArchive(filenameA)[jobname]
 
-	if !ok {
-		err = errors.New("could not find jobname in release A")
+	if jobA, ok = ProcessReleaseArchive(filenameA)[jobname]; !ok {
+		err = errors.New(fmt.Sprintf("could not find jobname %s in release A", jobname))
+		return
 	}
-	jobB, ok = ProcessReleaseArchive(filenameB)[jobname]
 
-	if !ok {
-		err = errors.New("could not find jobname in release B")
+	if jobB, ok = ProcessReleaseArchive(filenameB)[jobname]; !ok {
+		err = errors.New(fmt.Sprintf("could not find jobname %s in release B", jobname))
+		return
 	}
 	bufA := new(bytes.Buffer)
 	bufA.ReadFrom(jobA)

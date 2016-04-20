@@ -33,6 +33,18 @@ var _ = Describe("jobdiff", func() {
 			})
 		})
 		Describe("given JobDiffBetweenReleases method", func() {
+			Context("when called with a job which doesnt exist", func() {
+				It("then it should return an error stating it can't find the jobname", func() {
+					var diffset []string
+					var err error
+
+					Ω(func() {
+						diffset, err = diff.JobDiffBetweenReleases("i-do-not-exist", "http://url.com/concourse?v=1.1.0", "http://url.com/concourse?v=1.1.0")
+					}).ShouldNot(Panic())
+					Ω(diffset).Should(BeEmpty())
+					Ω(err).Should(HaveOccurred())
+				})
+			})
 			Context("when calling JobDiffBetweenReleases on 2 releases with unchanged properties", func() {
 				It("then it should return an empty changeset", func() {
 					diff, err := diff.JobDiffBetweenReleases("atc", "http://url.com/concourse?v=1.1.0", "http://url.com/concourse?v=1.1.0")
