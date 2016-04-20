@@ -83,3 +83,14 @@ func (s Deployment) GetDeployment() enaml.DeploymentManifest {
 	return *s.Manifest
 }
 ```
+
+### Building enaml
+
+Enaml uses [Glide](https://github.com/Masterminds/glide) to manage vendored Go
+dependencies. Glide is a tool for managing the vendor directory within a Go
+package. As such, Golang 1.6+ is recommended.
+
+1. If you haven't done so already, install glide and configure your GOPATH.
+2. Open a terminal to the cloned enaml repo directory and run `glide install`
+3. Run the enaml tests `go test $(glide novendor)`
+4. Build the enaml executable `go build -o $GOPATH/bin/enaml cmd/enaml/main.go`
