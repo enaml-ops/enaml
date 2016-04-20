@@ -1,14 +1,10 @@
 hash: 43037f9710cf5991c1f485e44a928a5d7c99e0a69f111c63cde4c261501fd74d
-updated: 2016-04-20T09:47:20.92582548-07:00
+updated: 2016-04-20T13:02:58.569792546-04:00
 imports:
 - name: github.com/codegangsta/cli
   version: 71f57d300dd6a780ac1856c005c4b518cfd498ec
-- name: github.com/golang/protobuf
-  version: bf531ff1a004f24ee53329dfd5ce0b41bfdc17df
 - name: github.com/kr/pretty
   version: add1dbc86daf0f983cd4a48ceb39deb95c729b67
-- name: github.com/kr/pty
-  version: f7ee69f31298ecbe5d2b349c711e2547a617d398
 - name: github.com/kr/text
   version: bb797dc4fb8320488f47bf11de07a733d7233e1f
 - name: github.com/mitchellh/ioprogress
