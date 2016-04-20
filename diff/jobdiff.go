@@ -25,6 +25,15 @@ type Diff struct {
 	CacheDir string
 }
 
+func (s *Diff) ReleaseDiff(releaseURLA, releaseURLB string) (diffset []string, err error) {
+	release := pull.NewRelease(s.CacheDir)
+	filenameA := release.Pull(releaseURLA)
+	filenameB := release.Pull(releaseURLB)
+	GetReleaseManifest(filenameA)
+	GetReleaseManifest(filenameB)
+	return
+}
+
 func (s *Diff) JobDiffBetweenReleases(jobname, releaseURLA, releaseURLB string) (diffset []string, err error) {
 	var jobA *tar.Reader
 	var jobB *tar.Reader
@@ -48,6 +57,10 @@ func (s *Diff) JobDiffBetweenReleases(jobname, releaseURLA, releaseURLB string) 
 	bufB.ReadFrom(jobB)
 	diffset = JobPropertiesDiff(bufA.Bytes(), bufB.Bytes())
 	return
+}
+
+func GetReleaseManifest(srcFile string) {
+
 }
 
 func ProcessReleaseArchive(srcFile string) (jobs map[string]*tar.Reader) {

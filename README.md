@@ -1,7 +1,7 @@
 #Enaml
 ## Because (EN)ough with the y(AML) already
 
-[![wercker status](https://app.wercker.com/status/598e34535cfd9cb173a1bdb633c9005b/s/master "wercker status")](https://app.wercker.com/project/bykey/598e34535cfd9cb173a1bdb633c9005b)
+[![wercker status](https://app.wercker.com/status/869354741507e6bced0b8199b26d4b5c/s/master "wercker status")](https://app.wercker.com/project/bykey/869354741507e6bced0b8199b26d4b5c)
 
 ### Intent
 - deployment manifests as testable code
