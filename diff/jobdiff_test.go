@@ -35,7 +35,7 @@ var _ = Describe("jobdiff", func() {
 		Describe("given JobDiffBetweenReleases method", func() {
 			Context("when calling JobDiffBetweenReleases on 2 releases with unchanged properties", func() {
 				It("then it should return an empty changeset", func() {
-					diff, err := diff.JobDiffBetweenReleases("atc", "url.com/concourse?v=1.1.0", "url.com/concourse?v=1.1.0")
+					diff, err := diff.JobDiffBetweenReleases("atc", "http://url.com/concourse?v=1.1.0", "http://url.com/concourse?v=1.1.0")
 					Ω(diff).Should(BeEmpty())
 					Ω(err).ShouldNot(HaveOccurred())
 				})
