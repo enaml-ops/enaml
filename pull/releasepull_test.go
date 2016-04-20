@@ -11,14 +11,17 @@ import (
 
 var _ = Describe("given Release object", func() {
 	Describe("given a Pull method", func() {
+		var (
+			release  *Release
+			filename string
+			err      error
+		)
+
 		Context("when called on a valid release in the cache", func() {
 			var (
 				releaseName       = "concourse?v=1.1.0"
 				controlReleaseURL = "https://bosh.io/d/github.com/concourse/" + releaseName
 				controlCacheDir   = "fixtures"
-				release           *Release
-				filename          string
-				err               error
 			)
 
 			BeforeEach(func() {
@@ -34,20 +37,19 @@ var _ = Describe("given Release object", func() {
 				Ω(filename).Should(Equal(path.Join(controlCacheDir, releaseName)))
 			})
 		})
+
 		Context("when called on an existing local release", func() {
 			var (
 				releaseName        = "concourse?v=1.1.0"
 				controlReleaseFile = "fixtures/" + releaseName
 				controlCacheDir    = "shouldnotbeused"
-				release            *Release
-				filename           string
-				err                error
 			)
 
 			BeforeEach(func() {
 				release = NewRelease(controlCacheDir)
 				filename, err = release.Pull(controlReleaseFile)
 			})
+
 			It("should not have errored", func() {
 				Ω(err).ShouldNot(HaveOccurred())
 			})
@@ -55,20 +57,13 @@ var _ = Describe("given Release object", func() {
 				Ω(filename).Should(Equal(controlReleaseFile))
 			})
 		})
-		Context("when called on a local release that does not exist", func() {
-			var (
-				releaseName        = "foobar?v=1.0"
-				controlReleaseFile = "fixtures/" + releaseName
-				controlCacheDir    = "shouldnotbeused"
-				release            *Release
-				filename           string
-				err                error
-			)
 
+		Context("when called on a local release that does not exist", func() {
 			BeforeEach(func() {
-				release = NewRelease(controlCacheDir)
-				filename, err = release.Pull(controlReleaseFile)
+				release = NewRelease("ignored")
+				filename, err = release.Pull("fixtures/foobar?v=1.0")
 			})
+
 			It("should have errored", func() {
 				Ω(err).Should(MatchError("Could not pull fixtures/foobar?v=1.0. The file doesn't exist or isn't a valid http(s) URL"))
 			})
