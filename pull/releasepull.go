@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"net/url"
 	"os"
 	"path"
 
@@ -21,13 +22,22 @@ type Release struct {
 }
 
 // Pull downloads the specified Release to the local cache dir
-func (r *Release) Pull(url string) (filename string, err error) {
-	name := path.Base(url)
-	filename = r.CacheDir + "/" + name
-
-	if _, err = os.Stat(filename); os.IsNotExist(err) {
-		fmt.Println("Could not find release in local cache. Downloading now.")
-		err = r.download(url, filename)
+func (r *Release) Pull(releaseLocation string) (filename string, err error) {
+	u, uerr := url.Parse(releaseLocation)
+	if uerr != nil || !(u.Scheme == "http" || u.Scheme == "https") {
+		// assume a local file, ensure it exists
+		if _, ferr := os.Stat(releaseLocation); os.IsNotExist(ferr) {
+			err = fmt.Errorf("Could not pull %s. The file doesn't exist or isn't a valid http(s) URL", releaseLocation)
+			return
+		}
+		filename = releaseLocation
+	} else {
+		// remote file, ensure its in the local cache
+		filename = r.CacheDir + "/" + path.Base(releaseLocation)
+		if _, err = os.Stat(filename); os.IsNotExist(err) {
+			fmt.Println("Could not find release in local cache. Downloading now.")
+			err = r.download(releaseLocation, filename)
+		}
 	}
 	return
 }

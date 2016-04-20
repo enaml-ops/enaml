@@ -34,5 +34,26 @@ var _ = Describe("given Release object", func() {
 				Ω(filename).Should(Equal(path.Join(controlCacheDir, releaseName)))
 			})
 		})
+		Context("when called on a local release", func() {
+			var (
+				releaseName        = "concourse?v=1.1.0"
+				controlReleaseFile = "fixtures/" + releaseName
+				controlCacheDir    = "shouldnotbeused"
+				release            *Release
+				filename           string
+				err                error
+			)
+
+			BeforeEach(func() {
+				release = NewRelease(controlCacheDir)
+				filename, err = release.Pull(controlReleaseFile)
+			})
+			It("should not have errored", func() {
+				Ω(err).ShouldNot(HaveOccurred())
+			})
+			It("returns the same local file", func() {
+				Ω(filename).Should(Equal(controlReleaseFile))
+			})
+		})
 	})
 })
