@@ -22,33 +22,37 @@ type Release struct {
 
 // Pull downloads the specified Release to the local cache dir
 func (s *Release) Pull(url string) (filename string, err error) {
-
 	name := path.Base(url)
 	filename = s.CacheDir + "/" + name
 
 	if _, err = os.Stat(filename); os.IsNotExist(err) {
 		fmt.Println("Could not find release in local cache. Downloading now.")
-		var out *os.File
-		out, err = os.Create(filename)
-		if err != nil {
-			return
-		}
-		var resp *http.Response
-		resp, err = http.Get(url)
-		if err != nil {
-			return
-		}
-		defer func() {
-			if cerr := resp.Body.Close(); cerr != nil {
-				err = cerr
-			}
-		}()
-
-		progressR := &ioprogress.Reader{
-			Reader: resp.Body,
-			Size:   resp.ContentLength,
-		}
-		_, err = io.Copy(out, progressR)
+		err = s.download(url, filename)
 	}
+	return
+}
+
+func (s *Release) download(url, local string) (err error) {
+	var out *os.File
+	out, err = os.Create(local)
+	if err != nil {
+		return
+	}
+	var resp *http.Response
+	resp, err = http.Get(url)
+	if err != nil {
+		return
+	}
+	defer func() {
+		if cerr := resp.Body.Close(); cerr != nil {
+			err = cerr
+		}
+	}()
+
+	progressR := &ioprogress.Reader{
+		Reader: resp.Body,
+		Size:   resp.ContentLength,
+	}
+	_, err = io.Copy(out, progressR)
 	return
 }
