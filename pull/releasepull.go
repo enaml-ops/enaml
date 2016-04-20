@@ -10,10 +10,12 @@ import (
 	"github.com/mitchellh/ioprogress"
 )
 
+// NewRelease creates a new Release instance
 func NewRelease(cache string) *Release {
 	return &Release{CacheDir: cache}
 }
 
+// Release is a BOSH release with a configurable cache dir
 type Release struct {
 	CacheDir string
 }
