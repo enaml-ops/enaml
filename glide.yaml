@@ -7,3 +7,4 @@ import:
 - package: github.com/mitchellh/ioprogress
 - package: github.com/kr/pretty
 - package: github.com/kr/text
+- package: github.com/xchapter7x/lo

@@ -1,10 +1,14 @@
-hash: e17e515f6d49b5f9eec384f256e0fb28d0c7737eb738f17adac91e36f4938f73
-updated: 2016-04-19T10:10:38.678636139-04:00
+hash: 43037f9710cf5991c1f485e44a928a5d7c99e0a69f111c63cde4c261501fd74d
+updated: 2016-04-20T09:47:20.92582548-07:00
 imports:
 - name: github.com/codegangsta/cli
   version: 71f57d300dd6a780ac1856c005c4b518cfd498ec
+- name: github.com/golang/protobuf
+  version: bf531ff1a004f24ee53329dfd5ce0b41bfdc17df
 - name: github.com/kr/pretty
   version: add1dbc86daf0f983cd4a48ceb39deb95c729b67
+- name: github.com/kr/pty
+  version: f7ee69f31298ecbe5d2b349c711e2547a617d398
 - name: github.com/kr/text
   version: bb797dc4fb8320488f47bf11de07a733d7233e1f
 - name: github.com/mitchellh/ioprogress
@@ -13,8 +17,10 @@ imports:
   version: 2c2e9bb47b4e44067024f29339588cac8b34dd12
 - name: github.com/onsi/gomega
   version: 7ce781ea776b2fd506491011353bded2e40c8467
-- name: gopkg.in/yaml.v1
-  version: 9f9df34309c04878acc86042b16630b0f696e1de
+- name: github.com/op/go-logging
+  version: 970db520ece77730c7e4724c61121037378659d9
+- name: github.com/xchapter7x/lo
+  version: aa2602d0e8e8647f0ce7b53109b37040941915aa
 - name: gopkg.in/yaml.v2
   version: a83829b6f1293c91addabc89d0571c246397bbf4
 devImports: []
