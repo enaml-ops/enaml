@@ -33,7 +33,7 @@ build:
         code: |
           cp -R ./ ${WERCKER_OUTPUT_DIR}
 
-deploy:
+deploy-pre-release:
   steps:
     - script:
         name: install-packages
