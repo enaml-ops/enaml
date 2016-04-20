@@ -28,8 +28,8 @@ type Diff struct {
 
 func (s *Diff) ReleaseDiff(releaseURLA, releaseURLB string) (diffset []string, err error) {
 	release := pull.NewRelease(s.CacheDir)
-	filenameA := release.Pull(releaseURLA)
-	filenameB := release.Pull(releaseURLB)
+	filenameA, _ := release.Pull(releaseURLA)
+	filenameB, _ := release.Pull(releaseURLB)
 	GetReleaseManifest(filenameA)
 	GetReleaseManifest(filenameB)
 	return
