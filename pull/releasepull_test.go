@@ -34,7 +34,7 @@ var _ = Describe("given Release object", func() {
 				Ω(filename).Should(Equal(path.Join(controlCacheDir, releaseName)))
 			})
 		})
-		Context("when called on a local release", func() {
+		Context("when called on an existing local release", func() {
 			var (
 				releaseName        = "concourse?v=1.1.0"
 				controlReleaseFile = "fixtures/" + releaseName
@@ -53,6 +53,24 @@ var _ = Describe("given Release object", func() {
 			})
 			It("returns the same local file", func() {
 				Ω(filename).Should(Equal(controlReleaseFile))
+			})
+		})
+		Context("when called on a local release that does not exist", func() {
+			var (
+				releaseName        = "foobar?v=1.0"
+				controlReleaseFile = "fixtures/" + releaseName
+				controlCacheDir    = "shouldnotbeused"
+				release            *Release
+				filename           string
+				err                error
+			)
+
+			BeforeEach(func() {
+				release = NewRelease(controlCacheDir)
+				filename, err = release.Pull(controlReleaseFile)
+			})
+			It("should have errored", func() {
+				Ω(err).Should(MatchError("Could not pull fixtures/foobar?v=1.0. The file doesn't exist or isn't a valid http(s) URL"))
 			})
 		})
 	})
