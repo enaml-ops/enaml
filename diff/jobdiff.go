@@ -60,7 +60,28 @@ func (s *Diff) JobDiffBetweenReleases(jobname, releaseURLA, releaseURLB string) 
 }
 
 func GetReleaseManifest(srcFile string) {
+	f, err := os.Open(srcFile)
+	if err != nil {
+		fmt.Println(err)
+	}
+	defer f.Close()
+	tarReader := getTarballReader(f)
 
+	for {
+		header, err := tarReader.Next()
+
+		if err == io.EOF {
+			break
+		}
+		name := header.Name
+
+		switch header.Typeflag {
+		case tar.TypeReg:
+			if path.Base(name) == "release.MF" {
+				fmt.Println("found the release manifest")
+			}
+		}
+	}
 }
 
 func ProcessReleaseArchive(srcFile string) (jobs map[string]*tar.Reader) {
