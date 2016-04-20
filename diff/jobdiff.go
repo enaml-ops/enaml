@@ -11,10 +11,11 @@ import (
 	"path"
 	"strings"
 
+	"gopkg.in/yaml.v1"
+
 	"github.com/kr/pretty"
 	"github.com/xchapter7x/enaml"
 	"github.com/xchapter7x/enaml/pull"
-	"gopkg.in/yaml.v2"
 )
 
 func NewDiff(cacheDir string) *Diff {
@@ -27,20 +28,32 @@ type Diff struct {
 
 func (s *Diff) ReleaseDiff(releaseURLA, releaseURLB string) (diffset []string, err error) {
 	release := pull.NewRelease(s.CacheDir)
-	filenameA := release.Pull(releaseURLA)
-	filenameB := release.Pull(releaseURLB)
+	filenameA, _ := release.Pull(releaseURLA)
+	filenameB, _ := release.Pull(releaseURLB)
 	GetReleaseManifest(filenameA)
 	GetReleaseManifest(filenameB)
 	return
 }
 
 func (s *Diff) JobDiffBetweenReleases(jobname, releaseURLA, releaseURLB string) (diffset []string, err error) {
-	var jobA *tar.Reader
-	var jobB *tar.Reader
-	var ok bool
+	var (
+		jobA      *tar.Reader
+		jobB      *tar.Reader
+		filenameA string
+		filenameB string
+		ok        bool
+	)
 	release := pull.NewRelease(s.CacheDir)
-	filenameA := release.Pull(releaseURLA)
-	filenameB := release.Pull(releaseURLB)
+	filenameA, err = release.Pull(releaseURLA)
+	if err != nil {
+		err = fmt.Errorf("An error occurred downloading %s. %s", releaseURLA, err.Error())
+		return
+	}
+	filenameB, err = release.Pull(releaseURLB)
+	if err != nil {
+		err = fmt.Errorf("An error occurred downloading %s. %s", releaseURLB, err.Error())
+		return
+	}
 	jobA, ok = ProcessReleaseArchive(filenameA)[jobname]
 
 	if !ok {
