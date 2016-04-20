@@ -23,7 +23,12 @@ func GenerateReleaseJobsPackage(releaseURL string, cacheDir string, outputDir st
 		OutputDir: outputDir,
 	}
 	release := pull.NewRelease(cacheDir)
-	filename, _ := release.Pull(releaseURL)
+	var filename string
+	filename, err = release.Pull(releaseURL)
+	if err != nil {
+		err = fmt.Errorf("An error occurred downloading %s. %s", releaseURL, err.Error())
+		return
+	}
 	gen.ProcessFile(filename)
 	return
 }
