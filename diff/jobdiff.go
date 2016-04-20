@@ -7,6 +7,7 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"io/ioutil"
 	"os"
 	"path"
 	"strings"
@@ -27,11 +28,16 @@ type Diff struct {
 }
 
 func (s *Diff) ReleaseDiff(releaseURLA, releaseURLB string) (diffset []string, err error) {
+	var filenameA string
+	var filenameB string
 	release := pull.NewRelease(s.CacheDir)
-	filenameA, _ := release.Pull(releaseURLA)
-	filenameB, _ := release.Pull(releaseURLB)
-	GetReleaseManifest(filenameA)
-	GetReleaseManifest(filenameB)
+	if filenameA, err = release.Pull(releaseURLA); err == nil {
+		if filenameB, err = release.Pull(releaseURLB); err == nil {
+			objA := GetReleaseManifest(filenameA)
+			objB := GetReleaseManifest(filenameB)
+			diffset = pretty.Diff(objA, objB)
+		}
+	}
 	return
 }
 
@@ -74,7 +80,7 @@ func (s *Diff) JobDiffBetweenReleases(jobname, releaseURLA, releaseURLB string) 
 	return
 }
 
-func GetReleaseManifest(srcFile string) {
+func GetReleaseManifest(srcFile string) (releaseManifest enaml.ReleaseManifest) {
 	f, err := os.Open(srcFile)
 	if err != nil {
 		fmt.Println(err)
@@ -93,10 +99,14 @@ func GetReleaseManifest(srcFile string) {
 		switch header.Typeflag {
 		case tar.TypeReg:
 			if path.Base(name) == "release.MF" {
-				fmt.Println("found the release manifest")
+				if b, err := ioutil.ReadAll(tarReader); err == nil {
+					releaseManifest = enaml.ReleaseManifest{}
+					yaml.Unmarshal(b, &releaseManifest)
+				}
 			}
 		}
 	}
+	return
 }
 
 func ProcessReleaseArchive(srcFile string) (jobs map[string]*tar.Reader) {

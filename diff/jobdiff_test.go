@@ -15,10 +15,10 @@ var _ = Describe("jobdiff", func() {
 		BeforeEach(func() {
 			diff = NewDiff("./fixtures")
 		})
-		XDescribe("given ReleaseDiff method", func() {
+		Describe("given ReleaseDiff method", func() {
 			Context("when calling ReleaseDiff with releases that have changed", func() {
 				It("then there should be a set of changes", func() {
-					diffset, err := diff.ReleaseDiff("url.com/concourse?v=1.0.1", "url.com/concourse?v=1.1.0")
+					diffset, err := diff.ReleaseDiff("fixtures/releaseA", "fixtures/releaseB")
 					Ω(err).ShouldNot(HaveOccurred())
 					Ω(diffset).ShouldNot(BeEmpty())
 				})
@@ -26,7 +26,7 @@ var _ = Describe("jobdiff", func() {
 
 			Context("when calling ReleaseDiff with releases that have changed", func() {
 				It("then there should not be any changes", func() {
-					diffset, err := diff.ReleaseDiff("http://url.com/concourse?v=1.1.0", "http://url.com/concourse?v=1.1.0")
+					diffset, err := diff.ReleaseDiff("fixtures/releaseA", "fixtures/releaseA")
 					Ω(err).ShouldNot(HaveOccurred())
 					Ω(diffset).Should(BeEmpty())
 				})

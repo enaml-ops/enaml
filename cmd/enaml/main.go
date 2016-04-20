@@ -52,8 +52,9 @@ func main() {
 			Aliases: []string{"dr"},
 			Usage:   "show a diff between 2 releases given",
 			Action: func(c *cli.Context) {
-				println("unimplemented")
-				println("release job properties diff", c.Args().First())
+				diff := diff.NewDiff(cacheDir)
+				diffset, err := diff.ReleaseDiff(c.Args()[0], c.Args()[1])
+				displayDiffAndExit(diffset, err)
 			},
 		},
 		{
@@ -63,22 +64,28 @@ func main() {
 			Description: "show diff between jobs across 2 releases",
 			Action: func(c *cli.Context) {
 				diff := diff.NewDiff(cacheDir)
-				if diffset, err := diff.JobDiffBetweenReleases(c.Args()[0], c.Args()[1], c.Args()[2]); err == nil && len(diffset) == 0 {
-					fmt.Println("no differences found")
-
-				} else if len(diffset) > 0 {
-
-					for i, v := range diffset {
-						fmt.Println(i, ": ", v)
-					}
-					os.Exit(1)
-
-				} else {
-					lo.G.Error("error: ", err)
-					os.Exit(2)
-				}
+				diffset, err := diff.JobDiffBetweenReleases(c.Args()[0], c.Args()[1], c.Args()[2])
+				displayDiffAndExit(diffset, err)
 			},
 		},
 	}
 	app.Run(os.Args)
+}
+
+func displayDiffAndExit(diffset []string, err error) {
+	if err == nil && len(diffset) == 0 {
+		fmt.Println("no differences found")
+
+	} else if len(diffset) > 0 {
+
+		for i, v := range diffset {
+			fmt.Println(i, ": ", v)
+		}
+		os.Exit(1)
+
+	} else {
+		lo.G.Error("error: ", err)
+		os.Exit(2)
+	}
+	os.Exit(0)
 }
