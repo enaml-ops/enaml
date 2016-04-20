@@ -11,10 +11,11 @@ import (
 	"path"
 	"strings"
 
+	"gopkg.in/yaml.v1"
+
 	"github.com/kr/pretty"
 	"github.com/xchapter7x/enaml"
 	"github.com/xchapter7x/enaml/pull"
-	"gopkg.in/yaml.v2"
 )
 
 func NewDiff(cacheDir string) *Diff {
@@ -39,8 +40,8 @@ func (s *Diff) JobDiffBetweenReleases(jobname, releaseURLA, releaseURLB string) 
 	var jobB *tar.Reader
 	var ok bool
 	release := pull.NewRelease(s.CacheDir)
-	filenameA := release.Pull(releaseURLA)
-	filenameB := release.Pull(releaseURLB)
+	filenameA, _ := release.Pull(releaseURLA)
+	filenameB, _ := release.Pull(releaseURLB)
 	jobA, ok = ProcessReleaseArchive(filenameA)[jobname]
 
 	if !ok {

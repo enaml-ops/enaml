@@ -12,9 +12,10 @@ import (
 	"strings"
 	"text/template"
 
+	"gopkg.in/yaml.v1"
+
 	"github.com/xchapter7x/enaml"
 	"github.com/xchapter7x/enaml/pull"
-	"gopkg.in/yaml.v2"
 )
 
 func GenerateReleaseJobsPackage(releaseURL string, cacheDir string, outputDir string) (err error) {
@@ -22,7 +23,7 @@ func GenerateReleaseJobsPackage(releaseURL string, cacheDir string, outputDir st
 		OutputDir: outputDir,
 	}
 	release := pull.NewRelease(cacheDir)
-	filename := release.Pull(releaseURL)
+	filename, _ := release.Pull(releaseURL)
 	gen.ProcessFile(filename)
 	return
 }
