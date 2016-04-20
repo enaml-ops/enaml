@@ -12,7 +12,7 @@ import (
 	"strings"
 	"text/template"
 
-	"gopkg.in/yaml.v1"
+	"gopkg.in/yaml.v2"
 
 	"github.com/xchapter7x/enaml"
 	"github.com/xchapter7x/enaml/pull"
