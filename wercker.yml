@@ -20,3 +20,86 @@ build:
         name: go test
         code: |
           go test $(glide novendor) -v -cover -race
+
+    - script:
+        name: compile for all platforms
+        code: |
+          GOOS=darwin go build -o enaml-osx -ldflags "-X main.Version=`git rev-parse HEAD`" cmd/enaml/main.go
+          GOOS=linux go build -o enaml-linux -ldflags "-X main.Version=`git rev-parse HEAD`" cmd/enaml/main.go
+          GOOS=windows go build -o enaml-win -ldflags "-X main.Version=`git rev-parse HEAD`" cmd/enaml/main.go
+
+    - script:
+        name: add repo to artifact
+        code: |
+          cp -R ./ ${WERCKER_OUTPUT_DIR}
+
+deploy:
+  steps:
+    - script:
+        name: install-packages
+        code: |
+          sudo apt-get install -y openssh-client wget
+          ls -la
+          pwd
+          echo ${WERCKER_OUTPUT_DIR}
+          ls -la ${WERCKER_OUTPUT_DIR}
+
+    - wercker/add-ssh-key@1.0.2:
+        keyname: PCF_GITHUB_KEY
+
+    - wercker/add-to-known_hosts@1.4.0:
+        hostname: github.com
+        fingerprint: 16:27:ac:a5:76:28:2d:36:63:1b:56:4d:eb:df:a6:48
+
+    - script:
+        name: set release id variable for version
+        code: |
+          go get github.com/xchapter7x/versioning
+          export WERCKER_GITHUB_CREATE_RELEASE_ID=`versioning bump_patch`
+
+    #- xchapter7x/flowy-release:
+    #    action: "get-latest"
+    #    tag_variable_name: "VERSION_TAG"
+    #    git_name: $GITFLOW_NAME
+    #    git_email: $GITFLOW_EMAIL
+
+    #- xchapter7x/flowy-release:
+    #    action: "complete-release"
+    #    active: $GITFLOW_ACTIVE
+    #    git_name: $GITFLOW_NAME
+    #    git_email: $GITFLOW_EMAIL
+
+    ##this is a workaround for the flowy-release not resetting
+    ##its branch state...
+    #- script:
+    #    name: reset git to proper commit
+    #    code: |
+    #      git checkout -fq ${WERCKER_GIT_COMMIT}
+    #      git submodule update --init --recursive
+
+    - github-create-release:
+        token: $GITHUB_TOKEN
+        tag: $WERCKER_GITHUB_CREATE_RELEASE_ID
+        title: CFOPS $WERCKER_GITHUB_CREATE_RELEASE_ID
+        draft: $RELEASE_DRAFT
+
+    - github-upload-asset:
+        token: $GITHUB_TOKEN
+        file: enaml-osx 
+        release_id: $WERCKER_GITHUB_CREATE_RELEASE_ID
+        content-type: application/x-gzip
+
+    - github-upload-asset:
+        token: $GITHUB_TOKEN
+        file: enaml-win 
+        release_id: $WERCKER_GITHUB_CREATE_RELEASE_ID
+        content-type: application/x-gzip
+
+    - github-upload-asset:
+        token: $GITHUB_TOKEN
+        file: enaml-linux 
+        release_id: $WERCKER_GITHUB_CREATE_RELEASE_ID
+        content-type: application/x-gzip
+
+    
+

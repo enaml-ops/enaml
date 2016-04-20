@@ -28,12 +28,14 @@ const (
 )
 
 var (
+	Version   string
 	cacheDir  = CacheDir
 	outputDir = OutputDir
 )
 
 func main() {
 	app := cli.NewApp()
+	app.Version = Version
 	app.Commands = []cli.Command{
 		{
 			Name:        "generate-jobs",
