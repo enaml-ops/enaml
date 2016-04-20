@@ -21,18 +21,18 @@ type Release struct {
 }
 
 // Pull downloads the specified Release to the local cache dir
-func (s *Release) Pull(url string) (filename string, err error) {
+func (r *Release) Pull(url string) (filename string, err error) {
 	name := path.Base(url)
-	filename = s.CacheDir + "/" + name
+	filename = r.CacheDir + "/" + name
 
 	if _, err = os.Stat(filename); os.IsNotExist(err) {
 		fmt.Println("Could not find release in local cache. Downloading now.")
-		err = s.download(url, filename)
+		err = r.download(url, filename)
 	}
 	return
 }
 
-func (s *Release) download(url, local string) (err error) {
+func (r *Release) download(url, local string) (err error) {
 	var out *os.File
 	out, err = os.Create(local)
 	if err != nil {
