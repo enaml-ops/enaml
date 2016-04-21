@@ -61,7 +61,7 @@ publish-release:
         name: set release id variable for version
         code: |
           go get github.com/xchapter7x/versioning
-          export WERCKER_GITHUB_CREATE_RELEASE_ID=`versioning bump_patch`
+          export WERCKER_GITHUB_CREATE_RELEASE_ID=`versioning ${VERSION_COMMAND}`
 
     - github-create-release:
         token: $GITHUB_TOKEN
@@ -69,6 +69,24 @@ publish-release:
         title: CFOPS $WERCKER_GITHUB_CREATE_RELEASE_ID
         draft: false 
         prerelease: ${IS_PRE_RELEASE} 
+
+    - github-upload-asset:
+        token: $GITHUB_TOKEN
+        file: enaml-osx 
+        release_id: $WERCKER_GITHUB_CREATE_RELEASE_ID
+        content-type: application/x-gzip
+
+    - github-upload-asset:
+        token: $GITHUB_TOKEN
+        file: enaml-win 
+        release_id: $WERCKER_GITHUB_CREATE_RELEASE_ID
+        content-type: application/x-gzip
+
+    - github-upload-asset:
+        token: $GITHUB_TOKEN
+        file: enaml-linux 
+        release_id: $WERCKER_GITHUB_CREATE_RELEASE_ID
+        content-type: application/x-gzip
 
 deploy-pre-release:
   steps:
@@ -92,7 +110,7 @@ deploy-pre-release:
         name: set release id variable for version
         code: |
           go get github.com/xchapter7x/versioning
-          export WERCKER_GITHUB_CREATE_RELEASE_ID=`versioning bump_patch`
+          export WERCKER_GITHUB_CREATE_RELEASE_ID=`versioning bump_patch`-`git rev-parse HEAD`
 
     - github-create-release:
         token: $GITHUB_TOKEN
