@@ -30,9 +30,9 @@ build:
     - script:
         name: compile for all platforms
         code: |
-          GOOS=darwin go build -o enaml-osx -ldflags "-X main.Version=${WERCKER_GITHUB_CREATE_RELEASE_ID}-`git rev-parse HEAD`" cmd/enaml/main.go
-          GOOS=linux go build -o enaml-linux -ldflags "-X main.Version=${WERCKER_GITHUB_CREATE_RELEASE_ID}`-git rev-parse HEAD`" cmd/enaml/main.go
-          GOOS=windows go build -o enaml-win -ldflags "-X main.Version=${WERCKER_GITHUB_CREATE_RELEASE_ID}-`git rev-parse HEAD`" cmd/enaml/main.go
+          GOOS=darwin go build -o enaml-osx -ldflags "-X main.Version=${WERCKER_GITHUB_CREATE_RELEASE_ID}-`git rev-parse HEAD | cut -c1-6`" cmd/enaml/main.go
+          GOOS=linux go build -o enaml-linux -ldflags "-X main.Version=${WERCKER_GITHUB_CREATE_RELEASE_ID}-`git rev-parse HEAD | cut -c1-6`" cmd/enaml/main.go
+          GOOS=windows go build -o enaml-win -ldflags "-X main.Version=${WERCKER_GITHUB_CREATE_RELEASE_ID}-`git rev-parse HEAD | cut -c1-6`" cmd/enaml/main.go
 
     - script:
         name: add repo to artifact
@@ -110,7 +110,7 @@ deploy-pre-release:
         name: set release id variable for version
         code: |
           go get github.com/xchapter7x/versioning
-          export WERCKER_GITHUB_CREATE_RELEASE_ID=`versioning bump_patch`-`git rev-parse HEAD`
+          export WERCKER_GITHUB_CREATE_RELEASE_ID=`versioning bump_patch`-`git rev-parse HEAD | cut -c1-6`
 
     - github-create-release:
         token: $GITHUB_TOKEN
