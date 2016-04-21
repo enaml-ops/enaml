@@ -66,7 +66,7 @@ publish-release:
     - github-create-release:
         token: $GITHUB_TOKEN
         tag: $WERCKER_GITHUB_CREATE_RELEASE_ID
-        title: CFOPS $WERCKER_GITHUB_CREATE_RELEASE_ID
+        title: Enaml $WERCKER_GITHUB_CREATE_RELEASE_ID
         draft: false 
         prerelease: ${IS_PRE_RELEASE} 
 
@@ -115,7 +115,7 @@ deploy-pre-release:
     - github-create-release:
         token: $GITHUB_TOKEN
         tag: $WERCKER_GITHUB_CREATE_RELEASE_ID
-        title: CFOPS $WERCKER_GITHUB_CREATE_RELEASE_ID
+        title: Enaml $WERCKER_GITHUB_CREATE_RELEASE_ID
         draft: true 
         prerelease: ${IS_PRE_RELEASE} 
 
