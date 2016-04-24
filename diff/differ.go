@@ -14,8 +14,8 @@ type Result struct {
 
 // Differ implements diffing BOSH or Pivnet releases and their contained entities.
 type Differ interface {
-	Diff() (DiffResult, error)
-	DiffJob(job string) (DiffResult, error)
+	Diff() (Result, error)
+	DiffJob(job string) (Result, error)
 }
 
 // New creates a Differ instance for comparing two releases
