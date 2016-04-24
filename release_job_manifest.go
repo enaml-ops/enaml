@@ -1,6 +1,7 @@
 package enaml
 
 type JobManifest struct {
+	Name       string                         `yaml:"name"`
 	Properties map[string]JobManifestProperty `yaml:"properties"`
 }
 
