@@ -11,7 +11,7 @@ import (
 func decodeYaml(r io.Reader, v interface{}) error {
 	bytes, err := ioutil.ReadAll(r)
 	if err == nil {
-		yaml.Unmarshal(bytes, &v)
+		yaml.Unmarshal(bytes, v)
 	}
 	return err
 }
