@@ -26,17 +26,25 @@ func generate(packagename string, fileBytes []byte, outputDir string) {
 				if _, ok := objects[structname]; !ok {
 					objects[structname] = make(map[string]ObjectField)
 				}
-				objects[structname][v.Slice[i]] = ObjectField{
-					ElementName:       FormatName(v.Slice[i]),
-					ElementType:       typeName,
-					ElementAnnotation: "`yaml:\"" + v.Slice[i] + ",omitempty\"`",
-					Meta:              v.Yaml,
+
+				if !nestedTypeDefinition(structname, typeName, FormatName(v.Slice[i])) {
+
+					objects[structname][v.Slice[i]] = ObjectField{
+						ElementName:       FormatName(v.Slice[i]),
+						ElementType:       typeName,
+						ElementAnnotation: "`yaml:\"" + v.Slice[i] + ",omitempty\"`",
+						Meta:              v.Yaml,
+					}
 				}
 			}
 		}
 	}
 	structs := generateStructs(objects, packagename)
 	writeStructsToDisk(structs, outputDir)
+}
+
+func nestedTypeDefinition(structname, typeName, elementName string) bool {
+	return (structname == typeName && typeName == elementName)
 }
 
 func newStructName(i int, v record, packagename string) (structname string) {

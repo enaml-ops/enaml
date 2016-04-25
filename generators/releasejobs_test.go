@@ -1,18 +1,24 @@
 package generators_test
 
 import (
+	"bytes"
 	"io/ioutil"
 	"os"
+	"os/exec"
 	"path"
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	. "github.com/xchapter7x/enaml/generators"
+	"github.com/xchapter7x/lo"
 )
 
 var _ = Describe("releasejobs", func() {
 	Describe("given a ProcessFile method on ReleaseJobsGenerator", func() {
-		var controlOutputDir, _ = ioutil.TempDir("", "releasejobs")
+		var pwd, _ = os.Getwd()
+		var tmpDirName = "_test"
+		var tmpPath = path.Join(pwd, tmpDirName)
+		var controlOutputDir string
 		var controlRelease = "./fixtures/concourse?v=1.1.0"
 		var controlPackageDir = "fixtures/_concourse_1.1.0"
 		var controlpackages, _ = ioutil.ReadDir(controlPackageDir)
@@ -24,6 +30,16 @@ var _ = Describe("releasejobs", func() {
 		}
 		var gen *ReleaseJobsGenerator
 
+		BeforeEach(func() {
+			os.MkdirAll(tmpPath, 0700)
+			controlOutputDir, _ = ioutil.TempDir(tmpPath, "releasejobs")
+		})
+
+		AfterEach(func() {
+			lo.G.Debug("removing: ", controlOutputDir)
+			os.RemoveAll(tmpPath)
+		})
+
 		Context("when called on a release", func() {
 			BeforeEach(func() {
 				gen = &ReleaseJobsGenerator{
@@ -31,11 +47,9 @@ var _ = Describe("releasejobs", func() {
 				}
 				gen.ProcessFile(controlRelease)
 			})
-			AfterEach(func() {
-				os.RemoveAll(controlOutputDir)
-			})
 			It("then it should create a package for each job", func() {
 				packages, err := ioutil.ReadDir(controlOutputDir)
+				lo.G.Debug(controlOutputDir)
 				Ω(err).ShouldNot(HaveOccurred())
 				Ω(namelistFromPackages(packages)).Should(Equal(namelistFromPackages(controlpackages)))
 			})
@@ -68,19 +82,22 @@ var _ = Describe("releasejobs", func() {
 				}
 			})
 
-			XIt("then it should create a struct with the correct elements and format for each nested property", func() {
-
+			It("then it should create a struct with the correct elements and format for each nested property", func() {
+				var errBuffer bytes.Buffer
 				packages, _ := ioutil.ReadDir(controlOutputDir)
 
 				for _, pkg := range packages {
-					packagedir := path.Join(controlOutputDir, pkg.Name())
-					jobs, _ := ioutil.ReadDir(packagedir)
 
-					for _, job := range jobs {
-						jobBytes, _ := ioutil.ReadFile(path.Join(packagedir, job.Name()))
-						controlBytes, _ := ioutil.ReadFile(path.Join(controlPackageDir, pkg.Name(), job.Name()))
-						Ω(jobBytes).Should(Equal(controlBytes))
-					}
+					lo.G.Debug(controlOutputDir)
+					lo.G.Debug(pkg.Name())
+					packagedir := path.Join(controlOutputDir, pkg.Name())
+					lo.G.Debug("package", packagedir)
+					cmd := exec.Command("go", "build", "./"+path.Join(tmpDirName, path.Base(controlOutputDir), pkg.Name()))
+					cmd.Stderr = &errBuffer
+					out, err := cmd.Output()
+					lo.G.Debug("out: ", out)
+					Ω(errBuffer.String()).Should(BeEmpty())
+					Ω(err).ShouldNot(HaveOccurred())
 				}
 			})
 		})
