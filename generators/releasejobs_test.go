@@ -14,7 +14,7 @@ var _ = Describe("releasejobs", func() {
 	Describe("given a ProcessFile method on ReleaseJobsGenerator", func() {
 		var controlOutputDir, _ = ioutil.TempDir("", "releasejobs")
 		var controlRelease = "./fixtures/concourse?v=1.1.0"
-		var controlPackageDir = "fixtures/concourse_1.1.0"
+		var controlPackageDir = "fixtures/_concourse_1.1.0"
 		var controlpackages, _ = ioutil.ReadDir(controlPackageDir)
 		var namelistFromPackages = func(pkg []os.FileInfo) (list []string) {
 			for _, v := range pkg {
