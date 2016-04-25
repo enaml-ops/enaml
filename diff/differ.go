@@ -27,13 +27,13 @@ func New(releaseRepo pull.Release, r1Path, r2Path string) (differ Differ, err er
 	}
 	if filepath.Ext(r1Path) == ".pivotal" {
 		differ = pivnetReleaseDiffer{
-			ReleaseRepo: release,
+			ReleaseRepo: releaseRepo,
 			R1Path:      r1Path,
 			R2Path:      r2Path,
 		}
 	} else {
 		differ = boshReleaseDiffer{
-			ReleaseRepo: release,
+			ReleaseRepo: releaseRepo,
 			R1Path:      r1Path,
 			R2Path:      r2Path,
 		}

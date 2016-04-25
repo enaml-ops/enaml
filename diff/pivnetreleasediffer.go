@@ -7,3 +7,11 @@ type pivnetReleaseDiffer struct {
 	R1Path      string
 	R2Path      string
 }
+
+func (d pivnetReleaseDiffer) Diff() (Result, error) {
+	return Result{}, nil
+}
+
+func (d pivnetReleaseDiffer) DiffJob(job string) (Result, error) {
+	return Result{}, nil
+}
