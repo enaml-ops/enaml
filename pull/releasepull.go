@@ -21,6 +21,20 @@ type Release struct {
 	CacheDir string
 }
 
+// Read downloads the specified Release to the local cache dir and returns a
+// reader to the underyling release package.
+func (r *Release) Read(releaseLocation string) (io.ReadCloser, error) {
+	local, err := r.Pull(releaseLocation)
+	if err != nil {
+		return nil, err
+	}
+	rr, err := os.Open(local)
+	if err != nil {
+		return nil, err
+	}
+	return rr, nil
+}
+
 // Pull downloads the specified Release to the local cache dir
 func (r *Release) Pull(releaseLocation string) (filename string, err error) {
 	u, uerr := url.Parse(releaseLocation)
