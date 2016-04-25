@@ -5,34 +5,15 @@ package groundcrew
 */
 type Groundcrew struct {
 
-	/*NoProxy - Descr: A list domains and IPs with optional port for which the proxy should be bypassed, e.g. [localhost, 127.0.0.1, example.com, domain.com:8080]
- Default: []
+	/*Platform - Descr: Platform to advertise for each worker.
+ Default: linux
 */
-	NoProxy interface{} `yaml:"no_proxy,omitempty"`
+	Platform interface{} `yaml:"platform,omitempty"`
 
-	/*ResourceTypes - Descr: Resource types supported by the workers, in `[{type: string, image: string}]` form.
- Default: [map[type:archive image:/var/vcap/packages/archive_resource] map[type:cf image:/var/vcap/packages/cf_resource] map[image:/var/vcap/packages/docker_image_resource type:docker-image] map[type:git image:/var/vcap/packages/git_resource] map[type:s3 image:/var/vcap/packages/s3_resource] map[image:/var/vcap/packages/semver_resource type:semver] map[type:time image:/var/vcap/packages/time_resource] map[type:tracker image:/var/vcap/packages/tracker_resource] map[type:pool image:/var/vcap/packages/pool_resource] map[type:vagrant-cloud image:/var/vcap/packages/vagrant_cloud_resource] map[type:github-release image:/var/vcap/packages/github_release_resource] map[type:bosh-io-release image:/var/vcap/packages/bosh_io_release_resource] map[image:/var/vcap/packages/bosh_io_stemcell_resource type:bosh-io-stemcell] map[type:bosh-deployment image:/var/vcap/packages/bosh_deployment_resource]]
+	/*HttpProxyUrl - Descr: Proxy to use for outgoing http requests from containers.
+ Default: <nil>
 */
-	ResourceTypes interface{} `yaml:"resource_types,omitempty"`
-
-	/*AdditionalResourceTypes - Descr: Additional resource types that will be merged into resource_types. The
-same format is used.
- Default: []
-*/
-	AdditionalResourceTypes interface{} `yaml:"additional_resource_types,omitempty"`
-
-	/*Tsa - Descr: Port of the TSA server to register with.
-
-Only used when `tsa.host` is also specified. Otherwise the port is
-autodiscovered via the `tsa` link.
- Default: 2222
-*/
-	Tsa Tsa `yaml:"tsa,omitempty"`
-
-	/*Yeller - Descr: Environment name you wish to group errors under in yeller.
- Default: 
-*/
-	Yeller Yeller `yaml:"yeller,omitempty"`
+	HttpProxyUrl interface{} `yaml:"http_proxy_url,omitempty"`
 
 	/*Baggageclaim - Descr: Baggageclaim server connection address to forward through SSH to the TSA.
 
@@ -41,10 +22,37 @@ If not specified, the Baggageclaim server address is registered directly.
 */
 	Baggageclaim Baggageclaim `yaml:"baggageclaim,omitempty"`
 
-	/*Platform - Descr: Platform to advertise for each worker.
- Default: linux
+	/*Yeller - Descr: Environment name you wish to group errors under in yeller.
+ Default: 
 */
-	Platform interface{} `yaml:"platform,omitempty"`
+	Yeller Yeller `yaml:"yeller,omitempty"`
+
+	/*AdditionalResourceTypes - Descr: Additional resource types that will be merged into resource_types. The
+same format is used.
+ Default: []
+*/
+	AdditionalResourceTypes interface{} `yaml:"additional_resource_types,omitempty"`
+
+	/*HttpsProxyUrl - Descr: Proxy to use for outgoing https requests from containers.
+ Default: <nil>
+*/
+	HttpsProxyUrl interface{} `yaml:"https_proxy_url,omitempty"`
+
+	/*Tsa - Descr: Private key to use when authenticating with the TSA.
+If not specified, a deployment-scoped default is used.
+ Default: 
+*/
+	Tsa Tsa `yaml:"tsa,omitempty"`
+
+	/*Tags - Descr: An array of tags to advertise for each worker.
+ Default: []
+*/
+	Tags interface{} `yaml:"tags,omitempty"`
+
+	/*ResourceTypes - Descr: Resource types supported by the workers, in `[{type: string, image: string}]` form.
+ Default: [map[type:archive image:/var/vcap/packages/archive_resource] map[type:cf image:/var/vcap/packages/cf_resource] map[type:docker-image image:/var/vcap/packages/docker_image_resource] map[type:git image:/var/vcap/packages/git_resource] map[type:s3 image:/var/vcap/packages/s3_resource] map[type:semver image:/var/vcap/packages/semver_resource] map[type:time image:/var/vcap/packages/time_resource] map[type:tracker image:/var/vcap/packages/tracker_resource] map[type:pool image:/var/vcap/packages/pool_resource] map[type:vagrant-cloud image:/var/vcap/packages/vagrant_cloud_resource] map[type:github-release image:/var/vcap/packages/github_release_resource] map[type:bosh-io-release image:/var/vcap/packages/bosh_io_release_resource] map[image:/var/vcap/packages/bosh_io_stemcell_resource type:bosh-io-stemcell] map[type:bosh-deployment image:/var/vcap/packages/bosh_deployment_resource]]
+*/
+	ResourceTypes interface{} `yaml:"resource_types,omitempty"`
 
 	/*Garden - Descr: Garden server connection address to advertise directly to the TSA.
 
@@ -55,19 +63,9 @@ found.
 */
 	Garden Garden `yaml:"garden,omitempty"`
 
-	/*HttpProxyUrl - Descr: Proxy to use for outgoing http requests from containers.
- Default: <nil>
-*/
-	HttpProxyUrl interface{} `yaml:"http_proxy_url,omitempty"`
-
-	/*Tags - Descr: An array of tags to advertise for each worker.
+	/*NoProxy - Descr: A list domains and IPs with optional port for which the proxy should be bypassed, e.g. [localhost, 127.0.0.1, example.com, domain.com:8080]
  Default: []
 */
-	Tags interface{} `yaml:"tags,omitempty"`
-
-	/*HttpsProxyUrl - Descr: Proxy to use for outgoing https requests from containers.
- Default: <nil>
-*/
-	HttpsProxyUrl interface{} `yaml:"https_proxy_url,omitempty"`
+	NoProxy interface{} `yaml:"no_proxy,omitempty"`
 
 }

@@ -5,15 +5,15 @@ package baggageclaim
 */
 type Yeller struct {
 
+	/*EnvironmentName - Descr: Environment name to specify for errors emitted to Yeller.
+ Default: 
+*/
+	EnvironmentName interface{} `yaml:"environment_name,omitempty"`
+
 	/*ApiKey - Descr: If configured, errors emitted to the logs will also be emitted to Yeller.
 This is only really useful for Concourse developers.
  Default: 
 */
 	ApiKey interface{} `yaml:"api_key,omitempty"`
-
-	/*EnvironmentName - Descr: Environment name to specify for errors emitted to Yeller.
- Default: 
-*/
-	EnvironmentName interface{} `yaml:"environment_name,omitempty"`
 
 }

@@ -5,14 +5,14 @@ package atc
 */
 type Role struct {
 
-	/*Name - Descr: Name of role to connect with.
- Default: atc
-*/
-	Name interface{} `yaml:"name,omitempty"`
-
 	/*Password - Descr: Password to use when connecting.
  Default: <nil>
 */
 	Password interface{} `yaml:"password,omitempty"`
+
+	/*Name - Descr: Name of role to connect with.
+ Default: atc
+*/
+	Name interface{} `yaml:"name,omitempty"`
 
 }

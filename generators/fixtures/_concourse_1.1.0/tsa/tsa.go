@@ -5,6 +5,11 @@ package tsa
 */
 type Tsa struct {
 
+	/*Yeller - Descr: Environment name to specify for errors emitted to Yeller.
+ Default: 
+*/
+	Yeller Yeller `yaml:"yeller,omitempty"`
+
 	/*HostPublicKey - Descr: Public key component of the host's key. This property is exported via the `tsa` link so that workers can discover it.
  Default: 
 */
@@ -14,6 +19,13 @@ type Tsa struct {
  Default: []
 */
 	AuthorizedKeys interface{} `yaml:"authorized_keys,omitempty"`
+
+	/*AuthorizeGeneratedWorkerKey - Descr: Permit access via generated worker key, local to the deployment. Set to
+`false` if you plan on only ever using explicitly configured and
+authorized worker keys.
+ Default: true
+*/
+	AuthorizeGeneratedWorkerKey interface{} `yaml:"authorize_generated_worker_key,omitempty"`
 
 	/*HeartbeatInterval - Descr: Interval on which to register workers with the ATC.
  Default: 30s
@@ -26,19 +38,6 @@ If not specified, the instance's address is used.
  Default: <nil>
 */
 	ForwardHost interface{} `yaml:"forward_host,omitempty"`
-
-	/*AuthorizeGeneratedWorkerKey - Descr: Permit access via generated worker key, local to the deployment. Set to
-`false` if you plan on only ever using explicitly configured and
-authorized worker keys.
- Default: true
-*/
-	AuthorizeGeneratedWorkerKey interface{} `yaml:"authorize_generated_worker_key,omitempty"`
-
-	/*Yeller - Descr: If configured, errors emitted to the logs will also be emitted to Yeller.
-This is only really useful for Concourse developers.
- Default: 
-*/
-	Yeller Yeller `yaml:"yeller,omitempty"`
 
 	/*BindPort - Descr: Port on which to listen for SSH connections.
  Default: 2222

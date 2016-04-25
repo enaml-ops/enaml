@@ -10,9 +10,4 @@ type Blackbox struct {
 */
 	Syslog Syslog `yaml:"syslog,omitempty"`
 
-	/*Blackbox - Descr: directory with subdirectories containing log files. log lines will be tagged with subdirectory name.
- Default: /var/vcap/sys/log
-*/
-	Blackbox Blackbox `yaml:"blackbox,omitempty"`
-
 }

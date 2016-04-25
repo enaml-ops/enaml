@@ -19,16 +19,11 @@ with the actual value).
 */
 	TokenUrl interface{} `yaml:"token_url,omitempty"`
 
-	/*AuthUrl - Descr: Override default OAuth endpoint for Github Enterprise.
+	/*ApiUrl - Descr: Override default API endpoint URL for Github Enterprise. Must end in a
+trailing slash.
  Default: <nil>
 */
-	AuthUrl interface{} `yaml:"auth_url,omitempty"`
-
-	/*Authorize - Descr: An array of different criteria to check for when authorizing a GitHub
-user. If empty, GitHub authorization is effectively disabled.
- Default: []
-*/
-	Authorize interface{} `yaml:"authorize,omitempty"`
+	ApiUrl interface{} `yaml:"api_url,omitempty"`
 
 	/*ClientSecret - Descr: GitHub client secret to use for OAuth.
 
@@ -39,10 +34,15 @@ with the actual value).
 */
 	ClientSecret interface{} `yaml:"client_secret,omitempty"`
 
-	/*ApiUrl - Descr: Override default API endpoint URL for Github Enterprise. Must end in a
-trailing slash.
+	/*AuthUrl - Descr: Override default OAuth endpoint for Github Enterprise.
  Default: <nil>
 */
-	ApiUrl interface{} `yaml:"api_url,omitempty"`
+	AuthUrl interface{} `yaml:"auth_url,omitempty"`
+
+	/*Authorize - Descr: An array of different criteria to check for when authorizing a GitHub
+user. If empty, GitHub authorization is effectively disabled.
+ Default: []
+*/
+	Authorize interface{} `yaml:"authorize,omitempty"`
 
 }
