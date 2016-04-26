@@ -25,7 +25,21 @@ var _ = Describe("Differ", func() {
 			It("should not have errored", func() {
 				Expect(err).NotTo(HaveOccurred())
 			})
+			It("should have differences", func() {
+				Expect(len(result.Deltas)).To(BeNumerically(">", 0))
+			})
+		})
+		Context("Redis PivNet release 1.4.0 compared to 1.5.0", func() {
+			BeforeEach(func() {
+				releaseRepo := pull.Release{CacheDir: "./cache"}
+				differ, err = New(releaseRepo, "./fixtures/p-redis-1.4.0.pivotal", "./fixtures/p-redis-1.5.0.pivotal")
+				Expect(err).NotTo(HaveOccurred())
+				result, err = differ.Diff()
+			})
 			It("should not have errored", func() {
+				Expect(err).NotTo(HaveOccurred())
+			})
+			It("should have differences", func() {
 				Expect(len(result.Deltas)).To(BeNumerically(">", 0))
 			})
 		})
