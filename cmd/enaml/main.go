@@ -24,7 +24,7 @@ func init() {
 
 const (
 	CacheDir  = ".cache"
-	OutputDir = "./releasejobs"
+	OutputDir = "./enaml-gen"
 )
 
 var (
