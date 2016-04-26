@@ -59,7 +59,7 @@ func newStructName(i int, v record, packagename string) (structname string) {
 
 func newTypeName(i int, v record) (typename string) {
 	if i+1 < v.Length {
-		typename = FormatName(v.Slice[i])
+		typename = "*" + FormatName(v.Slice[i])
 	} else {
 		typename = "interface{}"
 	}
