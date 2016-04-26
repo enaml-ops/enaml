@@ -12,7 +12,7 @@
 **below is a repo showing how one might leverage the enaml primatives and
 helpers**
 
-[ENAML - CONCOURSE](github.com/xchapter7x/enaml-concourse-sample)
+[ENAML - CONCOURSE](https://github.com/xchapter7x/enaml-concourse-sample)
 
 
 ### how to use enaml as a cli
