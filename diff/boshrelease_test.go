@@ -18,8 +18,7 @@ var _ = Describe("Boshrelease", func() {
 		BeforeEach(func() {
 			f, err := os.Open("./fixtures/redis-boshrelease-12.tgz")
 			Expect(err).NotTo(HaveOccurred())
-			release = newBoshRelease()
-			err = release.readBoshRelease(f)
+			release, err = readBoshRelease(f)
 		})
 		It("should not have errored", func() {
 			Expect(err).NotTo(HaveOccurred())

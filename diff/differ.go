@@ -32,10 +32,14 @@ func New(releaseRepo pull.Release, r1Path, r2Path string) (differ Differ, err er
 			R2Path:      r2Path,
 		}
 	} else {
-		differ = boshReleaseDiffer{
-			ReleaseRepo: releaseRepo,
-			R1Path:      r1Path,
-			R2Path:      r2Path,
+		var r1, r2 *boshRelease
+		if r1, err = loadBoshRelease(releaseRepo, r1Path); err == nil {
+			if r2, err = loadBoshRelease(releaseRepo, r2Path); err == nil {
+				differ = boshReleaseDiffer{
+					release1: r1,
+					release2: r2,
+				}
+			}
 		}
 	}
 	return

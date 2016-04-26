@@ -5,6 +5,7 @@ import (
 
 	"github.com/xchapter7x/enaml"
 	"github.com/xchapter7x/enaml/pkg"
+	"github.com/xchapter7x/enaml/pull"
 )
 
 // boshRelease wraps a release manifest and its job manifests neatly together.
@@ -13,11 +14,31 @@ type boshRelease struct {
 	JobManifests    map[string]enaml.JobManifest
 }
 
-// newBoshRelease creates a new empty boshRelease struct
-func newBoshRelease() *boshRelease {
-	return &boshRelease{
+// loadBoshRelease creates an initialized boshRelease instance from the
+// specifed local or remote .tgz file
+func loadBoshRelease(releaseRepo pull.Release, path string) (release *boshRelease, err error) {
+	var rr io.ReadCloser
+	rr, err = releaseRepo.Read(path)
+	if err != nil {
+		return
+	}
+	defer func() {
+		if cerr := rr.Close(); cerr != nil {
+			err = cerr
+		}
+	}()
+	release, err = readBoshRelease(rr)
+	return
+}
+
+// readBoshRelease creates an initialized boshRelease instance from the
+// specifed .tgz reader
+func readBoshRelease(rr io.Reader) (*boshRelease, error) {
+	release := &boshRelease{
 		JobManifests: make(map[string]enaml.JobManifest),
 	}
+	err := release.readBoshRelease(rr)
+	return release, err
 }
 
 // readBoshRelease reads a bosh release out of the given reader into a new
