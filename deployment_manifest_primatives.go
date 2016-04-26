@@ -8,7 +8,7 @@ type DeploymentManifest struct {
 	Name           string              `yaml:"name"`
 	DirectorUUID   string              `yaml:"director_uuid,omitempty"`
 	Releases       []Release           `yaml:"releases,omitempty"`
-	Stemcells      []Stemcell          `yaml:"stemcells",omitempty`
+	Stemcells      []Stemcell          `yaml:"stemcells,omitempty"`
 	InstanceGroups []*InstanceGroup    `yaml:"instance_groups,omitempty"`
 	Networks       []DeploymentNetwork `yaml:"networks,omitempty"`
 	ResourcePools  []ResourcePool      `yaml:"resource_pools,omitempty"`
