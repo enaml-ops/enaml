@@ -14,7 +14,7 @@ func (s *InstanceGroup) AddAZ(az string) (err error) {
 	return
 }
 
-func (s *InstanceGroup) AddNetwork(network InstanceGroupNetwork) (err error) {
+func (s *InstanceGroup) AddNetwork(network Network) (err error) {
 	s.Networks = append(s.Networks, network)
 	return
 }

@@ -61,7 +61,7 @@ func NewDeployment() (d Deployment) {
 	d.Manifest.AddStemcellByName("ubuntu-trusty", StemcellAlias)
 	web := enaml.NewInstanceGroup("web", 1, "web", StemcellAlias)
 	web.AddAZ("z1")
-	web.AddNetwork(enaml.InstanceGroupNetwork{"name": "private"})
+	web.AddNetwork(enaml.Network{"name": "private"})
 	atc := enaml.NewInstanceJob("atc", "concourse", releasejobs.Atc{
 		ExternalUrl:        "something",
 		BasicAuthUsername:  "user",

@@ -4,7 +4,7 @@ instance_groups:
   vm_type: fake-string
   stemcell: fake-string
   azs: [fake-string]
-  networks: [{fake-string: fake-string}]
+  networks: [{name: fake-string}]
   jobs:
   - name: fake-string
     release: fake-string
