@@ -19,7 +19,7 @@ var _ = Describe("Walker", func() {
 		Context("redis-boshrelease-1.tgz", func() {
 			var file FileEntry
 			BeforeEach(func() {
-				walker = NewWalker(readFixtureFile("redis-boshrelease-1.tgz"))
+				walker = NewTgzWalker(readFixtureFile("redis-boshrelease-1.tgz"))
 			})
 			JustBeforeEach(func() {
 				err = walker.Walk()
@@ -53,14 +53,14 @@ var _ = Describe("Walker", func() {
 		Context("p-redis-1.5.0.pivotal", func() {
 			var file FileEntry
 			BeforeEach(func() {
-				walker = NewWalker(readFixtureFile("p-redis-1.5.0.pivotal"))
+				walker = NewZipWalker("./fixtures/p-redis-1.5.0.pivotal")
 			})
 			JustBeforeEach(func() {
 				err = walker.Walk()
 			})
 			Context("When matching releases dir", func() {
 				BeforeEach(func() {
-					walker.OnMatch("/releases/", func(f FileEntry) error {
+					walker.OnMatch("releases/", func(f FileEntry) error {
 						file = f
 						return nil
 					})
@@ -69,7 +69,7 @@ var _ = Describe("Walker", func() {
 					Expect(err).NotTo(HaveOccurred())
 				})
 				It("Calls back with redis-boshrelease-12.tgz", func() {
-					Expect(file.FileName).To(Equal("./releases/redis-boshrelease-12.tgz"))
+					Expect(file.FileName).To(Equal("releases/redis-boshrelease-12.tgz"))
 				})
 			})
 		})

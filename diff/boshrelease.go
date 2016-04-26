@@ -23,7 +23,7 @@ func newBoshRelease() *boshRelease {
 // readBoshRelease reads a bosh release out of the given reader into a new
 // boshRelease struct
 func (r *boshRelease) readBoshRelease(rr io.Reader) error {
-	w := pkg.NewWalker(rr)
+	w := pkg.NewTgzWalker(rr)
 	w.OnMatch("release.MF", func(file pkg.FileEntry) error {
 		return decodeYaml(file.Reader, &r.ReleaseManifest)
 	})
@@ -42,7 +42,7 @@ func (r *boshRelease) readBoshRelease(rr io.Reader) error {
 // JobManifest struct
 func (r *boshRelease) readBoshJob(jr io.Reader) (enaml.JobManifest, error) {
 	var job enaml.JobManifest
-	jw := pkg.NewWalker(jr)
+	jw := pkg.NewTgzWalker(jr)
 	jw.OnMatch("job.MF", func(file pkg.FileEntry) error {
 		return decodeYaml(file.Reader, &job)
 	})

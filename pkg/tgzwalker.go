@@ -13,7 +13,8 @@ type tgzWalker struct {
 	callbacks map[*regexp.Regexp]WalkFunc
 }
 
-func newTgzWalker(pkgReader io.Reader) Walker {
+// NewTgzWalker creates a new Walker instance that can read a .tgz stream
+func NewTgzWalker(pkgReader io.Reader) Walker {
 	return tgzWalker{
 		pkgReader: pkgReader,
 		callbacks: make(map[*regexp.Regexp]WalkFunc),

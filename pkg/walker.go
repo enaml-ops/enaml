@@ -18,9 +18,3 @@ type Walker interface {
 	OnMatch(regexExpr string, fn WalkFunc)
 	Walk() error
 }
-
-// NewWalker creates a new package Walker instance.
-func NewWalker(pkgReader io.Reader) Walker {
-	// for now assume .tgz package type
-	return newTgzWalker(pkgReader)
-}
