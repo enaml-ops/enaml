@@ -1,18 +1,14 @@
 package enaml
 
-import (
-	"fmt"
+import "gopkg.in/yaml.v2"
 
-	"gopkg.in/yaml.v2"
-)
-
-func Paint(deployment Deployment) {
+//Paint -
+func Paint(deployment Deployment) (result string, err error) {
 	var deploymentManifest DeploymentManifest
 	deploymentManifest = deployment.GetDeployment()
-
-	if dmYaml, err := yaml.Marshal(deploymentManifest); err != nil {
-		panic(fmt.Sprintf("couldnt parse deployment manifest: ", err))
-	} else {
-		fmt.Println(string(dmYaml))
+	var dmYaml []byte
+	if dmYaml, err = yaml.Marshal(deploymentManifest); err == nil {
+		result = string(dmYaml)
 	}
+	return
 }
