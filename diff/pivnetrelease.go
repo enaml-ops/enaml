@@ -8,11 +8,11 @@ import (
 // pivnetRelease wraps a .pivotal release and all of its contained BOSH
 // releases and jobs
 type pivnetRelease struct {
-	boshRelease []*boshRelease
+	boshRelease map[string]*boshRelease
 }
 
 // loadPivnetRelease creates an initialized pivnetRelease instance from the
-// specifed .pivotal file.
+// specified .pivotal file.
 func loadPivnetRelease(releaseRepo pull.Release, path string) (release *pivnetRelease, err error) {
 	release = &pivnetRelease{}
 	var localPath string
@@ -20,7 +20,9 @@ func loadPivnetRelease(releaseRepo pull.Release, path string) (release *pivnetRe
 	if err != nil {
 		return
 	}
-	release = &pivnetRelease{}
+	release = &pivnetRelease{
+		boshRelease: make(map[string]*boshRelease),
+	}
 	err = release.readPivnetRelease(localPath)
 	return
 }
@@ -34,7 +36,7 @@ func (r *pivnetRelease) readPivnetRelease(path string) error {
 		if berr != nil {
 			return berr
 		}
-		r.boshRelease = append(r.boshRelease, br)
+		r.boshRelease[br.ReleaseManifest.Name] = br
 		return nil
 	})
 	return walker.Walk()

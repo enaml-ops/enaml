@@ -20,9 +20,10 @@ var _ = Describe("Pivnetrelease", func() {
 		It("should not have errored", func() {
 			Expect(err).NotTo(HaveOccurred())
 		})
-		It("should contain the redis BOSH release", func() {
+		It("should contain only the redis BOSH release", func() {
 			Expect(release.boshRelease).To(HaveLen(1))
-			Expect(release.boshRelease[0].ReleaseManifest.Name).To(Equal("redis"))
+			Expect(release.boshRelease).To(HaveKey("redis"))
+			Expect(release.boshRelease["redis"].ReleaseManifest.Name).To(Equal("redis"))
 		})
 	})
 })
