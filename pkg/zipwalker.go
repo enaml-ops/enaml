@@ -2,7 +2,6 @@ package pkg
 
 import (
 	"archive/zip"
-	"fmt"
 	"regexp"
 )
 
@@ -36,7 +35,6 @@ func (z zipWalker) Walk() error {
 	}
 	for _, zipFile := range zr.File {
 		if !zipFile.FileInfo().IsDir() {
-			fmt.Println(zipFile.Name)
 			for regex, fn := range z.callbacks {
 				if regex.MatchString(zipFile.Name) {
 					r, err := zipFile.Open()
