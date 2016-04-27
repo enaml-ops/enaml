@@ -26,10 +26,14 @@ func New(releaseRepo pull.Release, r1Path, r2Path string) (differ Differ, err er
 		return
 	}
 	if filepath.Ext(r1Path) == ".pivotal" {
-		differ = pivnetReleaseDiffer{
-			ReleaseRepo: releaseRepo,
-			R1Path:      r1Path,
-			R2Path:      r2Path,
+		var r1, r2 *pivnetRelease
+		if r1, err = loadPivnetRelease(releaseRepo, r1Path); err == nil {
+			if r2, err = loadPivnetRelease(releaseRepo, r2Path); err == nil {
+				differ = pivnetReleaseDiffer{
+					release1: r1,
+					release2: r2,
+				}
+			}
 		}
 	} else {
 		var r1, r2 *boshRelease
