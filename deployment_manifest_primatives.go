@@ -25,15 +25,16 @@ type DeploymentManifest struct {
 }
 
 type InstanceGroup struct {
-	Name           string        `yaml:"name"`
-	ResourcePool   string        `yaml:"resource_pool,omitempty"`
-	PersistentDisk int           `yaml:"persistent_disk,omitempty"`
-	Instances      int           `yaml:"instances"`
-	VMType         string        `yaml:"vm_type,omitempty"`
-	Stemcell       string        `yaml:"stemcell,omitempty"`
-	AZs            []string      `yaml:"azs,flow,omitempty"`
-	Networks       []Network     `yaml:"networks,flow"`
-	Jobs           []InstanceJob `yaml:"jobs"`
+	Name               string        `yaml:"name"`
+	ResourcePool       string        `yaml:"resource_pool,omitempty"`
+	PersistentDisk     int           `yaml:"persistent_disk,omitempty"`
+	PersistentDiskType string        `yaml:"persistent_disk_type,omitempty"`
+	Instances          int           `yaml:"instances"`
+	VMType             string        `yaml:"vm_type,omitempty"`
+	Stemcell           string        `yaml:"stemcell,omitempty"`
+	AZs                []string      `yaml:"azs,flow,omitempty"`
+	Networks           []Network     `yaml:"networks,flow"`
+	Jobs               []InstanceJob `yaml:"jobs"`
 }
 
 type InstanceJob struct {
