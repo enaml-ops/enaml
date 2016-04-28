@@ -4,6 +4,7 @@ networks:
   subnets:
   - range: fake-string
     gateway: fake-string
-    dns: fake-string
+    dns:
+    - fake-string
     cloud_properties:
       name: fake-string

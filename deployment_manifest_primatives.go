@@ -52,6 +52,13 @@ type Release struct {
 	SHA1    string `yaml:"sha1,omitempty"`
 }
 
+func NewVIPNetwork(name string) VIPNetwork {
+	return VIPNetwork{
+		Name: name,
+		Type: "vip",
+	}
+}
+
 type VIPNetwork struct {
 	Name            string          `yaml:"name"`
 	Type            string          `yaml:"type"`
@@ -65,21 +72,51 @@ type DynamicNetwork struct {
 	CloudProperties CloudProperties `yaml:"cloud_properties"`
 }
 
+func NewManualNetwork(name string) ManualNetwork {
+	return ManualNetwork{
+		Name: name,
+		Type: "manual",
+	}
+}
+
 type ManualNetwork struct {
 	Name    string   `yaml:"name"`
 	Type    string   `yaml:"type"`
 	Subnets []Subnet `yaml:"subnets"`
 }
 
+func (s *ManualNetwork) AddSubnet(subnet Subnet) (err error) {
+	s.Subnets = append(s.Subnets, subnet)
+	return
+}
+
+func NewSubnet(octet string, azName string) Subnet {
+	return Subnet{
+		Range:   octet + ".0/24",
+		Gateway: octet + ".1",
+		AZ:      azName,
+	}
+}
+
 type Subnet struct {
 	Range           string          `yaml:"range,omitempty"`
 	Gateway         string          `yaml:"gateway,omitempty"`
-	DNS             string          `yaml:"dns,omitempty"`
+	DNS             []string        `yaml:"dns,omitempty"`
 	Reserved        []string        `yaml:"reserved,omitempty"`
 	Static          []string        `yaml:"static,omitempty"`
 	AZ              string          `yaml:"az,omitempty"`
 	AZs             []string        `yaml:"azs,omitempty"`
 	CloudProperties CloudProperties `yaml:"cloud_properties"`
+}
+
+func (s *Subnet) AddDNS(dns string) (err error) {
+	s.DNS = append(s.DNS, dns)
+	return
+}
+
+func (s *Subnet) AddReserved(rsv string) (err error) {
+	s.Reserved = append(s.Reserved, rsv)
+	return
 }
 
 type ResourcePool struct {

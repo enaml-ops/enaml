@@ -125,7 +125,7 @@ var _ = Describe("DeploymentManifest Primatives", func() {
 					Subnets: []Subnet{
 						Subnet{
 							Range:   fakeString,
-							DNS:     fakeString,
+							DNS:     []string{fakeString},
 							Gateway: fakeString,
 							CloudProperties: CloudProperties{
 								"name": fakeString,

@@ -55,7 +55,7 @@ func NewFooNetwork(networkName string) DeploymentNetwork {
 		Subnets: []Subnet{
 			Subnet{
 				Range:   "10.0.0.0/24",
-				DNS:     "10.0.0.2",
+				DNS:     []string{"10.0.0.2"},
 				Gateway: "10.0.0.1",
 				CloudProperties: CloudProperties{
 					"name": "NETWORK_NAME",

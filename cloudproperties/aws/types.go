@@ -1,7 +1,8 @@
 package awscloudproperties
 
 type AZ struct {
-	AvailabilityZoneName string `yaml:"availability_zone,omitempty"`
+	AvailabilityZoneName string   `yaml:"availability_zone,omitempty"`
+	SecurityGroups       []string `yaml:"security_groups,omitempty"`
 }
 
 type Network struct {
