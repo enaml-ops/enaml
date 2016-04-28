@@ -8,6 +8,10 @@ type CloudConfigManifest struct {
 	Compilation *Compilation        `yaml:"compilation,omitempty"`
 }
 
+func (s *CloudConfigManifest) GetManifest() CloudConfigManifest {
+	return *s
+}
+
 type VMType struct {
 	Name            string      `yaml:"name:omitempty"`
 	CloudProperties interface{} `yaml:"cloud_properties,omitempty"`

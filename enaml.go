@@ -12,3 +12,14 @@ func Paint(deployment Deployment) (result string, err error) {
 	}
 	return
 }
+
+//Cloud -
+func Cloud(config CloudConfig) (result string, err error) {
+	var cloudConfigManifest CloudConfigManifest
+	cloudConfigManifest = config.GetManifest()
+	var ccfgYaml []byte
+	if ccfgYaml, err = yaml.Marshal(cloudConfigManifest); err == nil {
+		result = string(ccfgYaml)
+	}
+	return
+}

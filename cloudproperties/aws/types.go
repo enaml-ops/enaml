@@ -22,7 +22,7 @@ type ResourcePool struct {
 	PlacementGroup        string        `yaml:"placement_group,omitempty"`        // [String, optional]: Name of a placement group. Example: my-group.
 	Tenancy               string        `yaml:"tenancy,omitempty"`                // [String, optional]: VM tenancy configuration. Example: dedicated. Default is default.
 	RawInstanceStorage    bool          `yaml:"raw_instance_storage,omitempty"`   // [Boolean, optional]: Exposes all available instance storage via labeled disks. Defaults to false.
-	EphemeralDisk         EphemeralDisk `yaml:"ephemeral_disk,omitempty"`         //EBS backed ephemeral disk of custom size for when instance storage is not large enough or not available for selected instance type.
+	EphemeralDisk         EphemeralDisk `yaml:"ephemeral_disk,omitempty,flow"`    //EBS backed ephemeral disk of custom size for when instance storage is not large enough or not available for selected instance type.
 	RootDisk              RootDisk      `yaml:"root_disk,omitempty"`              // [Hash, optional]: EBS backed root disk of custom size.
 }
 
@@ -33,7 +33,7 @@ type RootDisk struct {
 
 type EphemeralDisk struct {
 	Size     int    `yaml:"size,omitempty"` //size [Integer, required]: Specifies the disk size in megabytes.
-	DiskType string `yaml"type,omitempty"`  // [String, optional]: Type of the disk: standard, gp2. Defaults to standard.
+	DiskType string `yaml:"type,omitempty"` // [String, optional]: Type of the disk: standard, gp2. Defaults to standard.
 	/*
 		standard stands for EBS magnetic drives
 		gp2 stands for EBS general purpose drives (SSD)

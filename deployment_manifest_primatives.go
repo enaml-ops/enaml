@@ -4,6 +4,10 @@ type Deployment interface {
 	GetDeployment() DeploymentManifest
 }
 
+type CloudConfig interface {
+	GetManifest() CloudConfigManifest
+}
+
 type DeploymentManifest struct {
 	Name           string              `yaml:"name"`
 	DirectorUUID   string              `yaml:"director_uuid,omitempty"`
