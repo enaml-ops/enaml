@@ -9,6 +9,7 @@ type Network struct {
 	SecurityGroups []string `yaml:"security_groups,omitempty"`
 }
 
+type VMType ResourcePool
 type ResourcePool struct {
 	InstanceType          string        `yaml:"instance_type,omitempty"`          // [String, required]: Type of the instance. Example: m3.medium.
 	AvailabilityZone      string        `yaml:"availability_zone,omitempty"`      // [String, required]: Availability zone to use for creating instances. Example: us-east-1a.
