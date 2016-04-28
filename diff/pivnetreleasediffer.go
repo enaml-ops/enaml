@@ -1,11 +1,17 @@
 package diff
 
-import "github.com/xchapter7x/enaml/release"
+import (
+	"errors"
+
+	"github.com/xchapter7x/enaml/release"
+)
 
 type pivnetReleaseDiffer struct {
 	release1 *release.PivnetRelease
 	release2 *release.PivnetRelease
 }
+
+var errSkipDiff = errors.New("skip diffing this release")
 
 func (d pivnetReleaseDiffer) Diff() (*Result, error) {
 	return d.doDiff(func(brd boshReleaseDiffer) (*Result, error) {
@@ -15,6 +21,12 @@ func (d pivnetReleaseDiffer) Diff() (*Result, error) {
 
 func (d pivnetReleaseDiffer) DiffJob(job string) (*Result, error) {
 	return d.doDiff(func(brd boshReleaseDiffer) (*Result, error) {
+		// don't diff a job between relases if it doesn't exist in either release
+		if _, ok := brd.release1.JobManifests[job]; !ok {
+			if _, ok := brd.release2.JobManifests[job]; !ok {
+				return nil, errSkipDiff
+			}
+		}
 		return brd.DiffJob(job)
 	})
 }
@@ -32,6 +44,9 @@ func (d pivnetReleaseDiffer) doDiff(fn diffFunc) (*Result, error) {
 		}
 		boshDiffResult, err := fn(boshDiffer)
 		if err != nil {
+			if err == errSkipDiff {
+				continue
+			}
 			return nil, err
 		}
 		result.Concat(boshDiffResult)
