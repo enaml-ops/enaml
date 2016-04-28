@@ -7,6 +7,7 @@ import (
 	"github.com/codegangsta/cli"
 	"github.com/xchapter7x/enaml/diff"
 	"github.com/xchapter7x/enaml/generators"
+	"github.com/xchapter7x/enaml/pull"
 	"github.com/xchapter7x/lo"
 )
 
@@ -52,9 +53,10 @@ func main() {
 			Aliases: []string{"dr"},
 			Usage:   "show a diff between 2 releases given",
 			Action: func(c *cli.Context) {
-				diff := diff.NewDiff(cacheDir)
-				diffset, err := diff.ReleaseDiff(c.Args()[0], c.Args()[1])
-				displayDiffAndExit(diffset, err)
+				releaseRepo := pull.Release{CacheDir: cacheDir}
+				differ, err := diff.New(releaseRepo, c.Args()[0], c.Args()[1])
+				result, err := differ.Diff()
+				displayDiffAndExit(result.Deltas, err)
 			},
 		},
 		{
@@ -63,9 +65,10 @@ func main() {
 			Usage:       "diff-jobs <jobname> <releaseurl-A> <releaseurl-B>",
 			Description: "show diff between jobs across 2 releases",
 			Action: func(c *cli.Context) {
-				diff := diff.NewDiff(cacheDir)
-				diffset, err := diff.JobDiffBetweenReleases(c.Args()[0], c.Args()[1], c.Args()[2])
-				displayDiffAndExit(diffset, err)
+				releaseRepo := pull.Release{CacheDir: cacheDir}
+				differ, err := diff.New(releaseRepo, c.Args()[1], c.Args()[2])
+				result, err := differ.DiffJob(c.Args()[0])
+				displayDiffAndExit(result.Deltas, err)
 			},
 		},
 	}

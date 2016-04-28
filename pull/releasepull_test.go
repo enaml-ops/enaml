@@ -1,6 +1,7 @@
 package pull_test
 
 import (
+	"io"
 	"os"
 	"path"
 
@@ -66,6 +67,37 @@ var _ = Describe("given Release object", func() {
 
 			It("should have errored", func() {
 				Ω(err).Should(MatchError("Could not pull fixtures/foobar?v=1.0. The file doesn't exist or isn't a valid http(s) URL"))
+			})
+		})
+	})
+
+	Describe("given a Read method", func() {
+		var (
+			release *Release
+			reader  io.ReadCloser
+			err     error
+		)
+
+		Context("when called on a valid release in the cache", func() {
+			var (
+				releaseName       = "concourse?v=1.1.0"
+				controlReleaseURL = "https://bosh.io/d/github.com/concourse/" + releaseName
+				controlCacheDir   = "fixtures"
+			)
+
+			BeforeEach(func() {
+				release = NewRelease(controlCacheDir)
+				reader, err = release.Read(controlReleaseURL)
+			})
+			AfterEach(func() {
+				reader.Close()
+			})
+
+			It("then it should return no errors", func() {
+				Ω(err).ShouldNot(HaveOccurred())
+			})
+			It("then it should return a stream to the package", func() {
+				Ω(reader).ShouldNot(BeNil())
 			})
 		})
 	})
