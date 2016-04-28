@@ -8,6 +8,7 @@ import (
 	"github.com/xchapter7x/enaml/diff"
 	"github.com/xchapter7x/enaml/generators"
 	"github.com/xchapter7x/enaml/pull"
+	"github.com/xchapter7x/enaml/run"
 	"github.com/xchapter7x/lo"
 )
 
@@ -78,10 +79,7 @@ func main() {
 			Description: "show all jobs and properties from the specified release",
 			Action: func(c *cli.Context) {
 				releaseRepo := pull.Release{CacheDir: cacheDir}
-				s := &show{
-					releaseRepo: releaseRepo,
-					release:     c.Args()[0],
-				}
+				s := run.NewShowCmd(releaseRepo, c.Args()[0])
 				err := s.All(os.Stdout)
 				if err != nil {
 					fmt.Println(err.Error())

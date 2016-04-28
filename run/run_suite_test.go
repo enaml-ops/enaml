@@ -1,4 +1,4 @@
-package main_test
+package run_test
 
 import (
 	. "github.com/onsi/ginkgo"
@@ -7,7 +7,7 @@ import (
 	"testing"
 )
 
-func TestEnaml(t *testing.T) {
+func TestRun(t *testing.T) {
 	RegisterFailHandler(Fail)
-	RunSpecs(t, "Enaml Suite")
+	RunSpecs(t, "Run Suite")
 }

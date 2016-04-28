@@ -1,4 +1,4 @@
-package main
+package run_test
 
 import (
 	"bufio"
@@ -7,6 +7,7 @@ import (
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	"github.com/xchapter7x/enaml/pull"
+	. "github.com/xchapter7x/enaml/run"
 )
 
 var _ = Describe("Show", func() {
@@ -17,10 +18,7 @@ var _ = Describe("Show", func() {
 			releaseFile string
 		)
 		JustBeforeEach(func() {
-			s := &show{
-				release:     "../../fixtures/" + releaseFile,
-				releaseRepo: pull.Release{CacheDir: ".cache"},
-			}
+			s := NewShowCmd(pull.Release{CacheDir: ".cache"}, "../fixtures/"+releaseFile)
 			buf.Reset()
 			w := bufio.NewWriter(&buf)
 			err = s.All(w)

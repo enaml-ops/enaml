@@ -1,4 +1,4 @@
-package main
+package run
 
 import (
 	"fmt"
@@ -10,12 +10,22 @@ import (
 	"github.com/xchapter7x/enaml/release"
 )
 
-type show struct {
+// ShowCmd runs the show CLI command
+type ShowCmd struct {
 	releaseRepo pull.Release
 	release     string
 }
 
-func (s *show) All(w io.Writer) error {
+// NewShowCmd creates a new ShowCmd instance.
+func NewShowCmd(releaseRepo pull.Release, release string) *ShowCmd {
+	return &ShowCmd{
+		releaseRepo: releaseRepo,
+		release:     release,
+	}
+}
+
+// All writes out all the release data to writer.
+func (s *ShowCmd) All(w io.Writer) error {
 	if filepath.Ext(s.release) == ".pivotal" {
 		pivnetRelease, err := release.LoadPivnetRelease(s.releaseRepo, s.release)
 		if err != nil {
@@ -34,14 +44,14 @@ func (s *show) All(w io.Writer) error {
 	return nil
 }
 
-func (s *show) printBoshRelease(w io.Writer, br *release.BoshRelease) {
+func (s *ShowCmd) printBoshRelease(w io.Writer, br *release.BoshRelease) {
 	for _, j := range br.JobManifests {
 		s.printBoshJob(w, j, br.ReleaseManifest.Name)
 	}
 	fmt.Fprintln(w)
 }
 
-func (s *show) printBoshJob(w io.Writer, j enaml.JobManifest, boshReleaseName string) {
+func (s *ShowCmd) printBoshJob(w io.Writer, j enaml.JobManifest, boshReleaseName string) {
 	fmt.Fprintln(w, "------------------------------------------------------")
 	fmt.Fprintln(w, fmt.Sprintf("Release: %s", boshReleaseName))
 	fmt.Fprintln(w, fmt.Sprintf("Job:     %s", j.Name))
@@ -54,7 +64,7 @@ func (s *show) printBoshJob(w io.Writer, j enaml.JobManifest, boshReleaseName st
 	fmt.Fprintln(w)
 }
 
-func (s *show) printBoshJobProperty(w io.Writer, p enaml.JobManifestProperty) {
+func (s *ShowCmd) printBoshJobProperty(w io.Writer, p enaml.JobManifestProperty) {
 	if len(p.Description) > 0 {
 		fmt.Fprintln(w, fmt.Sprintf("  Description: %s", p.Description))
 	}
