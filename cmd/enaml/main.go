@@ -77,10 +77,16 @@ func main() {
 			Usage:       "show <releaseurl>",
 			Description: "show all jobs and properties from the specified release",
 			Action: func(c *cli.Context) {
+				releaseRepo := pull.Release{CacheDir: cacheDir}
 				s := &show{
-					release: c.Args()[1],
+					releaseRepo: releaseRepo,
+					release:     c.Args()[0],
 				}
-				s.All(os.Stdout)
+				err := s.All(os.Stdout)
+				if err != nil {
+					fmt.Println(err.Error())
+					os.Exit(1)
+				}
 			},
 		},
 	}
