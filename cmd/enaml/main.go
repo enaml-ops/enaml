@@ -62,7 +62,7 @@ func main() {
 		{
 			Name:        "diff-job",
 			Aliases:     []string{"dj"},
-			Usage:       "diff-jobs <jobname> <releaseurl-A> <releaseurl-B>",
+			Usage:       "diff-job <jobname> <releaseurl-A> <releaseurl-B>",
 			Description: "show diff between jobs across 2 releases",
 			Action: func(c *cli.Context) {
 				releaseRepo := pull.Release{CacheDir: cacheDir}
