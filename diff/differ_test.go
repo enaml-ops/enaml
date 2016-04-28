@@ -1,6 +1,8 @@
 package diff_test
 
 import (
+	"fmt"
+
 	. "github.com/xchapter7x/enaml/diff"
 	"github.com/xchapter7x/enaml/pull"
 
@@ -15,9 +17,12 @@ var _ = Describe("Differ", func() {
 		result Result
 	)
 	Describe("Given a Diff func", func() {
-		Context("Redis BOSH release 1 compared to 12", func() {
+		var releaseRepo pull.Release
+		BeforeEach(func() {
+			releaseRepo = pull.Release{CacheDir: "./cache"}
+		})
+		Context("When comparing BOSH Redis release 1 to 12", func() {
 			BeforeEach(func() {
-				releaseRepo := pull.Release{CacheDir: "./cache"}
 				differ, err = New(releaseRepo, "./fixtures/redis-boshrelease-1.tgz", "./fixtures/redis-boshrelease-12.tgz")
 				Expect(err).NotTo(HaveOccurred())
 				result, err = differ.Diff()
@@ -29,9 +34,8 @@ var _ = Describe("Differ", func() {
 				Expect(len(result.Deltas)).To(BeNumerically(">", 0))
 			})
 		})
-		Context("Redis PivNet release 1.4.0 compared to 1.5.0", func() {
+		Context("When comparing Pivnet Redis release 1.4.0 to 1.5.0", func() {
 			BeforeEach(func() {
-				releaseRepo := pull.Release{CacheDir: "./cache"}
 				differ, err = New(releaseRepo, "./fixtures/p-redis-1.4.0.pivotal", "./fixtures/p-redis-1.5.0.pivotal")
 				Expect(err).NotTo(HaveOccurred())
 				result, err = differ.Diff()
@@ -41,6 +45,35 @@ var _ = Describe("Differ", func() {
 			})
 			It("should have differences", func() {
 				Expect(len(result.Deltas)).To(BeNumerically(">", 0))
+			})
+		})
+		Context("When comparing Pivnet Redis release 1.5.0 to Xip release 2.0.0", func() {
+			BeforeEach(func() {
+				differ, err = New(releaseRepo, "./fixtures/p-redis-1.5.0.pivotal", "./fixtures/p-xip-2.0.0.pivotal")
+				Expect(err).NotTo(HaveOccurred())
+				result, err = differ.Diff()
+			})
+			It("should not error", func() {
+				Expect(err).ToNot(HaveOccurred())
+			})
+			It("should have differences", func() {
+				Expect(len(result.Deltas)).To(BeNumerically(">", 0))
+			})
+		})
+		Context("When comparing Redis job between Pivnet Redis release 1.4.0 and 1.5.0", func() {
+			BeforeEach(func() {
+				differ, err = New(releaseRepo, "./fixtures/p-redis-1.4.0.pivotal", "./fixtures/p-redis-1.5.0.pivotal")
+				Expect(err).NotTo(HaveOccurred())
+				result, err = differ.DiffJob("redis")
+			})
+			It("should not have errored", func() {
+				Expect(err).NotTo(HaveOccurred())
+			})
+			It("should have differences", func() {
+				Expect(len(result.Deltas)).To(BeNumerically(">", 0))
+				for _, d := range result.Deltas {
+					fmt.Println(d)
+				}
 			})
 		})
 	})
