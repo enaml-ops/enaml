@@ -77,7 +77,10 @@ func main() {
 			Usage:       "show <releaseurl>",
 			Description: "show all jobs and properties from the specified release",
 			Action: func(c *cli.Context) {
-				fmt.Println("Not implemented")
+				s := &show{
+					release: c.Args()[1],
+				}
+				s.All(os.Stdout)
 			},
 		},
 	}
