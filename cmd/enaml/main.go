@@ -71,6 +71,15 @@ func main() {
 				displayDiffAndExit(result.Deltas, err)
 			},
 		},
+		{
+			Name:        "show",
+			Aliases:     []string{"sh"},
+			Usage:       "show <releaseurl>",
+			Description: "show all jobs and properties from the specified release",
+			Action: func(c *cli.Context) {
+				fmt.Println("Not implemented")
+			},
+		},
 	}
 	app.Run(os.Args)
 }
