@@ -194,7 +194,7 @@ var _ = Describe("DeploymentManifest Primatives", func() {
 				Workers:             fakeInt,
 				Network:             fakeString,
 				ReuseCompilationVMs: fakeBool,
-				CloudProperties: CloudProperties{
+				CloudProperties: &CloudProperties{
 					"instance_type":     fakeString,
 					"availability_zone": fakeString,
 				},
