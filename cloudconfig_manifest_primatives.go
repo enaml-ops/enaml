@@ -13,12 +13,12 @@ func (s *CloudConfigManifest) GetManifest() CloudConfigManifest {
 }
 
 type VMType struct {
-	Name            string      `yaml:"name:omitempty"`
+	Name            string      `yaml:"name,omitempty"`
 	CloudProperties interface{} `yaml:"cloud_properties,omitempty"`
 }
 
 type AZ struct {
-	Name            string      `yaml:"name:omitempty"`
+	Name            string      `yaml:"name,omitempty"`
 	CloudProperties interface{} `yaml:"cloud_properties,omitempty"`
 }
 
@@ -39,5 +39,10 @@ func (s *CloudConfigManifest) AddDiskType(dskt DiskPool) (err error) {
 
 func (s *CloudConfigManifest) AddNetwork(ntw DeploymentNetwork) (err error) {
 	s.Networks = append(s.Networks, ntw)
+	return
+}
+
+func (s *CloudConfigManifest) SetCompilation(cpl *Compilation) (err error) {
+	s.Compilation = cpl
 	return
 }
