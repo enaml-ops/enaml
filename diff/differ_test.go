@@ -16,6 +16,7 @@ var _ = Describe("Differ", func() {
 		differ Differ
 		result Result
 	)
+
 	Describe("Given a Diff func", func() {
 		var releaseRepo pull.Release
 		BeforeEach(func() {
@@ -23,7 +24,7 @@ var _ = Describe("Differ", func() {
 		})
 		Context("When comparing BOSH Redis release 1 to 12", func() {
 			BeforeEach(func() {
-				differ, err = New(releaseRepo, "./fixtures/redis-boshrelease-1.tgz", "./fixtures/redis-boshrelease-12.tgz")
+				differ, err = New(releaseRepo, "../fixtures/redis-boshrelease-1.tgz", "../fixtures/redis-boshrelease-12.tgz")
 				Expect(err).NotTo(HaveOccurred())
 				result, err = differ.Diff()
 			})
@@ -36,7 +37,7 @@ var _ = Describe("Differ", func() {
 		})
 		Context("When comparing Pivnet Redis release 1.4.0 to 1.5.0", func() {
 			BeforeEach(func() {
-				differ, err = New(releaseRepo, "./fixtures/p-redis-1.4.0.pivotal", "./fixtures/p-redis-1.5.0.pivotal")
+				differ, err = New(releaseRepo, "../fixtures/p-redis-1.4.0.pivotal", "../fixtures/p-redis-1.5.0.pivotal")
 				Expect(err).NotTo(HaveOccurred())
 				result, err = differ.Diff()
 			})
@@ -49,7 +50,7 @@ var _ = Describe("Differ", func() {
 		})
 		Context("When comparing Pivnet Redis release 1.5.0 to Xip release 2.0.0", func() {
 			BeforeEach(func() {
-				differ, err = New(releaseRepo, "./fixtures/p-redis-1.5.0.pivotal", "./fixtures/p-xip-2.0.0.pivotal")
+				differ, err = New(releaseRepo, "../fixtures/p-redis-1.5.0.pivotal", "../fixtures/p-xip-2.0.0.pivotal")
 				Expect(err).NotTo(HaveOccurred())
 				result, err = differ.Diff()
 			})
@@ -62,7 +63,7 @@ var _ = Describe("Differ", func() {
 		})
 		Context("When comparing Redis job between Pivnet Redis release 1.4.0 and 1.5.0", func() {
 			BeforeEach(func() {
-				differ, err = New(releaseRepo, "./fixtures/p-redis-1.4.0.pivotal", "./fixtures/p-redis-1.5.0.pivotal")
+				differ, err = New(releaseRepo, "../fixtures/p-redis-1.4.0.pivotal", "../fixtures/p-redis-1.5.0.pivotal")
 				Expect(err).NotTo(HaveOccurred())
 				result, err = differ.DiffJob("redis")
 			})
