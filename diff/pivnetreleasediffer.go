@@ -6,15 +6,29 @@ type pivnetReleaseDiffer struct {
 }
 
 func (d pivnetReleaseDiffer) Diff() (Result, error) {
+	return d.doDiff(func(brd boshReleaseDiffer) (Result, error) {
+		return brd.Diff()
+	})
+}
+
+func (d pivnetReleaseDiffer) DiffJob(job string) (Result, error) {
+	return d.doDiff(func(brd boshReleaseDiffer) (Result, error) {
+		return brd.DiffJob(job)
+	})
+}
+
+type diffFunc func(brd boshReleaseDiffer) (Result, error)
+
+func (d pivnetReleaseDiffer) doDiff(fn diffFunc) (Result, error) {
 	result := Result{}
-	for rname, br1 := range d.release1.boshRelease {
-		// TODO: need to handle the case where the BOSH release doesn't exist in the other .pivotal file
-		br2 := d.release2.boshRelease[rname]
+	for _, rname := range d.allBoshReleaseNames() {
+		br1 := d.release1.boshReleaseOrEmpty(rname)
+		br2 := d.release2.boshReleaseOrEmpty(rname)
 		boshDiffer := boshReleaseDiffer{
 			release1: br1,
 			release2: br2,
 		}
-		boshDiffResult, err := boshDiffer.Diff()
+		boshDiffResult, err := fn(boshDiffer)
 		if err != nil {
 			return Result{}, err
 		}
@@ -23,7 +37,20 @@ func (d pivnetReleaseDiffer) Diff() (Result, error) {
 	return result, nil
 }
 
-func (d pivnetReleaseDiffer) DiffJob(job string) (Result, error) {
-	// TODO: implement
-	return Result{}, nil
+// allBoshReleaseNames returns a union of unique BOSH release names across all
+// contained BOSH releases.
+func (d pivnetReleaseDiffer) allBoshReleaseNames() []string {
+	boshReleaseNamesMap := make(map[string]string)
+	var addReleaseNames = func(br map[string]*boshRelease) {
+		for brname := range br {
+			boshReleaseNamesMap[brname] = brname
+		}
+	}
+	addReleaseNames(d.release1.boshRelease)
+	addReleaseNames(d.release2.boshRelease)
+	var releaseNames []string
+	for brname := range boshReleaseNamesMap {
+		releaseNames = append(releaseNames, brname)
+	}
+	return releaseNames
 }
