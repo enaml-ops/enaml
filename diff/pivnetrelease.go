@@ -41,3 +41,13 @@ func (r *pivnetRelease) readPivnetRelease(path string) error {
 	})
 	return walker.Walk()
 }
+
+// boshReleaseOrEmpty returns the named BOSH release from this pivnet release
+// if it exists, otherwise emptyBoshRelease is returned.
+func (r *pivnetRelease) boshReleaseOrEmpty(name string) *boshRelease {
+	br := r.boshRelease[name]
+	if br == nil {
+		br = emptyBoshRelease
+	}
+	return br
+}

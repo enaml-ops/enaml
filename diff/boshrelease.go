@@ -14,6 +14,13 @@ type boshRelease struct {
 	JobManifests    map[string]enaml.JobManifest
 }
 
+// emptyBoshRelease is a null boshRelease object. This is useful when a pivnet
+// release from one release to another has missing BOSH releases.
+var emptyBoshRelease = &boshRelease{
+	ReleaseManifest: enaml.ReleaseManifest{},
+	JobManifests:    make(map[string]enaml.JobManifest),
+}
+
 // loadBoshRelease creates an initialized boshRelease instance from the
 // specifed local or remote .tgz file
 func loadBoshRelease(releaseRepo pull.Release, path string) (release *boshRelease, err error) {
