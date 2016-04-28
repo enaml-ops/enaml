@@ -7,22 +7,22 @@ type pivnetReleaseDiffer struct {
 	release2 *release.PivnetRelease
 }
 
-func (d pivnetReleaseDiffer) Diff() (Result, error) {
-	return d.doDiff(func(brd boshReleaseDiffer) (Result, error) {
+func (d pivnetReleaseDiffer) Diff() (*Result, error) {
+	return d.doDiff(func(brd boshReleaseDiffer) (*Result, error) {
 		return brd.Diff()
 	})
 }
 
-func (d pivnetReleaseDiffer) DiffJob(job string) (Result, error) {
-	return d.doDiff(func(brd boshReleaseDiffer) (Result, error) {
+func (d pivnetReleaseDiffer) DiffJob(job string) (*Result, error) {
+	return d.doDiff(func(brd boshReleaseDiffer) (*Result, error) {
 		return brd.DiffJob(job)
 	})
 }
 
-type diffFunc func(brd boshReleaseDiffer) (Result, error)
+type diffFunc func(brd boshReleaseDiffer) (*Result, error)
 
-func (d pivnetReleaseDiffer) doDiff(fn diffFunc) (Result, error) {
-	result := Result{}
+func (d pivnetReleaseDiffer) doDiff(fn diffFunc) (*Result, error) {
+	result := &Result{}
 	for _, rname := range d.allBoshReleaseNames() {
 		br1 := d.release1.BoshReleaseOrEmpty(rname)
 		br2 := d.release2.BoshReleaseOrEmpty(rname)
@@ -32,9 +32,9 @@ func (d pivnetReleaseDiffer) doDiff(fn diffFunc) (Result, error) {
 		}
 		boshDiffResult, err := fn(boshDiffer)
 		if err != nil {
-			return Result{}, err
+			return nil, err
 		}
-		result.Deltas = append(result.Deltas, boshDiffResult.Deltas...)
+		result.Concat(boshDiffResult)
 	}
 	return result, nil
 }

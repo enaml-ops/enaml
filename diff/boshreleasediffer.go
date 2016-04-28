@@ -1,7 +1,6 @@
 package diff
 
 import (
-	"github.com/kr/pretty"
 	"github.com/xchapter7x/enaml"
 	"github.com/xchapter7x/enaml/release"
 )
@@ -11,22 +10,41 @@ type boshReleaseDiffer struct {
 	release2 *release.BoshRelease
 }
 
-func (d boshReleaseDiffer) Diff() (result Result, err error) {
-	result = Result{}
-	var jresult Result
+func (d boshReleaseDiffer) Diff() (*Result, error) {
+	result := &Result{}
 	for _, jname := range d.allJobNames() {
-		jresult, err = d.DiffJob(jname)
-		result.Deltas = append(result.Deltas, jresult.Deltas...)
+		jresult, err := d.DiffJob(jname)
+		if err != nil {
+			return nil, err
+		}
+		result.Concat(jresult)
 	}
-	return
+	return result, nil
 }
 
-func (d boshReleaseDiffer) DiffJob(job string) (result Result, err error) {
-	result = Result{}
+func (d boshReleaseDiffer) DiffJob(job string) (result *Result, err error) {
 	var job1, job2 enaml.JobManifest
 	job1 = d.release1.JobManifests[job]
 	job2 = d.release2.JobManifests[job]
-	result.Deltas = pretty.Diff(job1, job2)
+
+	dj := newDeltaJob(d.release1.ReleaseManifest.Name, job)
+	result = &Result{}
+	result.AddDeltaJob(dj)
+
+	// added properties or new jobs
+	for pname, prop := range job2.Properties {
+		if _, ok := job1.Properties[pname]; !ok {
+			dj.AddedProperty(pname, &prop)
+		}
+	}
+
+	// removed properties or removed jobs
+	for pname, prop := range job1.Properties {
+		if _, ok := job2.Properties[pname]; !ok {
+			dj.RemovedProperty(pname, &prop)
+		}
+	}
+
 	return
 }
 
