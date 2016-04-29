@@ -1,4 +1,4 @@
-package diff
+package release
 
 import (
 	"github.com/xchapter7x/enaml/pull"
@@ -10,20 +10,20 @@ import (
 var _ = Describe("Pivnetrelease", func() {
 	var (
 		err     error
-		release *pivnetRelease
+		release *PivnetRelease
 	)
 	Context("Redis BOSH release 1.5.0", func() {
 		BeforeEach(func() {
 			releaseRepo := pull.Release{CacheDir: ".cache"}
-			release, err = loadPivnetRelease(releaseRepo, "./fixtures/p-redis-1.5.0.pivotal")
+			release, err = LoadPivnetRelease(releaseRepo, "../fixtures/p-redis-1.5.0.pivotal")
 		})
 		It("should not have errored", func() {
 			Expect(err).NotTo(HaveOccurred())
 		})
 		It("should contain only the redis BOSH release", func() {
-			Expect(release.boshRelease).To(HaveLen(1))
-			Expect(release.boshRelease).To(HaveKey("redis"))
-			Expect(release.boshRelease["redis"].ReleaseManifest.Name).To(Equal("redis"))
+			Expect(release.BoshRelease).To(HaveLen(1))
+			Expect(release.BoshRelease).To(HaveKey("redis"))
+			Expect(release.BoshRelease["redis"].ReleaseManifest.Name).To(Equal("redis"))
 		})
 	})
 })

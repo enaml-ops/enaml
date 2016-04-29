@@ -8,6 +8,7 @@ import (
 	"github.com/xchapter7x/enaml/diff"
 	"github.com/xchapter7x/enaml/generators"
 	"github.com/xchapter7x/enaml/pull"
+	"github.com/xchapter7x/enaml/run"
 	"github.com/xchapter7x/lo"
 )
 
@@ -62,13 +63,28 @@ func main() {
 		{
 			Name:        "diff-job",
 			Aliases:     []string{"dj"},
-			Usage:       "diff-jobs <jobname> <releaseurl-A> <releaseurl-B>",
+			Usage:       "diff-job <jobname> <releaseurl-A> <releaseurl-B>",
 			Description: "show diff between jobs across 2 releases",
 			Action: func(c *cli.Context) {
 				releaseRepo := pull.Release{CacheDir: cacheDir}
 				differ, err := diff.New(releaseRepo, c.Args()[1], c.Args()[2])
 				result, err := differ.DiffJob(c.Args()[0])
 				displayDiffAndExit(result.Deltas, err)
+			},
+		},
+		{
+			Name:        "show",
+			Aliases:     []string{"sh"},
+			Usage:       "show <releaseurl>",
+			Description: "show all jobs and properties from the specified release",
+			Action: func(c *cli.Context) {
+				releaseRepo := pull.Release{CacheDir: cacheDir}
+				s := run.NewShowCmd(releaseRepo, c.Args()[0])
+				err := s.All(os.Stdout)
+				if err != nil {
+					fmt.Println(err.Error())
+					os.Exit(1)
+				}
 			},
 		},
 	}

@@ -1,4 +1,4 @@
-package diff
+package release
 
 import (
 	"os"
@@ -12,11 +12,11 @@ import (
 var _ = Describe("Boshrelease", func() {
 	var (
 		err     error
-		release *boshRelease
+		release *BoshRelease
 	)
 	Context("Redis BOSH release 12", func() {
 		BeforeEach(func() {
-			f, err := os.Open("./fixtures/redis-boshrelease-12.tgz")
+			f, err := os.Open("../fixtures/redis-boshrelease-12.tgz")
 			Expect(err).NotTo(HaveOccurred())
 			release, err = readBoshRelease(f)
 		})

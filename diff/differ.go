@@ -5,6 +5,7 @@ import (
 	"path/filepath"
 
 	"github.com/xchapter7x/enaml/pull"
+	"github.com/xchapter7x/enaml/release"
 )
 
 // Result is returned from a diff operation
@@ -26,9 +27,9 @@ func New(releaseRepo pull.Release, r1Path, r2Path string) (differ Differ, err er
 		return
 	}
 	if filepath.Ext(r1Path) == ".pivotal" {
-		var r1, r2 *pivnetRelease
-		if r1, err = loadPivnetRelease(releaseRepo, r1Path); err == nil {
-			if r2, err = loadPivnetRelease(releaseRepo, r2Path); err == nil {
+		var r1, r2 *release.PivnetRelease
+		if r1, err = release.LoadPivnetRelease(releaseRepo, r1Path); err == nil {
+			if r2, err = release.LoadPivnetRelease(releaseRepo, r2Path); err == nil {
 				differ = pivnetReleaseDiffer{
 					release1: r1,
 					release2: r2,
@@ -36,9 +37,9 @@ func New(releaseRepo pull.Release, r1Path, r2Path string) (differ Differ, err er
 			}
 		}
 	} else {
-		var r1, r2 *boshRelease
-		if r1, err = loadBoshRelease(releaseRepo, r1Path); err == nil {
-			if r2, err = loadBoshRelease(releaseRepo, r2Path); err == nil {
+		var r1, r2 *release.BoshRelease
+		if r1, err = release.LoadBoshRelease(releaseRepo, r1Path); err == nil {
+			if r2, err = release.LoadBoshRelease(releaseRepo, r2Path); err == nil {
 				differ = boshReleaseDiffer{
 					release1: r1,
 					release2: r2,

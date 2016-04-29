@@ -3,11 +3,12 @@ package diff
 import (
 	"github.com/kr/pretty"
 	"github.com/xchapter7x/enaml"
+	"github.com/xchapter7x/enaml/release"
 )
 
 type boshReleaseDiffer struct {
-	release1 *boshRelease
-	release2 *boshRelease
+	release1 *release.BoshRelease
+	release2 *release.BoshRelease
 }
 
 func (d boshReleaseDiffer) Diff() (result Result, err error) {
@@ -32,7 +33,7 @@ func (d boshReleaseDiffer) DiffJob(job string) (result Result, err error) {
 // allJobNames returns a union of unique job names across both BOSH releases
 func (d boshReleaseDiffer) allJobNames() []string {
 	jobNamesMap := make(map[string]string)
-	var addJobNames = func(br *boshRelease) {
+	var addJobNames = func(br *release.BoshRelease) {
 		if br != nil {
 			for jbname := range br.JobManifests {
 				jobNamesMap[jbname] = jbname
