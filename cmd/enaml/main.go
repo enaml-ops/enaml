@@ -5,11 +5,9 @@ import (
 	"os"
 
 	"github.com/codegangsta/cli"
-	"github.com/xchapter7x/enaml/diff"
 	"github.com/xchapter7x/enaml/generators"
 	"github.com/xchapter7x/enaml/pull"
 	"github.com/xchapter7x/enaml/run"
-	"github.com/xchapter7x/lo"
 )
 
 func init() {
@@ -54,10 +52,12 @@ func main() {
 			Aliases: []string{"dr"},
 			Usage:   "show a diff between 2 releases given",
 			Action: func(c *cli.Context) {
-				releaseRepo := pull.Release{CacheDir: cacheDir}
-				differ, err := diff.New(releaseRepo, c.Args()[0], c.Args()[1])
-				result, err := differ.Diff()
-				displayDiffAndExit(result.Deltas, err)
+				d := run.NewDiffCmd(pull.Release{CacheDir: cacheDir}, c.Args()[0], c.Args()[1])
+				err := d.All(os.Stdout)
+				if err != nil {
+					fmt.Println(err.Error())
+					os.Exit(1)
+				}
 			},
 		},
 		{
@@ -66,10 +66,12 @@ func main() {
 			Usage:       "diff-job <jobname> <releaseurl-A> <releaseurl-B>",
 			Description: "show diff between jobs across 2 releases",
 			Action: func(c *cli.Context) {
-				releaseRepo := pull.Release{CacheDir: cacheDir}
-				differ, err := diff.New(releaseRepo, c.Args()[1], c.Args()[2])
-				result, err := differ.DiffJob(c.Args()[0])
-				displayDiffAndExit(result.Deltas, err)
+				d := run.NewDiffCmd(pull.Release{CacheDir: cacheDir}, c.Args()[1], c.Args()[2])
+				err := d.Job(c.Args()[0], os.Stdout)
+				if err != nil {
+					fmt.Println(err.Error())
+					os.Exit(1)
+				}
 			},
 		},
 		{
@@ -89,22 +91,4 @@ func main() {
 		},
 	}
 	app.Run(os.Args)
-}
-
-func displayDiffAndExit(diffset []string, err error) {
-	if err == nil && len(diffset) == 0 {
-		fmt.Println("no differences found")
-
-	} else if len(diffset) > 0 {
-
-		for i, v := range diffset {
-			fmt.Println(i, ": ", v)
-		}
-		os.Exit(1)
-
-	} else {
-		lo.G.Error("error: ", err)
-		os.Exit(2)
-	}
-	os.Exit(0)
 }

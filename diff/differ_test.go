@@ -14,7 +14,7 @@ var _ = Describe("Differ", func() {
 	var (
 		err    error
 		differ Differ
-		result Result
+		result *Result
 	)
 
 	Describe("Given a Diff func", func() {
@@ -32,7 +32,7 @@ var _ = Describe("Differ", func() {
 				Expect(err).NotTo(HaveOccurred())
 			})
 			It("should have differences", func() {
-				Expect(len(result.Deltas)).To(BeNumerically(">", 0))
+				Expect(len(result.DeltaJob)).To(BeNumerically(">", 0))
 			})
 		})
 		Context("When comparing Pivnet Redis release 1.4.0 to 1.5.0", func() {
@@ -45,7 +45,7 @@ var _ = Describe("Differ", func() {
 				Expect(err).NotTo(HaveOccurred())
 			})
 			It("should have differences", func() {
-				Expect(len(result.Deltas)).To(BeNumerically(">", 0))
+				Expect(len(result.DeltaJob)).To(BeNumerically(">", 0))
 			})
 		})
 		Context("When comparing Pivnet Redis release 1.5.0 to Xip release 2.0.0", func() {
@@ -58,7 +58,7 @@ var _ = Describe("Differ", func() {
 				Expect(err).ToNot(HaveOccurred())
 			})
 			It("should have differences", func() {
-				Expect(len(result.Deltas)).To(BeNumerically(">", 0))
+				Expect(len(result.DeltaJob)).To(BeNumerically(">", 0))
 			})
 		})
 		Context("When comparing Redis job between Pivnet Redis release 1.4.0 and 1.5.0", func() {
@@ -71,8 +71,8 @@ var _ = Describe("Differ", func() {
 				Expect(err).NotTo(HaveOccurred())
 			})
 			It("should have differences", func() {
-				Expect(len(result.Deltas)).To(BeNumerically(">", 0))
-				for _, d := range result.Deltas {
+				Expect(len(result.DeltaJob)).To(BeNumerically(">", 0))
+				for _, d := range result.DeltaJob {
 					fmt.Println(d)
 				}
 			})

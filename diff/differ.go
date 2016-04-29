@@ -8,15 +8,10 @@ import (
 	"github.com/xchapter7x/enaml/release"
 )
 
-// Result is returned from a diff operation
-type Result struct {
-	Deltas []string
-}
-
 // Differ implements diffing BOSH or Pivnet releases and their contained entities.
 type Differ interface {
-	Diff() (Result, error)
-	DiffJob(job string) (Result, error)
+	Diff() (*Result, error)
+	DiffJob(job string) (*Result, error)
 }
 
 // New creates a Differ instance for comparing two releases
