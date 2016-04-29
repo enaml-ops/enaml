@@ -137,6 +137,7 @@ type Stemcell struct {
 	SHA1    string `yaml:"sha1,omitempty"`
 }
 
+type DiskType DiskPool
 type DiskPool struct {
 	Name            string          `yaml:"name"`
 	DiskSize        int             `yaml:"disk_size"`

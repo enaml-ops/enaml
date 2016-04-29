@@ -3,7 +3,7 @@ package enaml
 type CloudConfigManifest struct {
 	AZs         []AZ                `yaml:"azs,omitempty"`
 	VMTypes     []VMType            `yaml:"vm_types,omitempty"`
-	DiskTypes   []DiskPool          `yaml:"disk_types,omitempty"`
+	DiskTypes   []DiskType          `yaml:"disk_types,omitempty"`
 	Networks    []DeploymentNetwork `yaml:"networks,omitempty"`
 	Compilation *Compilation        `yaml:"compilation,omitempty"`
 }
@@ -32,7 +32,7 @@ func (s *CloudConfigManifest) AddVMType(vmt VMType) (err error) {
 	return
 }
 
-func (s *CloudConfigManifest) AddDiskType(dskt DiskPool) (err error) {
+func (s *CloudConfigManifest) AddDiskType(dskt DiskType) (err error) {
 	s.DiskTypes = append(s.DiskTypes, dskt)
 	return
 }
