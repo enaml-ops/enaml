@@ -1,4 +1,4 @@
-package main
+package run
 
 import (
 	"fmt"
@@ -9,13 +9,24 @@ import (
 	"github.com/xchapter7x/enaml/pull"
 )
 
-type diffCmd struct {
+// DiffCmd runs the diff CLI command
+type DiffCmd struct {
 	releaseRepo pull.Release
 	release1    string
 	release2    string
 }
 
-func (s *diffCmd) All(w io.Writer) error {
+// NewDiffCmd creates a new DiffCmd instance.
+func NewDiffCmd(releaseRepo pull.Release, release1, release2 string) *DiffCmd {
+	return &DiffCmd{
+		releaseRepo: releaseRepo,
+		release1:    release1,
+		release2:    release2,
+	}
+}
+
+// All writes out all the differences between the specified releases
+func (s *DiffCmd) All(w io.Writer) error {
 	differ, err := diff.New(s.releaseRepo, s.release1, s.release2)
 	if err != nil {
 		return err
@@ -28,7 +39,8 @@ func (s *diffCmd) All(w io.Writer) error {
 	return nil
 }
 
-func (s *diffCmd) Job(job string, w io.Writer) error {
+// Job writes out the job differences between the specified releases
+func (s *DiffCmd) Job(job string, w io.Writer) error {
 	differ, err := diff.New(s.releaseRepo, s.release1, s.release2)
 	if err != nil {
 		return err
@@ -41,14 +53,14 @@ func (s *diffCmd) Job(job string, w io.Writer) error {
 	return nil
 }
 
-func (s *diffCmd) printDiffResult(w io.Writer, d *diff.Result) {
+func (s *DiffCmd) printDiffResult(w io.Writer, d *diff.Result) {
 	for _, j := range d.DeltaJob {
 		s.printDeltaJob(w, &j)
 	}
 	fmt.Fprintln(w)
 }
 
-func (s *diffCmd) printDeltaJob(w io.Writer, j *diff.DeltaJob) {
+func (s *DiffCmd) printDeltaJob(w io.Writer, j *diff.DeltaJob) {
 	fmt.Fprintln(w, "------------------------------------------------------")
 	fmt.Fprintln(w, fmt.Sprintf("Release: %s", j.ReleaseName))
 	fmt.Fprintln(w, fmt.Sprintf("Job:     %s", j.JobName))
@@ -66,7 +78,7 @@ func (s *diffCmd) printDeltaJob(w io.Writer, j *diff.DeltaJob) {
 	fmt.Fprintln(w)
 }
 
-func (s *diffCmd) printBoshJobProperty(w io.Writer, addedRemoved string, p enaml.JobManifestProperty) {
+func (s *DiffCmd) printBoshJobProperty(w io.Writer, addedRemoved string, p enaml.JobManifestProperty) {
 	if len(p.Description) > 0 {
 		fmt.Fprintln(w, fmt.Sprintf("%s   Description: %s", addedRemoved, p.Description))
 	}

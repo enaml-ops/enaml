@@ -52,11 +52,7 @@ func main() {
 			Aliases: []string{"dr"},
 			Usage:   "show a diff between 2 releases given",
 			Action: func(c *cli.Context) {
-				d := &diffCmd{
-					releaseRepo: pull.Release{CacheDir: cacheDir},
-					release1:    c.Args()[0],
-					release2:    c.Args()[1],
-				}
+				d := run.NewDiffCmd(pull.Release{CacheDir: cacheDir}, c.Args()[0], c.Args()[1])
 				err := d.All(os.Stdout)
 				if err != nil {
 					fmt.Println(err.Error())
@@ -70,11 +66,7 @@ func main() {
 			Usage:       "diff-job <jobname> <releaseurl-A> <releaseurl-B>",
 			Description: "show diff between jobs across 2 releases",
 			Action: func(c *cli.Context) {
-				d := &diffCmd{
-					releaseRepo: pull.Release{CacheDir: cacheDir},
-					release1:    c.Args()[1],
-					release2:    c.Args()[2],
-				}
+				d := run.NewDiffCmd(pull.Release{CacheDir: cacheDir}, c.Args()[1], c.Args()[2])
 				err := d.Job(c.Args()[0], os.Stdout)
 				if err != nil {
 					fmt.Println(err.Error())
