@@ -62,7 +62,7 @@ func NewVIPNetwork(name string) VIPNetwork {
 type VIPNetwork struct {
 	Name            string          `yaml:"name"`
 	Type            string          `yaml:"type"`
-	CloudProperties CloudProperties `yaml:"cloud_properties"`
+	CloudProperties CloudProperties `yaml:"cloud_properties,omitempty"`
 }
 
 type DynamicNetwork struct {
