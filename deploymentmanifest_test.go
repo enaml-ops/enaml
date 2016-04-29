@@ -57,7 +57,7 @@ func NewFooNetwork(networkName string) DeploymentNetwork {
 				Range:   "10.0.0.0/24",
 				DNS:     []string{"10.0.0.2"},
 				Gateway: "10.0.0.1",
-				CloudProperties: CloudProperties{
+				CloudProperties: map[string]string{
 					"name": "NETWORK_NAME",
 				},
 			},
@@ -77,7 +77,7 @@ func NewFooResource(resourceName, networkName string) ResourcePool {
 	return ResourcePool{
 		Name:    resourceName,
 		Network: networkName,
-		CloudProperties: CloudProperties{
+		CloudProperties: map[string]int{
 			"cpu":  2,
 			"ram":  4096,
 			"disk": 10240,

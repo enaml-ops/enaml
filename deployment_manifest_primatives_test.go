@@ -127,7 +127,7 @@ var _ = Describe("DeploymentManifest Primatives", func() {
 							Range:   fakeString,
 							DNS:     []string{fakeString},
 							Gateway: fakeString,
-							CloudProperties: CloudProperties{
+							CloudProperties: map[string]string{
 								"name": fakeString,
 							},
 						},
@@ -145,7 +145,7 @@ var _ = Describe("DeploymentManifest Primatives", func() {
 				Name:     fakeString,
 				Network:  fakeString,
 				Stemcell: Stemcell{Name: fakeString, Version: fakeString},
-				CloudProperties: CloudProperties{
+				CloudProperties: map[string]string{
 					"instance_type":     fakeString,
 					"availability_zone": fakeString,
 				},
@@ -181,7 +181,7 @@ var _ = Describe("DeploymentManifest Primatives", func() {
 				DiskPool{
 					Name:     fakeString,
 					DiskSize: fakeInt,
-					CloudProperties: CloudProperties{
+					CloudProperties: map[string]string{
 						"type": fakeString,
 					},
 				},
@@ -194,7 +194,7 @@ var _ = Describe("DeploymentManifest Primatives", func() {
 				Workers:             fakeInt,
 				Network:             fakeString,
 				ReuseCompilationVMs: fakeBool,
-				CloudProperties: &CloudProperties{
+				CloudProperties: map[string]string{
 					"instance_type":     fakeString,
 					"availability_zone": fakeString,
 				},

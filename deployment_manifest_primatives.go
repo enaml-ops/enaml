@@ -144,12 +144,12 @@ type DiskPool struct {
 }
 
 type Compilation struct {
-	Workers             int              `yaml:"workers"`
-	Network             string           `yaml:"network"`
-	ReuseCompilationVMs bool             `yaml:"reuse_compilation_vms"`
-	CloudProperties     *CloudProperties `yaml:"cloud_properties,omitempty"`
-	VMType              string           `yaml:"vm_type,omitempty"`
-	AZ                  string           `yaml:"az,omitempty"`
+	Workers             int             `yaml:"workers"`
+	Network             string          `yaml:"network"`
+	ReuseCompilationVMs bool            `yaml:"reuse_compilation_vms"`
+	CloudProperties     CloudProperties `yaml:"cloud_properties,omitempty"`
+	VMType              string          `yaml:"vm_type,omitempty"`
+	AZ                  string          `yaml:"az,omitempty"`
 }
 
 type Update struct {
@@ -190,4 +190,4 @@ type CloudProvider struct {
 }
 type CloudProviderProperties interface{}
 type Properties map[string]interface{}
-type CloudProperties map[string]interface{}
+type CloudProperties interface{}
