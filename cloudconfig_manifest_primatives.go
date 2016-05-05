@@ -48,18 +48,6 @@ func (s *CloudConfigManifest) ContainsDiskType(diskTypeName string) (result bool
 	return
 }
 
-//ContainsDeploymentNetwork -
-func (s *CloudConfigManifest) ContainsDeploymentNetwork(deploymentNetworkName string) (result bool) {
-	result = false
-	for _, deploymentNetwork := range s.Networks {
-		if deploymentNetwork.GetName() == deploymentNetworkName {
-			result = true
-			return
-		}
-	}
-	return
-}
-
 type VMType struct {
 	Name            string      `yaml:"name,omitempty"`
 	CloudProperties interface{} `yaml:"cloud_properties,omitempty"`
