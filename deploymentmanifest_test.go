@@ -49,7 +49,7 @@ func NewFooDiskPool(name string, size int) DiskPool {
 }
 
 func NewFooNetwork(networkName string) DeploymentNetwork {
-	return ManualNetwork{
+	return &ManualNetwork{
 		Name: networkName,
 		Type: "manual",
 		Subnets: []Subnet{

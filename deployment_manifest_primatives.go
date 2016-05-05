@@ -43,7 +43,9 @@ type InstanceJob struct {
 	Properties interface{} `yaml:"properties"`
 }
 
-type DeploymentNetwork interface{}
+type DeploymentNetwork interface {
+	GetName() string
+}
 
 type Release struct {
 	Name    string `yaml:"name"`
@@ -65,11 +67,19 @@ type VIPNetwork struct {
 	CloudProperties CloudProperties `yaml:"cloud_properties,omitempty"`
 }
 
+func (s *VIPNetwork) GetName() (name string) {
+	return s.Name
+}
+
 type DynamicNetwork struct {
 	Name            string          `yaml:"name"`
 	Type            string          `yaml:"type"`
 	DNS             []string        `yaml:"dns"`
 	CloudProperties CloudProperties `yaml:"cloud_properties"`
+}
+
+func (s *DynamicNetwork) GetName() (name string) {
+	return s.Name
 }
 
 func NewManualNetwork(name string) ManualNetwork {
@@ -83,6 +93,10 @@ type ManualNetwork struct {
 	Name    string   `yaml:"name"`
 	Type    string   `yaml:"type"`
 	Subnets []Subnet `yaml:"subnets"`
+}
+
+func (s *ManualNetwork) GetName() (name string) {
+	return s.Name
 }
 
 func (s *ManualNetwork) AddSubnet(subnet Subnet) (err error) {

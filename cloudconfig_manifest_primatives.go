@@ -12,6 +12,54 @@ func (s *CloudConfigManifest) GetManifest() CloudConfigManifest {
 	return *s
 }
 
+//ContainsAZName -
+func (s *CloudConfigManifest) ContainsAZName(azName string) (result bool) {
+	result = false
+	for _, az := range s.AZs {
+		if az.Name == azName {
+			result = true
+			return
+		}
+	}
+	return
+}
+
+//ContainsVMType -
+func (s *CloudConfigManifest) ContainsVMType(vmTypeName string) (result bool) {
+	result = false
+	for _, vmType := range s.VMTypes {
+		if vmType.Name == vmTypeName {
+			result = true
+			return
+		}
+	}
+	return
+}
+
+//ContainsDiskType -
+func (s *CloudConfigManifest) ContainsDiskType(diskTypeName string) (result bool) {
+	result = false
+	for _, diskType := range s.DiskTypes {
+		if diskType.Name == diskTypeName {
+			result = true
+			return
+		}
+	}
+	return
+}
+
+//ContainsDeploymentNetwork -
+func (s *CloudConfigManifest) ContainsDeploymentNetwork(deploymentNetworkName string) (result bool) {
+	result = false
+	for _, deploymentNetwork := range s.Networks {
+		if deploymentNetwork.GetName() == deploymentNetworkName {
+			result = true
+			return
+		}
+	}
+	return
+}
+
 type VMType struct {
 	Name            string      `yaml:"name,omitempty"`
 	CloudProperties interface{} `yaml:"cloud_properties,omitempty"`
