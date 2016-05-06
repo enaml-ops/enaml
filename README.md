@@ -16,7 +16,7 @@ helpers**
 
 
 ### how to use enaml as a cli
-```
+```bash
 #install it using go get
 $ go get github.com/xchapter7x/enaml/cmd/enaml
 
@@ -27,8 +27,7 @@ $ enaml generate-jobs https://bosh.io/d/github.com/concourse/concourse?v=1.1.0
 
 
 ### how your deployment could look
-```golang
-
+```go
 package concourse
 
 import (
