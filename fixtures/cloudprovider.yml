@@ -17,3 +17,8 @@ cloud_provider:
     agent: {mbus: fake-string}
     blobstore: {path: fake-string, provider: fake-string}
     ntp: [fake-string, fake-string]
+  ssh_tunnel:
+    host: ""
+    port: 0
+    user: ""
+    private_key: ""
