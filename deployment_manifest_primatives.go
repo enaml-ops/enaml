@@ -167,15 +167,34 @@ type Update struct {
 }
 
 type Job struct {
-	Name           string                 `yaml:"name"`
-	Templates      []Template             `yaml:"templates,flow"`
-	Lifecycle      string                 `yaml:"lifeycle,omitempty"`
-	PersistentDisk string                 `yaml:"persistent_disk,omitempty"`
-	Properties     Properties             `yaml:"properties,omitempty"`
-	ResourcePool   string                 `yaml:"resource_pool"`
-	Update         map[string]interface{} `yaml:"update,omitempty"`
-	Instances      int                    `yaml:"instances"`
-	Networks       []Network              `yaml:"networks"`
+	Name               string                 `yaml:"name"`
+	Templates          []Template             `yaml:"templates,flow"`
+	Lifecycle          string                 `yaml:"lifeycle,omitempty"`
+	PersistentDisk     string                 `yaml:"persistent_disk,omitempty"`
+	PersistentDiskPool string                 `yaml:"persistent_disk_pool,omitempty"`
+	Properties         Properties             `yaml:"properties,omitempty"`
+	ResourcePool       string                 `yaml:"resource_pool"`
+	Update             map[string]interface{} `yaml:"update,omitempty"`
+	Instances          int                    `yaml:"instances"`
+	Networks           []Network              `yaml:"networks"`
+}
+
+func (s *Job) AddTemplate(t Template) (err error) {
+	s.Templates = append(s.Templates, t)
+	return
+}
+
+func (s *Job) AddNetwork(n Network) (err error) {
+	s.Networks = append(s.Networks, n)
+	return
+}
+
+func (s *Job) AddProperty(name string, property interface{}) (err error) {
+	if s.Properties == nil {
+		s.Properties = make(map[string]interface{})
+	}
+	s.Properties[name] = property
+	return
 }
 
 type Network struct {
@@ -193,6 +212,14 @@ type CloudProvider struct {
 	Template   Template                `yaml:"template,flow"`
 	MBus       string                  `yaml:"mbus"`
 	Properties CloudProviderProperties `yaml:"properties"`
+	SSHTunnel  SSHTunnel               `yaml:"ssh_tunnel"`
+}
+
+type SSHTunnel struct {
+	Host           string `yaml:"host"`
+	Port           int    `yaml:"port"`
+	User           string `yaml:"user"`
+	PrivateKeyPath string `yaml:"private_key"`
 }
 type CloudProviderProperties interface{}
 type Properties map[string]interface{}

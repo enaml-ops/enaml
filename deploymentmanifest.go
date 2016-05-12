@@ -1,5 +1,9 @@
 package enaml
 
+func (s *DeploymentManifest) GetDeployment() DeploymentManifest {
+	return *s
+}
+
 func (s *DeploymentManifest) SetDirectorUUID(d string) (err error) {
 	s.DirectorUUID = d
 	return
