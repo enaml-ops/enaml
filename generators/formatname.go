@@ -16,3 +16,7 @@ func ConvertToCamelCase(name string) string {
 	}
 	return strings.Join(f, "")
 }
+
+func removeDashes(s string) string {
+	return strings.Replace(s, "-", "_", -1)
+}
