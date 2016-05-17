@@ -133,6 +133,11 @@ type ResourcePool struct {
 	Env             map[string]interface{} `yaml:"env,omitempty"`
 }
 
+func (s *ResourcePool) SetStemcell(sc Stemcell) (err error) {
+	s.Stemcell = sc
+	return
+}
+
 type Stemcell struct {
 	Alias   string `yaml:"alias,omitempty"`
 	OS      string `yaml:"os,omitempty"`
