@@ -13,6 +13,11 @@ func Paint(deployment Deployment) (result string, err error) {
 	return
 }
 
+//Deploy -
+func Deploy(deployment Deployment) (result string, err error) {
+	return Paint(deployment)
+}
+
 //Cloud -
 func Cloud(config CloudConfig) (result string, err error) {
 	var cloudConfigManifest CloudConfigManifest
