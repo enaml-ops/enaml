@@ -1,11 +1,25 @@
 package enaml
 
+import (
+	"github.com/xchapter7x/lo"
+	"gopkg.in/yaml.v2"
+)
+
 type CloudConfigManifest struct {
 	AZs         []AZ                `yaml:"azs,omitempty"`
 	VMTypes     []VMType            `yaml:"vm_types,omitempty"`
 	DiskTypes   []DiskType          `yaml:"disk_types,omitempty"`
 	Networks    []DeploymentNetwork `yaml:"networks,omitempty"`
 	Compilation *Compilation        `yaml:"compilation,omitempty"`
+}
+
+func (s *CloudConfigManifest) Bytes() (b []byte, err error) {
+
+	if b, err = yaml.Marshal(s); err != nil {
+		lo.G.Error("error grabbing cloud config manifest bytes: ", err)
+		b = nil
+	}
+	return
 }
 
 func (s *CloudConfigManifest) GetManifest() CloudConfigManifest {

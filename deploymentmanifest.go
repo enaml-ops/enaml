@@ -1,5 +1,20 @@
 package enaml
 
+import (
+	"github.com/xchapter7x/lo"
+	"gopkg.in/yaml.v2"
+)
+
+func (s *DeploymentManifest) Bytes() (b []byte) {
+	var err error
+
+	if b, err = yaml.Marshal(s); err != nil {
+		lo.G.Error("error grabbing deployment manifest bytes: ", err)
+		b = nil
+	}
+	return
+}
+
 func (s *DeploymentManifest) GetDeployment() DeploymentManifest {
 	return *s
 }
