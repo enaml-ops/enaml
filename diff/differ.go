@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"path/filepath"
 
-	"github.com/xchapter7x/enaml/pull"
-	"github.com/xchapter7x/enaml/release"
+	"github.com/enaml-ops/enaml/pull"
+	"github.com/enaml-ops/enaml/release"
 )
 
 // Differ implements diffing BOSH or Pivnet releases and their contained entities.

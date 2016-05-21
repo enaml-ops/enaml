@@ -6,5 +6,5 @@ if [[ "$isinit" == "init" ]]; then
     echo "pulling latest docker containers"
     local=""
 fi
-wercker --verbose --environment ".testrunner_env_defaults" build --git-domain github.com --git-owner xchapter7x --git-repository enaml ${local}
+wercker --verbose --environment ".testrunner_env_defaults" build --git-domain github.com --git-owner enaml-ops --git-repository enaml ${local}
 rm -fR _builds _steps _projects

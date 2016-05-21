@@ -3,7 +3,7 @@ package release
 import (
 	"os"
 
-	"github.com/xchapter7x/enaml"
+	"github.com/enaml-ops/enaml"
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"

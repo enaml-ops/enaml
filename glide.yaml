@@ -1,4 +1,4 @@
-package: github.com/xchapter7x/enaml
+package: github.com/enaml-ops/enaml
 import:
 - package: github.com/onsi/ginkgo
 - package: github.com/onsi/gomega

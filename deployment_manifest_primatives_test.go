@@ -8,8 +8,8 @@ import (
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
-	. "github.com/xchapter7x/enaml"
-	"github.com/xchapter7x/enaml/iaas/vsphere"
+	. "github.com/enaml-ops/enaml"
+	"github.com/enaml-ops/enaml/iaas/vsphere"
 )
 
 var _ = Describe("DeploymentManifest Primatives", func() {

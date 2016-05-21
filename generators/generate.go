@@ -7,7 +7,7 @@ import (
 	"strings"
 	"text/template"
 
-	"github.com/xchapter7x/enaml"
+	"github.com/enaml-ops/enaml"
 	"gopkg.in/yaml.v2"
 )
 

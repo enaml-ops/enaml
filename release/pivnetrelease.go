@@ -1,8 +1,8 @@
 package release
 
 import (
-	"github.com/xchapter7x/enaml/pkg"
-	"github.com/xchapter7x/enaml/pull"
+	"github.com/enaml-ops/enaml/pkg"
+	"github.com/enaml-ops/enaml/pull"
 )
 
 // PivnetRelease wraps a .pivotal release and all of its contained BOSH

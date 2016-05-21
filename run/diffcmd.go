@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"io"
 
-	"github.com/xchapter7x/enaml"
-	"github.com/xchapter7x/enaml/diff"
-	"github.com/xchapter7x/enaml/pull"
+	"github.com/enaml-ops/enaml"
+	"github.com/enaml-ops/enaml/diff"
+	"github.com/enaml-ops/enaml/pull"
 )
 
 // DiffCmd runs the diff CLI command

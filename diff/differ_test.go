@@ -3,8 +3,8 @@ package diff_test
 import (
 	"fmt"
 
-	. "github.com/xchapter7x/enaml/diff"
-	"github.com/xchapter7x/enaml/pull"
+	. "github.com/enaml-ops/enaml/diff"
+	"github.com/enaml-ops/enaml/pull"
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"

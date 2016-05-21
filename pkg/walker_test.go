@@ -4,7 +4,7 @@ import (
 	"io"
 	"os"
 
-	. "github.com/xchapter7x/enaml/pkg"
+	. "github.com/enaml-ops/enaml/pkg"
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"

@@ -1,8 +1,8 @@
 package diff
 
 import (
-	"github.com/xchapter7x/enaml"
-	"github.com/xchapter7x/enaml/release"
+	"github.com/enaml-ops/enaml"
+	"github.com/enaml-ops/enaml/release"
 )
 
 type boshReleaseDiffer struct {

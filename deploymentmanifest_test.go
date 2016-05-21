@@ -3,7 +3,7 @@ package enaml_test
 import (
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
-	. "github.com/xchapter7x/enaml"
+	. "github.com/enaml-ops/enaml"
 )
 
 var _ = Describe("DeploymentManifest", func() {

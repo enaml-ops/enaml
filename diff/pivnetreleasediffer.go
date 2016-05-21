@@ -3,7 +3,7 @@ package diff
 import (
 	"errors"
 
-	"github.com/xchapter7x/enaml/release"
+	"github.com/enaml-ops/enaml/release"
 )
 
 type pivnetReleaseDiffer struct {

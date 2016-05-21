@@ -10,7 +10,7 @@ import (
 	"path"
 	"strings"
 
-	"github.com/xchapter7x/enaml/pull"
+	"github.com/enaml-ops/enaml/pull"
 )
 
 func GenerateReleaseJobsPackage(releaseURL string, cacheDir string, outputDir string) (err error) {

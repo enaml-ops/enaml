@@ -5,9 +5,9 @@ import (
 	"io"
 	"path/filepath"
 
-	"github.com/xchapter7x/enaml"
-	"github.com/xchapter7x/enaml/pull"
-	"github.com/xchapter7x/enaml/release"
+	"github.com/enaml-ops/enaml"
+	"github.com/enaml-ops/enaml/pull"
+	"github.com/enaml-ops/enaml/release"
 )
 
 // ShowCmd runs the show CLI command

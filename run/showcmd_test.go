@@ -6,8 +6,8 @@ import (
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
-	"github.com/xchapter7x/enaml/pull"
-	. "github.com/xchapter7x/enaml/run"
+	"github.com/enaml-ops/enaml/pull"
+	. "github.com/enaml-ops/enaml/run"
 )
 
 var _ = Describe("Show", func() {

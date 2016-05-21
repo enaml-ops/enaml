@@ -1,6 +1,6 @@
 package generators
 
-import "github.com/xchapter7x/enaml"
+import "github.com/enaml-ops/enaml"
 
 type ReleaseJobsGenerator struct {
 	OutputDir string

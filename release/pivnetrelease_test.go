@@ -1,7 +1,7 @@
 package release
 
 import (
-	"github.com/xchapter7x/enaml/pull"
+	"github.com/enaml-ops/enaml/pull"
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"

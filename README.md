@@ -12,13 +12,13 @@
 **below is a repo showing how one might leverage the enaml primatives and
 helpers**
 
-[ENAML - CONCOURSE](https://github.com/xchapter7x/enaml-concourse-sample)
+[ENAML - CONCOURSE](https://github.com/enaml-ops/enaml-concourse-sample)
 
 
 ### how to use enaml as a cli
 ```bash
 #install it using go get
-$ go get github.com/xchapter7x/enaml/cmd/enaml
+$ go get github.com/enaml-ops/enaml/cmd/enaml
 
 #create golang structs for job properties from a release
 $ enaml generate-jobs https://bosh.io/d/github.com/concourse/concourse?v=1.1.0
@@ -31,8 +31,8 @@ $ enaml generate-jobs https://bosh.io/d/github.com/concourse/concourse?v=1.1.0
 package concourse
 
 import (
-	"github.com/xchapter7x/enaml"
-	"github.com/xchapter7x/enaml-concourse-sample/releasejobs"
+	"github.com/enaml-ops/enaml"
+	"github.com/enaml-ops/enaml-concourse-sample/releasejobs"
 )
 
 var (

@@ -5,9 +5,9 @@ import (
 	"os"
 
 	"github.com/codegangsta/cli"
-	"github.com/xchapter7x/enaml/generators"
-	"github.com/xchapter7x/enaml/pull"
-	"github.com/xchapter7x/enaml/run"
+	"github.com/enaml-ops/enaml/generators"
+	"github.com/enaml-ops/enaml/pull"
+	"github.com/enaml-ops/enaml/run"
 )
 
 func init() {

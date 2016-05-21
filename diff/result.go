@@ -1,6 +1,6 @@
 package diff
 
-import "github.com/xchapter7x/enaml"
+import "github.com/enaml-ops/enaml"
 
 // Result is returned from a diff operation
 type Result struct {

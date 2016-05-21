@@ -3,7 +3,7 @@ package generators_test
 import (
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
-	. "github.com/xchapter7x/enaml/generators"
+	. "github.com/enaml-ops/enaml/generators"
 )
 
 var _ = Describe("name formatters", func() {

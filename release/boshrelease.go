@@ -3,9 +3,9 @@ package release
 import (
 	"io"
 
-	"github.com/xchapter7x/enaml"
-	"github.com/xchapter7x/enaml/pkg"
-	"github.com/xchapter7x/enaml/pull"
+	"github.com/enaml-ops/enaml"
+	"github.com/enaml-ops/enaml/pkg"
+	"github.com/enaml-ops/enaml/pull"
 )
 
 // BoshRelease wraps a release manifest and its job manifests neatly together.
