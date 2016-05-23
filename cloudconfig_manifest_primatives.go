@@ -13,6 +13,13 @@ type CloudConfigManifest struct {
 	Compilation *Compilation        `yaml:"compilation,omitempty"`
 }
 
+//NewCloudConfigManifest - initialize a cloudconfigmanifest object with a []byte
+func NewCloudConfigManifest(b []byte) *CloudConfigManifest {
+	cm := new(CloudConfigManifest)
+	yaml.Unmarshal(b, cm)
+	return cm
+}
+
 func (s *CloudConfigManifest) Bytes() (b []byte, err error) {
 
 	if b, err = yaml.Marshal(s); err != nil {
