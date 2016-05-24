@@ -1,12 +1,30 @@
 package enaml_test
 
 import (
+	"io/ioutil"
+
+	. "github.com/enaml-ops/enaml"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
-	. "github.com/enaml-ops/enaml"
 )
 
 var _ = Describe("DeploymentManifest", func() {
+
+	Describe("given a NewDeploymentManifest", func() {
+		Context("when called with a []byte representation of the cloud config manifest", func() {
+			It("then it should initialize the manifest object with the given bytes", func() {
+				b, _ := ioutil.ReadFile("./fixtures/concourse.yml")
+				dm := NewDeploymentManifest(b)
+				Ω(dm.Name).Should(Equal("concourse"))
+				Ω(dm.DirectorUUID).Should(Equal("REPLACE_ME"))
+				Ω(len(dm.Releases)).Should(Equal(2))
+				Ω(len(dm.Stemcells)).Should(Equal(1))
+				Ω(len(dm.InstanceGroups)).Should(Equal(3))
+				Ω(dm.Update).ShouldNot(BeNil())
+			})
+		})
+	})
+
 	Describe("given base setters", func() {
 		Context("when called", func() {
 			var DefaultName = "testdeploy"

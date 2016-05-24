@@ -15,6 +15,13 @@ func (s *DeploymentManifest) Bytes() (b []byte) {
 	return
 }
 
+//NewDeploymentManifest - deployment manifest constructor
+func NewDeploymentManifest(b []byte) *DeploymentManifest {
+	dm := new(DeploymentManifest)
+	yaml.Unmarshal(b, dm)
+	return dm
+}
+
 func (s *DeploymentManifest) GetDeployment() DeploymentManifest {
 	return *s
 }
