@@ -2,6 +2,7 @@ package enamlbosh
 
 import "net/http"
 
+//Client a bosh client object
 type Client struct {
 	user string
 	pass string
@@ -9,10 +10,12 @@ type Client struct {
 	port int
 }
 
+//HttpClientDoer - interface for a http.Client.Doer
 type HttpClientDoer interface {
 	Do(req *http.Request) (resp *http.Response, err error)
 }
 
+//NewClient - constrcutor for a bosh client
 func NewClient(user, pass, host string, port int) *Client {
 	return &Client{
 		user: user,
@@ -22,6 +25,18 @@ func NewClient(user, pass, host string, port int) *Client {
 	}
 }
 
+//BoshInfo - info object for bosh
+type BoshInfo struct {
+	Name               string
+	UUID               string
+	Version            string
+	User               string
+	CPI                string
+	UserAuthentication map[string]interface{}
+	Features           map[string]interface{}
+}
+
+//CloudConfigResponseBody - response body struct for get cloud config calls
 type CloudConfigResponseBody struct {
 	Properties string
 }

@@ -1,7 +1,6 @@
 package enamlbosh_test
 
 import (
-	"fmt"
 	"net/http"
 	"os"
 
@@ -33,7 +32,6 @@ var _ = Describe("given *Client", func() {
 				doer.DoReturns(&http.Response{
 					Body: body,
 				}, nil)
-				fmt.Println("not using this: ", doer)
 				ccm, err = boshclient.GetCloudConfig(doer)
 			})
 			It("then we should be given a valid cloudconfigmanifest", func() {
@@ -43,6 +41,41 @@ var _ = Describe("given *Client", func() {
 				Ω(len(ccm.DiskTypes)).Should(Equal(3))
 				Ω(len(ccm.Networks)).Should(Equal(2))
 				Ω(ccm.Compilation).ShouldNot(BeNil())
+			})
+		})
+
+		Context("when calling its GetInfo method with a valid doer", func() {
+			var bi *BoshInfo
+			var err error
+			BeforeEach(func() {
+				doer := new(enamlboshfakes.FakeHttpClientDoer)
+				body, _ := os.Open("fixtures/getinfo.json")
+				doer.DoReturns(&http.Response{
+					Body: body,
+				}, nil)
+				bi, err = boshclient.GetInfo(doer)
+			})
+			It("then it should return valid info for the targetted bosh", func() {
+				Ω(err).ShouldNot(HaveOccurred())
+				Ω(bi).ShouldNot(BeNil())
+			})
+			It("then it should have a valid bosh name", func() {
+				Ω(bi.Name).Should(Equal("my-bosh"))
+			})
+			It("then it should have a valid bosh guid", func() {
+				Ω(bi.UUID).Should(Equal("ebecbaf0-70ce-4324-a1ea-8ea27073fc3b"))
+			})
+			It("then it should have a valid bosh version", func() {
+				Ω(bi.Version).Should(Equal("1.3232.2.0 (00000000)"))
+			})
+			It("then it should have a valid bosh user", func() {
+				Ω(bi.User).Should(Equal(""))
+			})
+			It("then it should have a valid bosh cpi", func() {
+				Ω(bi.CPI).Should(Equal("aws_cpi"))
+			})
+			It("then it should have a valid bosh features", func() {
+				Ω(bi.Features).ShouldNot(BeNil())
 			})
 		})
 

@@ -1,0 +1,28 @@
+{
+  "name": "my-bosh",
+  "uuid": "ebecbaf0-70ce-4324-a1ea-8ea27073fc3b",
+  "version": "1.3232.2.0 (00000000)",
+  "user": null,
+  "cpi": "aws_cpi",
+  "user_authentication": {
+    "type": "basic",
+    "options": {}
+  },
+  "features": {
+    "dns": {
+      "status": false,
+      "extras": {
+        "domain_name": null
+      }
+    },
+    "compiled_package_cache": {
+      "status": false,
+      "extras": {
+        "provider": null
+      }
+    },
+    "snapshots": {
+      "status": false
+    }
+  }
+}

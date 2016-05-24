@@ -42,6 +42,25 @@ func (s *Client) GetCloudConfig(httpClient HttpClientDoer) (cloudconfig *enaml.C
 	return
 }
 
+func (s *Client) GetInfo(httpClient HttpClientDoer) (bi *BoshInfo, err error) {
+	var req *http.Request
+	var res *http.Response
+	bi = new(BoshInfo)
+
+	if req, err = http.NewRequest("GET", s.buildBoshURL("/info"), nil); err == nil {
+		req.SetBasicAuth(s.user, s.pass)
+		req.Header.Set("content-type", "text/yaml")
+
+		if res, err = httpClient.Do(req); err == nil {
+			var b []byte
+			b, err = ioutil.ReadAll(res.Body)
+			json.Unmarshal(b, bi)
+		}
+	}
+	return
+
+}
+
 func (s *Client) buildBoshURL(urlpath string) (boshurl string) {
 	boshurl = s.host + ":" + strconv.Itoa(s.port) + urlpath
 	return
