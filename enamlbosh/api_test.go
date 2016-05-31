@@ -23,6 +23,25 @@ var _ = Describe("given *Client", func() {
 		BeforeEach(func() {
 			boshclient = NewClient(userControl, passControl, hostControl, portControl)
 		})
+
+		Context("when calling its PostDeployment method with a valid doer and deployment", func() {
+			var bt []BoshTask
+			var err error
+			BeforeEach(func() {
+				doer := new(enamlboshfakes.FakeHttpClientDoer)
+				body, _ := os.Open("fixtures/deployment_tasks.json")
+				doer.DoReturns(&http.Response{
+					Body: body,
+				}, nil)
+				bt, err = boshclient.PostDeployment(enaml.DeploymentManifest{}, doer)
+			})
+
+			It("then it should return valid info for the targetted bosh", func() {
+				Ω(err).ShouldNot(HaveOccurred())
+				Ω(bt).ShouldNot(BeNil())
+			})
+		})
+
 		Context("what calling its GetCloudConfig method w/ a valid httpclientdoer", func() {
 			var ccm *enaml.CloudConfigManifest
 			var err error

@@ -40,3 +40,13 @@ type BoshInfo struct {
 type CloudConfigResponseBody struct {
 	Properties string
 }
+
+//BoshTask - an object representing a bosh task response
+type BoshTask struct {
+	ID          int
+	State       string
+	Description string
+	Timestamp   int
+	Result      string
+	User        string
+}

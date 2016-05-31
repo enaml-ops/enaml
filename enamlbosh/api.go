@@ -23,6 +23,26 @@ func (s *Client) NewCloudConfigRequest(cloudconfig enaml.CloudConfigManifest) (r
 	return
 }
 
+func (s *Client) PostDeployment(deploymentManifest enaml.DeploymentManifest, httpClient HttpClientDoer) (boshTask []BoshTask, err error) {
+	var req *http.Request
+	var res *http.Response
+	var reqBody = bytes.NewReader(deploymentManifest.Bytes())
+
+	if req, err = http.NewRequest("POST", s.buildBoshURL("/deployments"), reqBody); err == nil {
+		req.SetBasicAuth(s.user, s.pass)
+		req.Header.Set("content-type", "text/yaml")
+
+		if res, err = httpClient.Do(req); err == nil {
+			var b []byte
+
+			if b, err = ioutil.ReadAll(res.Body); err == nil {
+				err = json.Unmarshal(b, &boshTask)
+			}
+		}
+	}
+	return
+}
+
 func (s *Client) GetCloudConfig(httpClient HttpClientDoer) (cloudconfig *enaml.CloudConfigManifest, err error) {
 	var req *http.Request
 	var res *http.Response
