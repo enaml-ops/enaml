@@ -24,6 +24,39 @@ var _ = Describe("given *Client", func() {
 			boshclient = NewClient(userControl, passControl, hostControl, portControl)
 		})
 
+		Context("when calling its PostRemoteStemcell method with a valid url and sha", func() {
+			var bt []BoshTask
+			var err error
+			BeforeEach(func() {
+				doer := new(enamlboshfakes.FakeHttpClientDoer)
+				body, _ := os.Open("fixtures/deployment_tasks.json")
+				doer.DoReturns(&http.Response{
+					Body: body,
+				}, nil)
+				bt, err = boshclient.PostRemoteStemcell(enaml.Stemcell{
+					URL:  "https://bosh.io/d/stemcells/bosh-aws-xen-hvm-ubuntu-trusty-go_agent?v=3232.4",
+					SHA1: "a57ef43974387441b4e8f79e8bb74834",
+				}, doer)
+			})
+
+			It("then it should return valid task info for the targetted bosh", func() {
+				Ω(err).ShouldNot(HaveOccurred())
+				Ω(bt).ShouldNot(BeNil())
+				Ω(len(bt)).Should(Equal(1))
+			})
+		})
+
+		Context("when calling its PostRemoteStemcell method WITHOUT a valid url and sha", func() {
+			var err error
+			BeforeEach(func() {
+				doer := new(enamlboshfakes.FakeHttpClientDoer)
+				_, err = boshclient.PostRemoteStemcell(enaml.Stemcell{}, doer)
+			})
+			It("then is should return an error as we only currently support remote stemcells", func() {
+				Ω(err).Should(HaveOccurred())
+			})
+		})
+
 		Context("when calling its PostDeployment method with a valid doer and deployment", func() {
 			var bt []BoshTask
 			var err error
@@ -36,7 +69,7 @@ var _ = Describe("given *Client", func() {
 				bt, err = boshclient.PostDeployment(enaml.DeploymentManifest{}, doer)
 			})
 
-			It("then it should return valid info for the targetted bosh", func() {
+			It("then it should return valid task info for the targetted bosh", func() {
 				Ω(err).ShouldNot(HaveOccurred())
 				Ω(bt).ShouldNot(BeNil())
 				Ω(len(bt)).Should(Equal(1))
