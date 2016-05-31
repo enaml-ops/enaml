@@ -39,6 +39,7 @@ var _ = Describe("given *Client", func() {
 			It("then it should return valid info for the targetted bosh", func() {
 				Ω(err).ShouldNot(HaveOccurred())
 				Ω(bt).ShouldNot(BeNil())
+				Ω(len(bt)).Should(Equal(1))
 			})
 		})
 
