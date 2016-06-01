@@ -24,6 +24,37 @@ func (s *Client) NewCloudConfigRequest(cloudconfig enaml.CloudConfigManifest) (r
 	return
 }
 
+func (s *Client) PostRemoteRelease(rls enaml.Release, httpClient HttpClientDoer) (bt []BoshTask, err error) {
+
+	if rls.URL == "" || rls.SHA1 == "" {
+		err = fmt.Errorf("url or sha not set. these are required for remote stemcells URL: %s , SHA: %s", rls.URL, rls.SHA1)
+
+	} else {
+		var req *http.Request
+		var res *http.Response
+		var reqMap = map[string]string{
+			"location": rls.URL,
+			"sha1":     rls.SHA1,
+		}
+		var reqBytes, _ = json.Marshal(reqMap)
+		var reqBody = bytes.NewReader(reqBytes)
+
+		if req, err = http.NewRequest("POST", s.buildBoshURL("/releases"), reqBody); err == nil {
+			req.SetBasicAuth(s.user, s.pass)
+			req.Header.Set("content-type", "application/json")
+
+			if res, err = httpClient.Do(req); err == nil {
+				var b []byte
+
+				if b, err = ioutil.ReadAll(res.Body); err == nil {
+					err = json.Unmarshal(b, &bt)
+				}
+			}
+		}
+	}
+	return
+}
+
 func (s *Client) PostRemoteStemcell(sc enaml.Stemcell, httpClient HttpClientDoer) (bt []BoshTask, err error) {
 
 	if sc.URL == "" || sc.SHA1 == "" {

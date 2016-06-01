@@ -24,6 +24,39 @@ var _ = Describe("given *Client", func() {
 			boshclient = NewClient(userControl, passControl, hostControl, portControl)
 		})
 
+		Context("when calling its PostRemoteRelease method with a valid url and sha", func() {
+			var bt []BoshTask
+			var err error
+			BeforeEach(func() {
+				doer := new(enamlboshfakes.FakeHttpClientDoer)
+				body, _ := os.Open("fixtures/deployment_tasks.json")
+				doer.DoReturns(&http.Response{
+					Body: body,
+				}, nil)
+				bt, err = boshclient.PostRemoteRelease(enaml.Release{
+					URL:  "https://bosh.io/d/github.com/cloudfoundry/cf-release?v=237",
+					SHA1: "8996122278b03b6ba21ec673812d2075c37f1097",
+				}, doer)
+			})
+
+			It("then it should return valid task info for the targetted bosh", func() {
+				Ω(err).ShouldNot(HaveOccurred())
+				Ω(bt).ShouldNot(BeNil())
+				Ω(len(bt)).Should(Equal(1))
+			})
+		})
+
+		Context("when calling its PostRemoteRelease method WITHOUT a valid url and sha", func() {
+			var err error
+			BeforeEach(func() {
+				doer := new(enamlboshfakes.FakeHttpClientDoer)
+				_, err = boshclient.PostRemoteRelease(enaml.Release{}, doer)
+			})
+			It("then is should return an error as we only currently support remote release", func() {
+				Ω(err).Should(HaveOccurred())
+			})
+		})
+
 		Context("when calling its PostRemoteStemcell method with a valid url and sha", func() {
 			var bt []BoshTask
 			var err error
