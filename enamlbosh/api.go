@@ -24,6 +24,27 @@ func (s *Client) NewCloudConfigRequest(cloudconfig enaml.CloudConfigManifest) (r
 	return
 }
 
+func (s *Client) GetTask(taskID int, httpClient HttpClientDoer) (bt BoshTask, err error) {
+	var req *http.Request
+	var res *http.Response
+
+	if req, err = http.NewRequest("GET", s.buildBoshURL("/tasks/"+strconv.Itoa(taskID)), nil); err == nil {
+		req.SetBasicAuth(s.user, s.pass)
+		req.Header.Set("content-type", "text/yaml")
+
+		if res, err = httpClient.Do(req); err == nil {
+			var b []byte
+			b, err = ioutil.ReadAll(res.Body)
+			json.Unmarshal(b, &bt)
+		}
+	}
+
+	if bt.ID != taskID && err == nil {
+		err = fmt.Errorf("could not find the given task: %v", taskID)
+	}
+	return
+}
+
 func (s *Client) PostRemoteRelease(rls enaml.Release, httpClient HttpClientDoer) (bt []BoshTask, err error) {
 
 	if rls.URL == "" || rls.SHA1 == "" {
