@@ -10,6 +10,7 @@ import (
 	"strconv"
 
 	"github.com/enaml-ops/enaml"
+	"github.com/xchapter7x/lo"
 )
 
 func (s *Client) NewCloudConfigRequest(cloudconfig enaml.CloudConfigManifest) (req *http.Request, err error) {
@@ -35,6 +36,7 @@ func (s *Client) GetTask(taskID int, httpClient HttpClientDoer) (bt BoshTask, er
 		if res, err = httpClient.Do(req); err == nil {
 			var b []byte
 			b, err = ioutil.ReadAll(res.Body)
+			lo.G.Debug("rest resp: ", string(b))
 			json.Unmarshal(b, &bt)
 		}
 	}
@@ -68,6 +70,7 @@ func (s *Client) PostRemoteRelease(rls enaml.Release, httpClient HttpClientDoer)
 				var b []byte
 
 				if b, err = ioutil.ReadAll(res.Body); err == nil {
+					lo.G.Debug("rest resp: ", string(b))
 					err = json.Unmarshal(b, &bt)
 				}
 			}
@@ -99,6 +102,7 @@ func (s *Client) PostRemoteStemcell(sc enaml.Stemcell, httpClient HttpClientDoer
 				var b []byte
 
 				if b, err = ioutil.ReadAll(res.Body); err == nil {
+					lo.G.Debug("rest resp: ", string(b))
 					err = json.Unmarshal(b, &bt)
 				}
 			}
@@ -120,6 +124,7 @@ func (s *Client) PostDeployment(deploymentManifest enaml.DeploymentManifest, htt
 			var b []byte
 
 			if b, err = ioutil.ReadAll(res.Body); err == nil {
+				lo.G.Debug("rest resp: ", string(b))
 				err = json.Unmarshal(b, &boshTask)
 			}
 		}
@@ -139,6 +144,7 @@ func (s *Client) GetCloudConfig(httpClient HttpClientDoer) (cloudconfig *enaml.C
 		if res, err = httpClient.Do(req); err == nil {
 			var b []byte
 			b, err = ioutil.ReadAll(res.Body)
+			lo.G.Debug("rest resp: ", string(b))
 			json.Unmarshal(b, &resBody)
 			cloudconfig = enaml.NewCloudConfigManifest([]byte(resBody[0].Properties))
 		}
@@ -158,6 +164,7 @@ func (s *Client) GetInfo(httpClient HttpClientDoer) (bi *BoshInfo, err error) {
 		if res, err = httpClient.Do(req); err == nil {
 			var b []byte
 			b, err = ioutil.ReadAll(res.Body)
+			lo.G.Debug("rest resp: ", string(b))
 			json.Unmarshal(b, bi)
 		}
 	}
