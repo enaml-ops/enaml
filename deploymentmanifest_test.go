@@ -25,6 +25,47 @@ var _ = Describe("DeploymentManifest", func() {
 		})
 	})
 
+	Describe("given AddRemoteStemcell", func() {
+		Context("when called with valid remote stemcell values", func() {
+			var dm *DeploymentManifest
+			var controlName = "name"
+			var controlVer = "1.2"
+			var controlURL = "http://hi.com"
+			var controlSHA = "alkshdglkashdg9243"
+			BeforeEach(func() {
+				dm = new(DeploymentManifest)
+				dm.AddRemoteStemcell(controlName, "stuf", controlVer, controlURL, controlSHA)
+			})
+
+			It("then it should properly add a remote stemcell record", func() {
+				Ω(dm.Stemcells[0].OS).Should(Equal(controlName))
+				Ω(dm.Stemcells[0].URL).Should(Equal(controlURL + "?v=" + controlVer))
+				Ω(dm.Stemcells[0].SHA1).Should(Equal(controlSHA))
+				Ω(dm.Stemcells[0].Version).Should(Equal(controlVer))
+			})
+		})
+	})
+
+	Describe("given AddRemoteRelease", func() {
+		Context("when called with valid remote release values", func() {
+			var dm *DeploymentManifest
+			var controlName = "name"
+			var controlVer = "1.2"
+			var controlURL = "http://hi.com"
+			var controlSHA = "alkshdglkashdg9243"
+			BeforeEach(func() {
+				dm = new(DeploymentManifest)
+				dm.AddRemoteRelease(controlName, controlVer, controlURL, controlSHA)
+			})
+			It("then it should properly add a remote release record", func() {
+				Ω(dm.Releases[0].Name).Should(Equal(controlName))
+				Ω(dm.Releases[0].URL).Should(Equal(controlURL + "?v=" + controlVer))
+				Ω(dm.Releases[0].SHA1).Should(Equal(controlSHA))
+				Ω(dm.Releases[0].Version).Should(Equal(controlVer))
+			})
+		})
+	})
+
 	Describe("given base setters", func() {
 		Context("when called", func() {
 			var DefaultName = "testdeploy"

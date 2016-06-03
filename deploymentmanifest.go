@@ -41,6 +41,18 @@ func (s *DeploymentManifest) AddRelease(r Release) (err error) {
 	return
 }
 
+//AddRemoteRelease - adds a remote release to the manifest. Url should not
+//contain version information
+func (s *DeploymentManifest) AddRemoteRelease(releaseName, ver, url, sha1 string) (err error) {
+	s.Releases = append(s.Releases, Release{
+		Name:    releaseName,
+		URL:     url + "?v=" + ver,
+		SHA1:    sha1,
+		Version: ver,
+	})
+	return
+}
+
 func (s *DeploymentManifest) AddReleaseByName(releaseName string) (err error) {
 	s.Releases = append(s.Releases, Release{Name: releaseName, Version: "latest"})
 	return
@@ -63,6 +75,19 @@ func (s *DeploymentManifest) AddStemcell(stemcell Stemcell) (err error) {
 
 func (s *DeploymentManifest) AddStemcellByName(name, alias string) (err error) {
 	s.Stemcells = append(s.Stemcells, Stemcell{Alias: alias, OS: name, Version: "latest"})
+	return
+}
+
+//AddRemoteStemcell - adds a remote stemcell to the manifest. Url should not
+//contain version information
+func (s *DeploymentManifest) AddRemoteStemcell(name, alias, ver, url, sha1 string) (err error) {
+	s.Stemcells = append(s.Stemcells, Stemcell{
+		Alias:   alias,
+		OS:      name,
+		URL:     url + "?v=" + ver,
+		SHA1:    sha1,
+		Version: ver,
+	})
 	return
 }
 
