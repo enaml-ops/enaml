@@ -34,6 +34,7 @@ func (s *Client) GetTask(taskID int, httpClient HttpClientDoer) (bt BoshTask, er
 		req.Header.Set("content-type", "text/yaml")
 
 		if res, err = httpClient.Do(req); err == nil {
+			lo.G.Debug("task request complete")
 			var b []byte
 			b, err = ioutil.ReadAll(res.Body)
 			lo.G.Debug("rest resp: ", string(b))
@@ -67,6 +68,7 @@ func (s *Client) PostRemoteRelease(rls enaml.Release, httpClient HttpClientDoer)
 			req.Header.Set("content-type", "application/json")
 
 			if res, err = httpClient.Do(req); err == nil {
+				lo.G.Debug("release request complete")
 				var b []byte
 
 				if b, err = ioutil.ReadAll(res.Body); err == nil {
@@ -99,6 +101,7 @@ func (s *Client) PostRemoteStemcell(sc enaml.Stemcell, httpClient HttpClientDoer
 			req.Header.Set("content-type", "application/json")
 
 			if res, err = httpClient.Do(req); err == nil {
+				lo.G.Debug("stemcell request complete")
 				var b []byte
 
 				if b, err = ioutil.ReadAll(res.Body); err == nil {
@@ -121,6 +124,7 @@ func (s *Client) PostDeployment(deploymentManifest enaml.DeploymentManifest, htt
 		req.Header.Set("content-type", "text/yaml")
 
 		if res, err = httpClient.Do(req); err == nil {
+			lo.G.Debug("deployment request complete")
 			var b []byte
 
 			if b, err = ioutil.ReadAll(res.Body); err == nil {
