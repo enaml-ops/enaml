@@ -34,6 +34,7 @@ func (s *Client) GetTask(taskID int, httpClient HttpClientDoer) (bt BoshTask, er
 		req.Header.Set("content-type", "text/yaml")
 
 		if res, err = httpClient.Do(req); err == nil {
+			defer res.Body.Close()
 			lo.G.Debug("task request complete")
 			var b []byte
 			b, err = ioutil.ReadAll(res.Body)
@@ -68,6 +69,7 @@ func (s *Client) PostRemoteRelease(rls enaml.Release, httpClient HttpClientDoer)
 			req.Header.Set("content-type", "application/json")
 
 			if res, err = httpClient.Do(req); err == nil {
+				defer res.Body.Close()
 				lo.G.Debug("release request complete")
 				var b []byte
 
@@ -101,6 +103,7 @@ func (s *Client) PostRemoteStemcell(sc enaml.Stemcell, httpClient HttpClientDoer
 			req.Header.Set("content-type", "application/json")
 
 			if res, err = httpClient.Do(req); err == nil {
+				defer res.Body.Close()
 				lo.G.Debug("stemcell request complete")
 				var b []byte
 
@@ -124,6 +127,7 @@ func (s *Client) PostDeployment(deploymentManifest enaml.DeploymentManifest, htt
 		req.Header.Set("content-type", "text/yaml")
 
 		if res, err = httpClient.Do(req); err == nil {
+			defer res.Body.Close()
 			lo.G.Debug("deployment request complete")
 			var b []byte
 
@@ -146,6 +150,7 @@ func (s *Client) GetCloudConfig(httpClient HttpClientDoer) (cloudconfig *enaml.C
 		req.Header.Set("content-type", "text/yaml")
 
 		if res, err = httpClient.Do(req); err == nil {
+			defer res.Body.Close()
 			var b []byte
 			b, err = ioutil.ReadAll(res.Body)
 			lo.G.Debug("rest resp: ", string(b))
