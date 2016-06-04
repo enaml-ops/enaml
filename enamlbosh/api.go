@@ -49,7 +49,7 @@ func (s *Client) GetTask(taskID int, httpClient HttpClientDoer) (bt BoshTask, er
 	return
 }
 
-func (s *Client) PostRemoteRelease(rls enaml.Release, httpClient HttpClientDoer) (bt []BoshTask, err error) {
+func (s *Client) PostRemoteRelease(rls enaml.Release, httpClient HttpClientDoer) (bt BoshTask, err error) {
 
 	if rls.URL == "" || rls.SHA1 == "" {
 		err = fmt.Errorf("url or sha not set. these are required for remote stemcells URL: %s , SHA: %s", rls.URL, rls.SHA1)
@@ -83,7 +83,7 @@ func (s *Client) PostRemoteRelease(rls enaml.Release, httpClient HttpClientDoer)
 	return
 }
 
-func (s *Client) PostRemoteStemcell(sc enaml.Stemcell, httpClient HttpClientDoer) (bt []BoshTask, err error) {
+func (s *Client) PostRemoteStemcell(sc enaml.Stemcell, httpClient HttpClientDoer) (bt BoshTask, err error) {
 
 	if sc.URL == "" || sc.SHA1 == "" {
 		err = fmt.Errorf("url or sha not set. these are required for remote stemcells URL: %s , SHA: %s", sc.URL, sc.SHA1)
@@ -117,7 +117,7 @@ func (s *Client) PostRemoteStemcell(sc enaml.Stemcell, httpClient HttpClientDoer
 	return
 }
 
-func (s *Client) PostDeployment(deploymentManifest enaml.DeploymentManifest, httpClient HttpClientDoer) (boshTask []BoshTask, err error) {
+func (s *Client) PostDeployment(deploymentManifest enaml.DeploymentManifest, httpClient HttpClientDoer) (boshTask BoshTask, err error) {
 	var req *http.Request
 	var res *http.Response
 	var reqBody = bytes.NewReader(deploymentManifest.Bytes())

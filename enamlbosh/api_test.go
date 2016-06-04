@@ -60,11 +60,11 @@ var _ = Describe("given *Client", func() {
 
 		Describe("PostRemoteRelease", func() {
 			Context("when calling its PostRemoteRelease method with a valid url and sha", func() {
-				var bt []BoshTask
+				var bt BoshTask
 				var err error
 				BeforeEach(func() {
 					doer := new(enamlboshfakes.FakeHttpClientDoer)
-					body, _ := os.Open("fixtures/deployment_tasks.json")
+					body, _ := os.Open("fixtures/deployment_task.json")
 					doer.DoReturns(&http.Response{
 						Body: body,
 					}, nil)
@@ -77,7 +77,6 @@ var _ = Describe("given *Client", func() {
 				It("then it should return valid task info for the targetted bosh", func() {
 					Ω(err).ShouldNot(HaveOccurred())
 					Ω(bt).ShouldNot(BeNil())
-					Ω(len(bt)).Should(Equal(1))
 				})
 			})
 
@@ -95,11 +94,11 @@ var _ = Describe("given *Client", func() {
 
 		Describe("PostRemoteStemcell", func() {
 			Context("when calling its PostRemoteStemcell method with a valid url and sha", func() {
-				var bt []BoshTask
+				var bt BoshTask
 				var err error
 				BeforeEach(func() {
 					doer := new(enamlboshfakes.FakeHttpClientDoer)
-					body, _ := os.Open("fixtures/deployment_tasks.json")
+					body, _ := os.Open("fixtures/deployment_task.json")
 					doer.DoReturns(&http.Response{
 						Body: body,
 					}, nil)
@@ -112,7 +111,6 @@ var _ = Describe("given *Client", func() {
 				It("then it should return valid task info for the targetted bosh", func() {
 					Ω(err).ShouldNot(HaveOccurred())
 					Ω(bt).ShouldNot(BeNil())
-					Ω(len(bt)).Should(Equal(1))
 				})
 			})
 
@@ -129,11 +127,11 @@ var _ = Describe("given *Client", func() {
 		})
 		Describe("PostDeployment", func() {
 			Context("when calling its PostDeployment method with a valid doer and deployment", func() {
-				var bt []BoshTask
+				var bt BoshTask
 				var err error
 				BeforeEach(func() {
 					doer := new(enamlboshfakes.FakeHttpClientDoer)
-					body, _ := os.Open("fixtures/deployment_tasks.json")
+					body, _ := os.Open("fixtures/deployment_task.json")
 					doer.DoReturns(&http.Response{
 						Body: body,
 					}, nil)
@@ -143,7 +141,6 @@ var _ = Describe("given *Client", func() {
 				It("then it should return valid task info for the targetted bosh", func() {
 					Ω(err).ShouldNot(HaveOccurred())
 					Ω(bt).ShouldNot(BeNil())
-					Ω(len(bt)).Should(Equal(1))
 				})
 			})
 
