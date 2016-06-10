@@ -165,23 +165,23 @@ type Compilation struct {
 
 type Update struct {
 	Canaries        int    `yaml:"canaries"`
-	MaxInFlight     int    `yaml:"max_in_flight"`
-	CanaryWatchTime string `yaml:"canary_watch_time"`
-	UpdateWatchTime string `yaml:"update_watch_time"`
+	MaxInFlight     int    `yaml:"max_in_flight,omitempty"`
+	CanaryWatchTime string `yaml:"canary_watch_time,omitempty"`
+	UpdateWatchTime string `yaml:"update_watch_time,omitempty"`
 	Serial          bool   `yaml:"serial,omitempty"`
 }
 
 type Job struct {
-	Name               string                 `yaml:"name"`
-	Templates          []Template             `yaml:"templates,flow"`
-	Lifecycle          string                 `yaml:"lifeycle,omitempty"`
-	PersistentDisk     string                 `yaml:"persistent_disk,omitempty"`
-	PersistentDiskPool string                 `yaml:"persistent_disk_pool,omitempty"`
-	Properties         Properties             `yaml:"properties,omitempty"`
-	ResourcePool       string                 `yaml:"resource_pool"`
-	Update             map[string]interface{} `yaml:"update,omitempty"`
-	Instances          int                    `yaml:"instances"`
-	Networks           []Network              `yaml:"networks"`
+	Name               string     `yaml:"name"`
+	Templates          []Template `yaml:"templates,flow"`
+	Lifecycle          string     `yaml:"lifeycle,omitempty"`
+	PersistentDisk     string     `yaml:"persistent_disk,omitempty"`
+	PersistentDiskPool string     `yaml:"persistent_disk_pool,omitempty"`
+	Properties         Properties `yaml:"properties,omitempty"`
+	ResourcePool       string     `yaml:"resource_pool"`
+	Update             Update     `yaml:"update,omitempty"`
+	Instances          int        `yaml:"instances"`
+	Networks           []Network  `yaml:"networks"`
 }
 
 func (s *Job) AddTemplate(t Template) (err error) {

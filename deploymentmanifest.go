@@ -44,9 +44,13 @@ func (s *DeploymentManifest) AddRelease(r Release) (err error) {
 //AddRemoteRelease - adds a remote release to the manifest. Url should not
 //contain version information
 func (s *DeploymentManifest) AddRemoteRelease(releaseName, ver, url, sha1 string) (err error) {
+	versionedURL := ""
+	if url != "" && ver != "" {
+		versionedURL = url + "?v=" + ver
+	}
 	s.Releases = append(s.Releases, Release{
 		Name:    releaseName,
-		URL:     url + "?v=" + ver,
+		URL:     versionedURL,
 		SHA1:    sha1,
 		Version: ver,
 	})
@@ -81,10 +85,14 @@ func (s *DeploymentManifest) AddStemcellByName(name, alias string) (err error) {
 //AddRemoteStemcell - adds a remote stemcell to the manifest. Url should not
 //contain version information
 func (s *DeploymentManifest) AddRemoteStemcell(name, alias, ver, url, sha1 string) (err error) {
+	versionedURL := ""
+	if url != "" && ver != "" {
+		versionedURL = url + "?v=" + ver
+	}
 	s.Stemcells = append(s.Stemcells, Stemcell{
 		Alias:   alias,
 		OS:      name,
-		URL:     url + "?v=" + ver,
+		URL:     versionedURL,
 		SHA1:    sha1,
 		Version: ver,
 	})
@@ -108,6 +116,16 @@ func (s *DeploymentManifest) SetUpdate(u Update) (err error) {
 
 func (s *DeploymentManifest) AddInstanceGroup(i *InstanceGroup) (err error) {
 	s.InstanceGroups = append(s.InstanceGroups, i)
+	return
+}
+
+func (s *DeploymentManifest) GetJobByName(name string) (job *Job) {
+	for _, j := range s.Jobs {
+		if j.Name == name {
+			job = &j
+			break
+		}
+	}
 	return
 }
 

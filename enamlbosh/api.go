@@ -178,7 +178,6 @@ func (s *Client) GetInfo(httpClient HttpClientDoer) (bi *BoshInfo, err error) {
 		}
 	}
 	return
-
 }
 
 func (s *Client) buildBoshURL(urlpath string) (boshurl string) {
