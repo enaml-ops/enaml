@@ -31,6 +31,19 @@ var _ = Describe("DeploymentManifest Primatives", func() {
 			})
 		})
 	}
+	Describe("given a NewSubnet func", func() {
+		Context("when called with valid args", func() {
+			It("should return a properly init'd subnet object", func() {
+				cidr := "10.0.0.0/24"
+				gateway := "10.0.0.1"
+				az := "subnet-something"
+				subnet := NewSubnet(cidr, gateway, az)
+				Ω(subnet.Range).Should(Equal(cidr))
+				Ω(subnet.Gateway).Should(Equal(gateway))
+				Ω(subnet.AZ).Should(Equal(az))
+			})
+		})
+	})
 
 	Describe("Given a Instance", func() {
 		Context("when used to generate a cloud_config manifest", func() {

@@ -27,3 +27,7 @@ vendor/
 .cache
 cmd/enaml/enaml
 .DS_Store
+.idea/
+*.iml
+*.iws
+*.ipr

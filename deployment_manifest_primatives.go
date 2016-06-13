@@ -95,10 +95,10 @@ func (s *ManualNetwork) AddSubnet(subnet Subnet) (err error) {
 	return
 }
 
-func NewSubnet(octet string, azName string) Subnet {
+func NewSubnet(cidr, gateway,  azName string) Subnet {
 	return Subnet{
-		Range:   octet + ".0/24",
-		Gateway: octet + ".1",
+		Range:   cidr,
+		Gateway: gateway,
 		AZ:      azName,
 	}
 }
