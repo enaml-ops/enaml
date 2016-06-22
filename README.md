@@ -24,6 +24,35 @@ $ go get github.com/enaml-ops/enaml/cmd/enaml
 $ enaml generate-jobs https://bosh.io/d/github.com/concourse/concourse?v=1.1.0
 ```
 
+### maybe you've got a manifest but dont know how to maintain it (ie. key/cert/pass rotation, or automated component scaling, etc)
+```
+package main
+
+import (
+		"fmt"
+    "io/ioutil"
+    "os"
+
+    "github.com/enaml-ops/enaml"
+)
+
+//this will take a manifest scale its instance counts and return a new manifest
+func main() {
+    originalFileBytes, _ := ioutil.ReadFile(os.Args[1])
+    enamlizedManifest := enaml.NewDeploymentManifest(originalFileBytes)
+
+    for i, job := range enamlizedManifest.Jobs {
+        job.Instances += 1
+        enamlizedManifest.Jobs[i] = job
+    }
+    ymlBytes, _ := enaml.Paint(enamlizedManifest)
+    fmt.Println(string(ymlBytes))
+}
+
+
+#then call it
+$> go run main.go my-cf-manifest.yml > my-scaled-cf-manifest.yml
+```
 
 
 ### how your deployment could look
