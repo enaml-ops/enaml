@@ -119,6 +119,16 @@ func (s *DeploymentManifest) AddInstanceGroup(i *InstanceGroup) (err error) {
 	return
 }
 
+func (s *DeploymentManifest) GetInstanceGroupByName(name string) (ig *InstanceGroup) {
+	for _, i := range s.InstanceGroups {
+		if i.Name == name {
+			ig = i
+			break
+		}
+	}
+	return
+}
+
 func (s *DeploymentManifest) GetJobByName(name string) (job *Job) {
 	for _, j := range s.Jobs {
 		if j.Name == name {
