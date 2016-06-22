@@ -25,11 +25,11 @@ $ enaml generate-jobs https://bosh.io/d/github.com/concourse/concourse?v=1.1.0
 ```
 
 ### maybe you've got a manifest but dont know how to maintain it (ie. key/cert/pass rotation, or automated component scaling, etc)
-```
+```go
 package main
 
 import (
-		"fmt"
+    "fmt"
     "io/ioutil"
     "os"
 
