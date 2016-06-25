@@ -95,7 +95,7 @@ func (s *ManualNetwork) AddSubnet(subnet Subnet) (err error) {
 	return
 }
 
-func NewSubnet(cidr, gateway,  azName string) Subnet {
+func NewSubnet(cidr, gateway, azName string) Subnet {
 	return Subnet{
 		Range:   cidr,
 		Gateway: gateway,
