@@ -19,6 +19,17 @@ func (s *InstanceGroup) AddNetwork(network Network) (err error) {
 	return
 }
 
+func (s *InstanceGroup) GetNetworkByName(name string) (n *Network) {
+
+	for _, network := range s.Networks {
+		if network.Name == name {
+			n = &network
+			break
+		}
+	}
+	return
+}
+
 func (s *InstanceGroup) AddJob(job *InstanceJob) (err error) {
 	s.Jobs = append(s.Jobs, *job)
 	return
