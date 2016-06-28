@@ -165,7 +165,7 @@ type Compilation struct {
 }
 
 type Update struct {
-	Canaries        int    `yaml:"canaries"`
+	Canaries        int    `yaml:"canaries,omitempty"`
 	MaxInFlight     int    `yaml:"max_in_flight,omitempty"`
 	CanaryWatchTime string `yaml:"canary_watch_time,omitempty"`
 	UpdateWatchTime string `yaml:"update_watch_time,omitempty"`
