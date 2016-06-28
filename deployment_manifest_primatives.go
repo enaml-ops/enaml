@@ -35,6 +35,7 @@ type InstanceGroup struct {
 	AZs                []string      `yaml:"azs,flow,omitempty"`
 	Networks           []Network     `yaml:"networks,flow"`
 	Jobs               []InstanceJob `yaml:"jobs"`
+	Update             Update        `yaml:"update,omitempty"`
 }
 
 type InstanceJob struct {
