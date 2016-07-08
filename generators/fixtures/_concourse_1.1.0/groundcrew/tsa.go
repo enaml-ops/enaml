@@ -5,6 +5,13 @@ package groundcrew
 */
 type Tsa struct {
 
+	/*Host - Descr: IP or DNS address of the TSA server to register with.
+
+If not specified, the `tsa` link is used.
+ Default: <nil>
+*/
+	Host interface{} `yaml:"host,omitempty"`
+
 	/*PrivateKey - Descr: Private key to use when authenticating with the TSA.
 If not specified, a deployment-scoped default is used.
  Default: 
@@ -24,12 +31,5 @@ If not specified, a deployment-scoped default is used.
  Default: 
 */
 	HostPublicKey interface{} `yaml:"host_public_key,omitempty"`
-
-	/*Host - Descr: IP or DNS address of the TSA server to register with.
-
-If not specified, the `tsa` link is used.
- Default: <nil>
-*/
-	Host interface{} `yaml:"host,omitempty"`
 
 }

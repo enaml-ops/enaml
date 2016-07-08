@@ -8,62 +8,44 @@ import (
 	"text/template"
 
 	"github.com/enaml-ops/enaml"
+	"github.com/xchapter7x/lo"
 	"gopkg.in/yaml.v2"
 )
 
-func generate(packagename string, fileBytes []byte, outputDir string) {
+//Generate - used to generate a struct for a given job
+func Generate(packagename string, fileBytes []byte, outputDir string) {
 	b := preprocessJobManifest(fileBytes)
 	objects := make(map[string]map[string]ObjectField)
-
+	var properties []string
+	for _, v := range b.recs {
+		properties = append(properties, v.Orig)
+	}
 	for i := 0; i < b.max; i++ {
 
 		for _, v := range b.recs {
-
 			if v.Length-1 >= i {
-				var structname = newStructName(i, v, packagename)
-				var typeName = newTypeName(i, v)
+
+				var structname = v.StructName(i, packagename, properties)
+				var typeName = v.TypeName(i, properties)
+				elementName := v.Slice[i]
 
 				if _, ok := objects[structname]; !ok {
 					objects[structname] = make(map[string]ObjectField)
 				}
 
-				if !nestedTypeDefinition(structname, typeName, FormatName(v.Slice[i])) {
-
-					objects[structname][v.Slice[i]] = ObjectField{
-						ElementName:       FormatName(v.Slice[i]),
-						ElementType:       typeName,
-						ElementAnnotation: "`yaml:\"" + v.Slice[i] + ",omitempty\"`",
-						Meta:              v.Yaml,
-					}
+				lo.G.Debug("Adding", elementName, "to", structname, "with type", typeName)
+				objects[structname][v.Slice[i]] = ObjectField{
+					ElementName:       FormatName(elementName),
+					ElementType:       typeName,
+					ElementAnnotation: "`yaml:\"" + elementName + ",omitempty\"`",
+					Meta:              v.Yaml,
 				}
+
 			}
 		}
 	}
 	structs := generateStructs(objects, packagename)
 	writeStructsToDisk(structs, outputDir)
-}
-
-func nestedTypeDefinition(structname, typeName, elementName string) bool {
-	return (structname == typeName && typeName == elementName)
-}
-
-func newStructName(i int, v record, packagename string) (structname string) {
-	if i > 0 {
-		structname = FormatName(strings.Join(v.Slice[i-1:i], ""))
-
-	} else {
-		structname = FormatName(packagename)
-	}
-	return
-}
-
-func newTypeName(i int, v record) (typename string) {
-	if i+1 < v.Length {
-		typename = "*" + FormatName(v.Slice[i])
-	} else {
-		typename = "interface{}"
-	}
-	return
 }
 
 func writeStructsToDisk(structs []jobStructTemplate, outputDir string) {
@@ -108,16 +90,23 @@ func preprocessJobManifest(jobmanifest []byte) (proc processing) {
 	yaml.Unmarshal(jobmanifest, &manifestYaml)
 
 	for k, v := range manifestYaml.Properties {
-		rec := record{
-			Length: len(strings.Split(k, ".")),
-			Orig:   k,
-			Slice:  strings.Split(k, "."),
-			Yaml:   v,
-		}
+		rec := CreateNewRecord(k, v)
 		proc.recs = append(proc.recs, rec)
 		if proc.max < rec.Length {
 			proc.max = rec.Length
 		}
+	}
+	return
+}
+
+//CreateNewRecord - creates a record from a given period delimited property and enaml.JobManifestProperty
+func CreateNewRecord(property string, yaml enaml.JobManifestProperty) (record Record) {
+	elementArray := strings.Split(property, ".")
+	record = Record{
+		Length: len(elementArray),
+		Orig:   property,
+		Slice:  elementArray,
+		Yaml:   yaml,
 	}
 	return
 }

@@ -7,9 +7,9 @@ import (
 	"os/exec"
 	"path"
 
+	. "github.com/enaml-ops/enaml/generators"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
-	. "github.com/enaml-ops/enaml/generators"
 	"github.com/xchapter7x/lo"
 )
 

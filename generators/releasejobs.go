@@ -72,7 +72,7 @@ func (s *ReleaseJobsGenerator) processJobManifest(jobTarball io.Reader, tarballF
 	jobname := strings.Split(path.Base(tarballFilename), ".")[0]
 	buf := new(bytes.Buffer)
 	buf.ReadFrom(jobTarball)
-	generate(removeDashes(jobname), buf.Bytes(), path.Join(s.OutputDir, jobname))
+	Generate(removeDashes(jobname), buf.Bytes(), path.Join(s.OutputDir, jobname))
 }
 
 func (s *ReleaseJobsGenerator) getTarballReader(reader io.Reader) *tar.Reader {

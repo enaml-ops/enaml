@@ -5,6 +5,13 @@ package groundcrew
 */
 type Baggageclaim struct {
 
+	/*ForwardAddress - Descr: Baggageclaim server connection address to forward through SSH to the TSA.
+
+If not specified, the Baggageclaim server address is registered directly.
+ Default: <nil>
+*/
+	ForwardAddress interface{} `yaml:"forward_address,omitempty"`
+
 	/*Url - Descr: Baggageclaim server URL to advertise directly to the
 TSA.
 
@@ -13,12 +20,5 @@ used.
  Default: <nil>
 */
 	Url interface{} `yaml:"url,omitempty"`
-
-	/*ForwardAddress - Descr: Baggageclaim server connection address to forward through SSH to the TSA.
-
-If not specified, the Baggageclaim server address is registered directly.
- Default: <nil>
-*/
-	ForwardAddress interface{} `yaml:"forward_address,omitempty"`
 
 }

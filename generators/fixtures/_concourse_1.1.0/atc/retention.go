@@ -8,6 +8,6 @@ type Retention struct {
 	/*Container - Descr: The duration to keep a failed step's containers before expiring them.
  Default: 1h
 */
-	Container Container `yaml:"container,omitempty"`
+	Container *Container `yaml:"container,omitempty"`
 
 }

@@ -38,7 +38,6 @@ var (
 )
 
 func main() {
-	var err error
 	app := cli.NewApp()
 	app.Name = "enaml"
 	app.Usage = "Because (EN)ough with the y(AML) already"
@@ -47,7 +46,8 @@ func main() {
 			Name: "John Calabrese",
 		},
 		cli.Author{
-			Name: "Caleb Washburn",
+			Name:  "Caleb Washburn",
+			Email: "caleb.washburn@me.com",
 		},
 		cli.Author{
 			Name:  "Shawn Neal",
@@ -61,9 +61,10 @@ func main() {
 			Usage:     "Generate golang structs for a given release",
 			ArgsUsage: "<releaseURL>",
 
-			Action: func(c *cli.Context) {
+			Action: func(c *cli.Context) (err error) {
 				generators.GenerateReleaseJobsPackage(c.Args().First(), cacheDir, OutputDir)
 				println("completed generating release job structs for ", c.Args().First())
+				return
 			},
 		},
 		{
@@ -76,7 +77,7 @@ func main() {
 					Usage: "Focus the command to a specific named `JOB`",
 				},
 			},
-			Action: func(c *cli.Context) {
+			Action: func(c *cli.Context) (err error) {
 				d := run.NewDiffCmd(releaseRepo, c.Args()[0], c.Args()[1])
 				if len(c.String("job")) > 0 {
 					err = d.Job(c.String("job"), os.Stdout)
@@ -84,16 +85,18 @@ func main() {
 					err = d.All(os.Stdout)
 				}
 				ifErrorDisplayAndExit(err)
+				return
 			},
 		},
 		{
 			Name:      "show",
 			Usage:     "Show details about the release",
 			ArgsUsage: "<releaseURL>",
-			Action: func(c *cli.Context) {
+			Action: func(c *cli.Context) (err error) {
 				s := run.NewShowCmd(releaseRepo, c.Args()[0])
-				err := s.All(os.Stdout)
+				err = s.All(os.Stdout)
 				ifErrorDisplayAndExit(err)
+				return
 			},
 		},
 	}

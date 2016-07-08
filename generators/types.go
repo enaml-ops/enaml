@@ -26,7 +26,7 @@ type ObjectField struct {
 	Meta              enaml.JobManifestProperty
 }
 
-type record struct {
+type Record struct {
 	Length int
 	Slice  []string
 	Orig   string
@@ -35,5 +35,5 @@ type record struct {
 
 type processing struct {
 	max  int
-	recs []record
+	recs []Record
 }

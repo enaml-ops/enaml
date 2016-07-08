@@ -1,9 +1,9 @@
 package generators_test
 
 import (
+	. "github.com/enaml-ops/enaml/generators"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
-	. "github.com/enaml-ops/enaml/generators"
 )
 
 var _ = Describe("name formatters", func() {

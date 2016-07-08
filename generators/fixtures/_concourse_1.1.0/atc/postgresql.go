@@ -5,10 +5,10 @@ package atc
 */
 type Postgresql struct {
 
-	/*Role - Descr: Name of role to connect with.
+	/*Database - Descr: Name of the database to use.
  Default: atc
 */
-	Role Role `yaml:"role,omitempty"`
+	Database interface{} `yaml:"database,omitempty"`
 
 	/*Address - Descr: Address of a PostgreSQL server to connect to, in `HOST:PORT` format.
 
@@ -17,9 +17,9 @@ If not specified, one will be autodiscovered via BOSH links.
 */
 	Address interface{} `yaml:"address,omitempty"`
 
-	/*Database - Descr: Name of the database to use.
+	/*Role - Descr: Name of role to connect with.
  Default: atc
 */
-	Database interface{} `yaml:"database,omitempty"`
+	Role *Role `yaml:"role,omitempty"`
 
 }

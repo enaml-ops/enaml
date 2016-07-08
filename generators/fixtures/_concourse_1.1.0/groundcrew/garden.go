@@ -5,6 +5,13 @@ package groundcrew
 */
 type Garden struct {
 
+	/*ForwardAddress - Descr: Garden server connection address to forward through SSH to the TSA.
+
+If not specified, the Garden server address is registered directly.
+ Default: <nil>
+*/
+	ForwardAddress interface{} `yaml:"forward_address,omitempty"`
+
 	/*Address - Descr: Garden server connection address to advertise directly to the TSA.
 
 If not specified, either the `garden` link is used, or
@@ -13,12 +20,5 @@ found.
  Default: <nil>
 */
 	Address interface{} `yaml:"address,omitempty"`
-
-	/*ForwardAddress - Descr: Garden server connection address to forward through SSH to the TSA.
-
-If not specified, the Garden server address is registered directly.
- Default: <nil>
-*/
-	ForwardAddress interface{} `yaml:"forward_address,omitempty"`
 
 }

@@ -5,14 +5,14 @@ package atc
 */
 type Container struct {
 
-	/*FailureDuration - Descr: The duration to keep a failed step's containers before expiring them.
- Default: 1h
-*/
-	FailureDuration interface{} `yaml:"failure_duration,omitempty"`
-
 	/*SuccessDuration - Descr: The duration to keep a succeeded step's containers before expiring them.
  Default: 5m
 */
 	SuccessDuration interface{} `yaml:"success_duration,omitempty"`
+
+	/*FailureDuration - Descr: The duration to keep a failed step's containers before expiring them.
+ Default: 1h
+*/
+	FailureDuration interface{} `yaml:"failure_duration,omitempty"`
 
 }

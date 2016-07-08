@@ -7,7 +7,7 @@ type Syslog struct {
 
 	/*Destination - Descr: transport protocol for syslog drain (udp/tcp/tls) Default: tls
 */
-	Destination Destination `yaml:"destination,omitempty"`
+	Destination *Destination `yaml:"destination,omitempty"`
 
 	/*SourceDir - Descr: directory with subdirectories containing log files. log lines will be tagged with subdirectory name.
  Default: /var/vcap/sys/log
