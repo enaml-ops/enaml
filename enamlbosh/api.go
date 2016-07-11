@@ -83,6 +83,39 @@ func (s *Client) PostRemoteRelease(rls enaml.Release, httpClient HttpClientDoer)
 	return
 }
 
+func (s *Client) CheckRemoteStemcell(sc enaml.Stemcell, httpClient HttpClientDoer) (exists bool, err error) {
+
+	if sc.Name == "" || sc.Version == "" {
+		err = fmt.Errorf("name or version not set. these are required to check for remote stemcells Name: %s , Version: %s", sc.Name, sc.Version)
+
+	} else {
+		var req *http.Request
+		var res *http.Response
+		exists = false
+		if req, err = http.NewRequest("GET", s.buildBoshURL("/stemcells"), nil); err == nil {
+			req.SetBasicAuth(s.user, s.pass)
+			req.Header.Set("content-type", "application/json")
+
+			if res, err = httpClient.Do(req); err == nil {
+				defer res.Body.Close()
+				var b []byte
+
+				if b, err = ioutil.ReadAll(res.Body); err == nil {
+					stemcells := make([]DeployedStemcell, 0)
+					err = json.Unmarshal(b, &stemcells)
+					for _, stemcell := range stemcells {
+						if stemcell.Name == sc.Name && stemcell.Version == sc.Version {
+							exists = true
+							break
+						}
+					}
+				}
+			}
+		}
+	}
+	return
+}
+
 func (s *Client) PostRemoteStemcell(sc enaml.Stemcell, httpClient HttpClientDoer) (bt BoshTask, err error) {
 
 	if sc.URL == "" || sc.SHA1 == "" {

@@ -90,8 +90,9 @@ func (s *DeploymentManifest) AddRemoteStemcell(name, alias, ver, url, sha1 strin
 		versionedURL = url + "?v=" + ver
 	}
 	s.Stemcells = append(s.Stemcells, Stemcell{
+		Name:    name,
 		Alias:   alias,
-		OS:      name,
+		OS:      alias,
 		URL:     versionedURL,
 		SHA1:    sha1,
 		Version: ver,

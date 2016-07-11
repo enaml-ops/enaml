@@ -50,3 +50,9 @@ type BoshTask struct {
 	Result      string
 	User        string
 }
+
+//DeployedStemcell - response of stemcells already deployed
+type DeployedStemcell struct {
+	Name    string
+	Version string
+}
