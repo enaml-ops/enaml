@@ -24,6 +24,7 @@ _testmain.go
 *.prof
 
 vendor/
+.wercker/
 .cache
 cmd/enaml/enaml
 .DS_Store
