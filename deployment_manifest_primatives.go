@@ -186,6 +186,10 @@ type Job struct {
 	Networks           []Network   `yaml:"networks"`
 }
 
+func (s *Job) AddProperty(prop interface{}) {
+	s.Properties = append(s.Properties.([]interface{}), prop)
+}
+
 func (s *Job) AddTemplate(t Template) (err error) {
 	s.Templates = append(s.Templates, t)
 	return
