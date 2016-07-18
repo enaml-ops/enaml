@@ -16,12 +16,12 @@ helpers**
 
 
 ### how to use enaml as a cli
-```bash
-#install it using go get
-$ go get github.com/enaml-ops/enaml/cmd/enaml
 
-#create golang structs for job properties from a release
-$ enaml generate-jobs https://bosh.io/d/github.com/concourse/concourse?v=1.1.0
+Download the latest binary release for your OS from: https://github.com/enaml-ops/enaml/releases/latest
+
+```bash
+# create golang structs for job properties from a release
+$ enaml generate https://bosh.io/d/github.com/concourse/concourse?v=1.1.0
 ```
 
 ### maybe you've got a manifest but dont know how to maintain it (ie. key/cert/pass rotation, or automated component scaling, etc)
@@ -112,13 +112,14 @@ func (s Deployment) GetDeployment() enaml.DeploymentManifest {
 }
 ```
 
-### Building enaml
+### Development
 
 Enaml uses [Glide](https://github.com/Masterminds/glide) to manage vendored Go
 dependencies. Glide is a tool for managing the vendor directory within a Go
 package. As such, Golang 1.6+ is recommended.
 
 1. If you haven't done so already, install glide and configure your GOPATH.
-2. Open a terminal to the cloned enaml repo directory and run `glide install`
-3. Run the enaml tests `go test $(glide novendor)`
-4. Build the enaml executable `go build -o $GOPATH/bin/enaml cmd/enaml/main.go`
+2. Clone `enaml` to your GOPATH: `git clone https://github.com/enaml-ops/enaml $GOPATH/src/github.com/enaml-ops`
+3. Install dependencies: `cd $GOPATH/src/github.com/enaml-ops/enaml && glide install`
+4. Run the enaml tests `go test $(glide novendor)`
+5. Build the `enaml` executable `go build -o $GOPATH/bin/enaml cmd/enaml/main.go`
