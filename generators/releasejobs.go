@@ -42,6 +42,10 @@ func (s *ReleaseJobsGenerator) ProcessFile(srcFile string) {
 		if err == io.EOF {
 			break
 		}
+		if err != nil {
+			fmt.Println(err)
+			break
+		}
 		name := header.Name
 
 		switch header.Typeflag {
