@@ -25,21 +25,58 @@ var _ = Describe("DeploymentManifest", func() {
 		})
 	})
 
+	Describe("given a deployment manifest", func() {
+		Context("when adding a stemcell by name", func() {
+			dm := new(DeploymentManifest)
+			const name = "stemcell-name"
+			const alias = "alias"
+			dm.AddStemcellByName(name, alias)
+
+			It("should have a stemcell with the name specified and the OS empty", func() {
+				Ω(len(dm.Stemcells)).Should(Equal(1))
+				Ω(dm.Stemcells[0].Alias).Should(Equal(alias))
+
+				Ω(dm.Stemcells[0].Name).Should(Equal(name))
+				Ω(dm.Stemcells[0].OS).Should(BeEmpty())
+			})
+		})
+
+		Context("when adding a stemcell by OS", func() {
+			dm := new(DeploymentManifest)
+			const os = "ubuntu-trusty"
+			const alias = "alias"
+			dm.AddStemcellByOS(os, alias)
+
+			It("should have a stemcell with the OS specified and the name empty", func() {
+				Ω(len(dm.Stemcells)).Should(Equal(1))
+				Ω(dm.Stemcells[0].Alias).Should(Equal(alias))
+
+				Ω(dm.Stemcells[0].OS).Should(Equal(os))
+				Ω(dm.Stemcells[0].Name).Should(BeEmpty())
+			})
+		})
+	})
+
 	Describe("given AddRemoteStemcell", func() {
 		Context("when called with valid remote stemcell values", func() {
 			var dm *DeploymentManifest
-			var controlName = "name"
-			var controlVer = "1.2"
-			var controlURL = "http://hi.com"
-			var controlSHA = "alkshdglkashdg9243"
+			const controlOS = "ubuntu-trusty"
+			const controlVer = "1.2"
+			const controlURL = "http://hi.com"
+			const controlSHA = "alkshdglkashdg9243"
+			const controlAlias = "stuf"
+
 			BeforeEach(func() {
 				dm = new(DeploymentManifest)
-				dm.AddRemoteStemcell(controlName, "stuf", controlVer, controlURL, controlSHA)
+				dm.AddRemoteStemcell(controlOS, controlAlias, controlVer, controlURL, controlSHA)
 			})
 
 			It("then it should properly add a remote stemcell record", func() {
-				Ω(dm.Stemcells[0].Name).Should(Equal(controlName))
-				Ω(dm.Stemcells[0].Alias).Should(Equal("stuf"))
+				// you can specify name OR os, make sure we didn't do both
+				Ω(dm.Stemcells[0].OS).Should(Equal(controlOS))
+				Ω(dm.Stemcells[0].Name).Should(BeEmpty())
+
+				Ω(dm.Stemcells[0].Alias).Should(Equal(controlAlias))
 				Ω(dm.Stemcells[0].URL).Should(Equal(controlURL + "?v=" + controlVer))
 				Ω(dm.Stemcells[0].SHA1).Should(Equal(controlSHA))
 				Ω(dm.Stemcells[0].Version).Should(Equal(controlVer))

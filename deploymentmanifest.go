@@ -77,26 +77,36 @@ func (s *DeploymentManifest) AddStemcell(stemcell Stemcell) (err error) {
 	return
 }
 
-func (s *DeploymentManifest) AddStemcellByName(name, alias string) (err error) {
-	s.Stemcells = append(s.Stemcells, Stemcell{Alias: alias, OS: name, Version: "latest"})
-	return
+func (s *DeploymentManifest) AddStemcellByName(name, alias string) {
+	s.Stemcells = append(s.Stemcells, Stemcell{
+		Name:    name,
+		Alias:   alias,
+		Version: "latest",
+	})
 }
 
-//AddRemoteStemcell - adds a remote stemcell to the manifest. Url should not
-//contain version information
-func (s *DeploymentManifest) AddRemoteStemcell(name, alias, ver, url, sha1 string) (err error) {
+func (s *DeploymentManifest) AddStemcellByOS(os, alias string) {
+	s.Stemcells = append(s.Stemcells, Stemcell{
+		OS:      os,
+		Alias:   alias,
+		Version: "latest",
+	})
+}
+
+// AddRemoteStemcell adds a remote stemcell to the manifest.
+// The URL should not contain version information.
+func (s *DeploymentManifest) AddRemoteStemcell(os, alias, ver, url, sha1 string) {
 	versionedURL := ""
 	if url != "" && ver != "" {
 		versionedURL = url + "?v=" + ver
 	}
 	s.Stemcells = append(s.Stemcells, Stemcell{
-		Name:    name,
+		OS:      os,
 		Alias:   alias,
+		Version: ver,
 		URL:     versionedURL,
 		SHA1:    sha1,
-		Version: ver,
 	})
-	return
 }
 
 func (s *DeploymentManifest) AddDiskPool(d DiskPool) (err error) {
