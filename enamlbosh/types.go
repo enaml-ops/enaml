@@ -60,7 +60,12 @@ func NewClientUAA(user, pass, id, secret, host string, port int, uaaURL string, 
 			TokenURL: fmt.Sprintf("%s/oauth/token", uaaURL),
 		},
 	}
-	tok, err := cfg.PasswordCredentialsToken(context.Background(), user, pass)
+
+	// make sure we use our HTTP client for getting the token,
+	// not http.DefaultClient
+	ctx := context.WithValue(context.Background(), oauth2.HTTPClient, c.http)
+
+	tok, err := cfg.PasswordCredentialsToken(ctx, user, pass)
 	c.token = tok
 	return c, err
 }

@@ -14,6 +14,15 @@ import (
 	"github.com/onsi/gomega/ghttp"
 )
 
+const tokenResponse = `{
+  "access_token":"abcdef01234567890",
+  "token_type":"bearer",
+  "refresh_token":"0987654321fedcba",
+  "expires_in":3599,
+  "scope":"opsman.user uaa.admin scim.read opsman.admin scim.write",
+  "jti":"foo"
+}`
+
 var _ = Describe("given *Client", func() {
 	var boshclient *Client
 	var server *ghttp.Server
@@ -29,6 +38,58 @@ var _ = Describe("given *Client", func() {
 			User:        "admin",
 		}
 	)
+
+	Describe("UAA tests", func() {
+		const idControl = "clientid"
+		const secretControl = "clientsecret"
+
+		BeforeEach(func() {
+			server = ghttp.NewTLSServer()
+		})
+
+		Context("when creating a UAA-enabled bosh client", func() {
+			var boshclient *Client
+			var err error
+
+			BeforeEach(func() {
+				server.AppendHandlers(
+					ghttp.CombineHandlers(
+						ghttp.VerifyRequest("POST", "/oauth/token"),
+						ghttp.RespondWith(http.StatusOK, tokenResponse, http.Header{
+							"Content-Type": []string{"application/json"}}),
+					),
+					ghttp.CombineHandlers(
+						ghttp.VerifyRequest("GET", "/stemcells"),
+						ghttp.RespondWith(http.StatusOK, "[]"),
+					),
+				)
+				u, _ := url.Parse(server.URL())
+				host, port, _ := net.SplitHostPort(u.Host)
+				host = u.Scheme + "://" + host
+				portInt, _ := strconv.Atoi(port)
+				const skipSSLVerify = true
+				boshclient, err = NewClientUAA(userControl, passControl, idControl, secretControl, host, portInt, server.URL(), skipSSLVerify)
+			})
+
+			It("should have returned a non-nil client and no error", func() {
+				Ω(err).ShouldNot(HaveOccurred())
+				Ω(boshclient).ShouldNot(BeNil())
+			})
+
+			It("should include the token in future requests", func() {
+				boshclient.GetStemcells()
+				lastReq := server.ReceivedRequests()[len(server.ReceivedRequests())-1]
+				_, _, hasBasicAuth := lastReq.BasicAuth()
+				Ω(hasBasicAuth).Should(BeFalse())
+
+				Ω(lastReq.Header["Authorization"]).Should(ConsistOf("Bearer abcdef01234567890"))
+			})
+		})
+
+		AfterEach(func() {
+			server.Close()
+		})
+	})
 
 	Describe("basic auth tests", func() {
 		BeforeEach(func() {
