@@ -21,7 +21,8 @@ var _ = Describe("given *Client", func() {
 			portControl = 25555
 		)
 		BeforeEach(func() {
-			boshclient = NewClient(userControl, passControl, hostControl, portControl)
+			const skipSSLVerify = true
+			boshclient = NewClientBasic(userControl, passControl, hostControl, portControl, skipSSLVerify)
 		})
 		Describe("GetTask", func() {
 			Context("when calling its GetTask method with a valid taskid", func() {
@@ -29,7 +30,11 @@ var _ = Describe("given *Client", func() {
 				var err error
 				BeforeEach(func() {
 					doer := new(enamlboshfakes.FakeHttpClientDoer)
-					body, _ := os.Open("fixtures/deployment_task.json")
+					var body *os.File
+					body, err = os.Open("fixtures/deployment_task.json")
+					if err == nil {
+						defer body.Close()
+					}
 					doer.DoReturns(&http.Response{
 						Body: body,
 					}, nil)
@@ -46,7 +51,11 @@ var _ = Describe("given *Client", func() {
 				var err error
 				BeforeEach(func() {
 					doer := new(enamlboshfakes.FakeHttpClientDoer)
-					body, _ := os.Open("fixtures/deployment_task.json")
+					var body *os.File
+					body, err = os.Open("fixtures/deployment_task.json")
+					if err == nil {
+						defer body.Close()
+					}
 					doer.DoReturns(&http.Response{
 						Body: body,
 					}, nil)
@@ -64,7 +73,11 @@ var _ = Describe("given *Client", func() {
 				var err error
 				BeforeEach(func() {
 					doer := new(enamlboshfakes.FakeHttpClientDoer)
-					body, _ := os.Open("fixtures/deployment_task.json")
+					var body *os.File
+					body, err = os.Open("fixtures/deployment_task.json")
+					if err == nil {
+						defer body.Close()
+					}
 					doer.DoReturns(&http.Response{
 						Body: body,
 					}, nil)
@@ -98,7 +111,11 @@ var _ = Describe("given *Client", func() {
 				var err error
 				BeforeEach(func() {
 					doer := new(enamlboshfakes.FakeHttpClientDoer)
-					body, _ := os.Open("fixtures/deployment_task.json")
+					var body *os.File
+					body, err = os.Open("fixtures/deployment_task.json")
+					if err == nil {
+						defer body.Close()
+					}
 					doer.DoReturns(&http.Response{
 						Body: body,
 					}, nil)
@@ -131,7 +148,11 @@ var _ = Describe("given *Client", func() {
 				var err error
 				BeforeEach(func() {
 					doer := new(enamlboshfakes.FakeHttpClientDoer)
-					body, _ := os.Open("fixtures/deployment_task.json")
+					var body *os.File
+					body, err = os.Open("fixtures/deployment_task.json")
+					if err == nil {
+						defer body.Close()
+					}
 					doer.DoReturns(&http.Response{
 						Body: body,
 					}, nil)
@@ -149,7 +170,11 @@ var _ = Describe("given *Client", func() {
 				var err error
 				BeforeEach(func() {
 					doer := new(enamlboshfakes.FakeHttpClientDoer)
-					body, _ := os.Open("fixtures/getcloudconfig.yml")
+					var body *os.File
+					body, err = os.Open("fixtures/getcloudconfig.yml")
+					if err == nil {
+						defer body.Close()
+					}
 					doer.DoReturns(&http.Response{
 						Body: body,
 					}, nil)
@@ -172,7 +197,11 @@ var _ = Describe("given *Client", func() {
 				var err error
 				BeforeEach(func() {
 					doer := new(enamlboshfakes.FakeHttpClientDoer)
-					body, _ := os.Open("fixtures/getinfo.json")
+					var body *os.File
+					body, err = os.Open("fixtures/getinfo.json")
+					if err == nil {
+						defer body.Close()
+					}
 					doer.DoReturns(&http.Response{
 						Body: body,
 					}, nil)
@@ -255,7 +284,11 @@ var _ = Describe("given *Client", func() {
 				Context("when called using a enaml.stemcell configured with a Name and OS and Version but empty response from bosh", func() {
 					BeforeEach(func() {
 						doer := new(enamlboshfakes.FakeHttpClientDoer)
-						body, _ := os.Open("fixtures/stemcell_not_exists.json")
+						var body *os.File
+						body, err = os.Open("fixtures/stemcell_not_exists.json")
+						if err == nil {
+							defer body.Close()
+						}
 						doer.DoReturns(&http.Response{
 							Body: body,
 						}, nil)
@@ -274,7 +307,11 @@ var _ = Describe("given *Client", func() {
 				Context("when called using a enaml.stemcell configured with a Name and OS and Version but no match in bosh result set", func() {
 					BeforeEach(func() {
 						doer := new(enamlboshfakes.FakeHttpClientDoer)
-						body, _ := os.Open("fixtures/stemcell_exists.json")
+						var body *os.File
+						body, err = os.Open("fixtures/stemcell_exists.json")
+						if err == nil {
+							defer body.Close()
+						}
 						doer.DoReturns(&http.Response{
 							Body: body,
 						}, nil)
@@ -298,7 +335,11 @@ var _ = Describe("given *Client", func() {
 				Context("when called using a enaml.stemcell configured with a Name and OS and Version", func() {
 					BeforeEach(func() {
 						doer := new(enamlboshfakes.FakeHttpClientDoer)
-						body, _ := os.Open("fixtures/stemcell_exists.json")
+						var body *os.File
+						body, err = os.Open("fixtures/stemcell_exists.json")
+						if err == nil {
+							defer body.Close()
+						}
 						doer.DoReturns(&http.Response{
 							Body: body,
 						}, nil)
@@ -317,7 +358,11 @@ var _ = Describe("given *Client", func() {
 				Context("when called using a enaml.stemcell configured with a name and version only", func() {
 					BeforeEach(func() {
 						doer := new(enamlboshfakes.FakeHttpClientDoer)
-						body, _ := os.Open("fixtures/stemcell_exists.json")
+						var body *os.File
+						body, err = os.Open("fixtures/stemcell_exists.json")
+						if err == nil {
+							defer body.Close()
+						}
 						doer.DoReturns(&http.Response{
 							Body: body,
 						}, nil)
@@ -335,7 +380,11 @@ var _ = Describe("given *Client", func() {
 				Context("when called using a enaml.stemcell configured with a os and version only", func() {
 					BeforeEach(func() {
 						doer := new(enamlboshfakes.FakeHttpClientDoer)
-						body, _ := os.Open("fixtures/stemcell_exists.json")
+						var body *os.File
+						body, err = os.Open("fixtures/stemcell_exists.json")
+						if err == nil {
+							defer body.Close()
+						}
 						doer.DoReturns(&http.Response{
 							Body: body,
 						}, nil)
@@ -353,7 +402,11 @@ var _ = Describe("given *Client", func() {
 				Context("when called using a enaml.stemcell configured without a version", func() {
 					BeforeEach(func() {
 						doer := new(enamlboshfakes.FakeHttpClientDoer)
-						body, _ := os.Open("fixtures/stemcell_exists.json")
+						var body *os.File
+						body, err = os.Open("fixtures/stemcell_exists.json")
+						if err == nil {
+							defer body.Close()
+						}
 						doer.DoReturns(&http.Response{
 							Body: body,
 						}, nil)

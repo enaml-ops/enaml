@@ -8,3 +8,7 @@ import:
 - package: github.com/kr/pretty
 - package: github.com/kr/text
 - package: github.com/xchapter7x/lo
+- package: golang.org/x/oauth2
+- package: golang.org/x/net
+  subpackages:
+  - context

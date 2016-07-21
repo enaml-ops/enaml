@@ -17,10 +17,20 @@ import (
 // basic auth headers if the client is configured for basic auth.
 func (s *Client) newRequest(method, url string, body io.Reader) (*http.Request, error) {
 	req, err := http.NewRequest(method, url, body)
-	if err == nil {
-		req.SetBasicAuth(s.user, s.pass)
+	if err != nil {
+		return nil, err
 	}
-	return req, err
+
+	setAuth(s, req)
+	return req, nil
+}
+
+func setAuth(c *Client, r *http.Request) {
+	if c.token == nil {
+		r.SetBasicAuth(c.user, c.pass)
+	} else {
+		c.token.SetAuthHeader(r)
+	}
 }
 
 func (s *Client) NewCloudConfigRequest(cloudconfig enaml.CloudConfigManifest) (*http.Request, error) {
