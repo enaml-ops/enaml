@@ -203,6 +203,130 @@ var _ = Describe("given *Client", func() {
 			})
 		})
 
+		Describe("CheckRemoteStemcell", func() {
+
+			Describe("given a stemcell that has not been uploaded", func() {
+				var se bool
+				var err error
+
+				Context("when called using a enaml.stemcell configured with a Name and OS and Version but empty response from bosh", func() {
+					BeforeEach(func() {
+						doer := new(enamlboshfakes.FakeHttpClientDoer)
+						body, _ := os.Open("fixtures/stemcell_not_exists.json")
+						doer.DoReturns(&http.Response{
+							Body: body,
+						}, nil)
+						se, err = boshclient.CheckRemoteStemcell(enaml.Stemcell{
+							Name:    "bosh-warden-boshlite-ubuntu-trusty-go_agent",
+							OS:      "ubuntu-trusty",
+							Version: "3126",
+						}, doer)
+					})
+					It("then it should return a false and a no errors", func() {
+						Ω(err).ShouldNot(HaveOccurred())
+						Ω(se).Should(BeFalse())
+					})
+				})
+
+				Context("when called using a enaml.stemcell configured with a Name and OS and Version but no match in bosh result set", func() {
+					BeforeEach(func() {
+						doer := new(enamlboshfakes.FakeHttpClientDoer)
+						body, _ := os.Open("fixtures/stemcell_exists.json")
+						doer.DoReturns(&http.Response{
+							Body: body,
+						}, nil)
+						se, err = boshclient.CheckRemoteStemcell(enaml.Stemcell{
+							Name:    "no-matching-name",
+							OS:      "no-matching-os",
+							Version: "no-version",
+						}, doer)
+					})
+					It("then it should return a false and a no errors", func() {
+						Ω(err).ShouldNot(HaveOccurred())
+						Ω(se).Should(BeFalse())
+					})
+				})
+			})
+
+			Describe("given a stemcell that already has been uploaded", func() {
+				var se bool
+				var err error
+
+				Context("when called using a enaml.stemcell configured with a Name and OS and Version", func() {
+					BeforeEach(func() {
+						doer := new(enamlboshfakes.FakeHttpClientDoer)
+						body, _ := os.Open("fixtures/stemcell_exists.json")
+						doer.DoReturns(&http.Response{
+							Body: body,
+						}, nil)
+						se, err = boshclient.CheckRemoteStemcell(enaml.Stemcell{
+							Name:    "bosh-warden-boshlite-ubuntu-trusty-go_agent",
+							OS:      "ubuntu-trusty",
+							Version: "3126",
+						}, doer)
+					})
+					It("then it should return a true and a no errors", func() {
+						Ω(err).ShouldNot(HaveOccurred())
+						Ω(se).Should(BeTrue())
+					})
+				})
+
+				Context("when called using a enaml.stemcell configured with a name and version only", func() {
+					BeforeEach(func() {
+						doer := new(enamlboshfakes.FakeHttpClientDoer)
+						body, _ := os.Open("fixtures/stemcell_exists.json")
+						doer.DoReturns(&http.Response{
+							Body: body,
+						}, nil)
+						se, err = boshclient.CheckRemoteStemcell(enaml.Stemcell{
+							Name:    "bosh-warden-boshlite-ubuntu-trusty-go_agent",
+							Version: "3126",
+						}, doer)
+					})
+					It("then it should return a true and a no errors", func() {
+						Ω(err).ShouldNot(HaveOccurred())
+						Ω(se).Should(BeTrue())
+					})
+				})
+
+				Context("when called using a enaml.stemcell configured with a os and version only", func() {
+					BeforeEach(func() {
+						doer := new(enamlboshfakes.FakeHttpClientDoer)
+						body, _ := os.Open("fixtures/stemcell_exists.json")
+						doer.DoReturns(&http.Response{
+							Body: body,
+						}, nil)
+						se, err = boshclient.CheckRemoteStemcell(enaml.Stemcell{
+							OS:      "ubuntu-trusty",
+							Version: "3126",
+						}, doer)
+					})
+					It("then it should return a true and a no errors", func() {
+						Ω(err).ShouldNot(HaveOccurred())
+						Ω(se).Should(BeTrue())
+					})
+				})
+
+				Context("when called using a enaml.stemcell configured without a verion", func() {
+					BeforeEach(func() {
+						doer := new(enamlboshfakes.FakeHttpClientDoer)
+						body, _ := os.Open("fixtures/stemcell_exists.json")
+						doer.DoReturns(&http.Response{
+							Body: body,
+						}, nil)
+						se, err = boshclient.CheckRemoteStemcell(enaml.Stemcell{
+							Name: "bosh-warden-boshlite-ubuntu-trusty-go_agent",
+							OS:   "ubuntu-trusty",
+						}, doer)
+					})
+					It("then it should return a error", func() {
+						Ω(err).Should(HaveOccurred())
+						Ω(se).Should(BeFalse())
+					})
+				})
+			})
+		})
+
 		Describe("NewCloudConfigRequest", func() {
 			Context("when calling its NewCloudConfigRequest method w/ a valid config file", func() {
 				var req *http.Request

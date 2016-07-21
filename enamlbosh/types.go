@@ -53,6 +53,7 @@ type BoshTask struct {
 
 //DeployedStemcell - response of stemcells already deployed
 type DeployedStemcell struct {
-	Name    string
-	Version string
+	Name    string `json:"name"`
+	Version string `json:"version"`
+	OS      string `json:"operating_system"`
 }

@@ -85,7 +85,7 @@ func (s *Client) PostRemoteRelease(rls enaml.Release, httpClient HttpClientDoer)
 
 func (s *Client) CheckRemoteStemcell(sc enaml.Stemcell, httpClient HttpClientDoer) (exists bool, err error) {
 
-	if sc.Name == "" || sc.Version == "" {
+	if (sc.Name == "" && sc.OS == "") || sc.Version == "" {
 		err = fmt.Errorf("name or version not set. these are required to check for remote stemcells Name: %s , Version: %s", sc.Name, sc.Version)
 
 	} else {
@@ -104,7 +104,7 @@ func (s *Client) CheckRemoteStemcell(sc enaml.Stemcell, httpClient HttpClientDoe
 					stemcells := make([]DeployedStemcell, 0)
 					err = json.Unmarshal(b, &stemcells)
 					for _, stemcell := range stemcells {
-						if stemcell.Name == sc.Name && stemcell.Version == sc.Version {
+						if (stemcell.Name == sc.Name || stemcell.OS == sc.OS) && stemcell.Version == sc.Version {
 							exists = true
 							break
 						}
