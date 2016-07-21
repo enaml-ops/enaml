@@ -119,7 +119,7 @@ dependencies. Glide is a tool for managing the vendor directory within a Go
 package. As such, Golang 1.6+ is recommended.
 
 1. If you haven't done so already, install glide and configure your GOPATH.
-2. Clone `enaml` to your GOPATH: `git clone https://github.com/enaml-ops/enaml $GOPATH/src/github.com/enaml-ops`
+2. Clone `enaml` to your GOPATH: `git clone https://github.com/enaml-ops/enaml $GOPATH/src/github.com/enaml-ops/enaml`
 3. Install dependencies: `cd $GOPATH/src/github.com/enaml-ops/enaml && glide install`
 4. Run the enaml tests `go test $(glide novendor)`
 5. Build the `enaml` executable `go build -o $GOPATH/bin/enaml cmd/enaml/main.go`
