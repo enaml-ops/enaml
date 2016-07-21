@@ -103,7 +103,7 @@ func (s *Client) PostRemoteRelease(rls enaml.Release, httpClient HttpClientDoer)
 	return bt, err
 }
 
-func (s *Client) GetStemcells(httpClient HttpClientDoer) (stemcells []DeployedStemcell, err error) {
+func (s *Client) GetStemcells(httpClient HttpClientDoer) ([]DeployedStemcell, error) {
 	req, err := s.newRequest("GET", s.buildBoshURL("/stemcells"), nil)
 	if err != nil {
 		return nil, err
