@@ -83,32 +83,42 @@ func (s *Client) PostRemoteRelease(rls enaml.Release, httpClient HttpClientDoer)
 	return
 }
 
+func (s *Client) GetStemcells(httpClient HttpClientDoer) (stemcells []DeployedStemcell, err error) {
+	var req *http.Request
+	var res *http.Response
+
+	if req, err = http.NewRequest("GET", s.buildBoshURL("/stemcells"), nil); err == nil {
+		req.SetBasicAuth(s.user, s.pass)
+		req.Header.Set("content-type", "application/json")
+
+		if res, err = httpClient.Do(req); err == nil {
+			defer res.Body.Close()
+			var b []byte
+
+			if b, err = ioutil.ReadAll(res.Body); err == nil {
+				stemcells = make([]DeployedStemcell, 0)
+				err = json.Unmarshal(b, &stemcells)
+			}
+		}
+	}
+	return stemcells, err
+}
+
 func (s *Client) CheckRemoteStemcell(sc enaml.Stemcell, httpClient HttpClientDoer) (exists bool, err error) {
 
 	if (sc.Name == "" && sc.OS == "") || sc.Version == "" {
 		err = fmt.Errorf("name or version not set. these are required to check for remote stemcells Name: %s , Version: %s", sc.Name, sc.Version)
 
 	} else {
-		var req *http.Request
-		var res *http.Response
 		exists = false
-		if req, err = http.NewRequest("GET", s.buildBoshURL("/stemcells"), nil); err == nil {
-			req.SetBasicAuth(s.user, s.pass)
-			req.Header.Set("content-type", "application/json")
 
-			if res, err = httpClient.Do(req); err == nil {
-				defer res.Body.Close()
-				var b []byte
+		if stemcells, err := s.GetStemcells(httpClient); err == nil {
 
-				if b, err = ioutil.ReadAll(res.Body); err == nil {
-					stemcells := make([]DeployedStemcell, 0)
-					err = json.Unmarshal(b, &stemcells)
-					for _, stemcell := range stemcells {
-						if (stemcell.Name == sc.Name || stemcell.OS == sc.OS) && stemcell.Version == sc.Version {
-							exists = true
-							break
-						}
-					}
+			for _, stemcell := range stemcells {
+
+				if (stemcell.Name == sc.Name || stemcell.OS == sc.OS) && stemcell.Version == sc.Version {
+					exists = true
+					break
 				}
 			}
 		}

@@ -203,6 +203,49 @@ var _ = Describe("given *Client", func() {
 			})
 		})
 
+		Describe("GetStemcells", func() {
+			Describe("given a call to a bosh with stemcells already uploaded", func() {
+				var sl []DeployedStemcell
+				var err error
+				BeforeEach(func() {
+					doer := new(enamlboshfakes.FakeHttpClientDoer)
+					body, _ := os.Open("fixtures/stemcell_exists.json")
+					doer.DoReturns(&http.Response{
+						Body: body,
+					}, nil)
+					sl, err = boshclient.GetStemcells(doer)
+				})
+
+				Context("when calling GetStemcells on that bosh", func() {
+					It("should return an array containing those stemcells' metadata", func() {
+						Ω(len(sl)).Should(Equal(1))
+						Ω(sl[0].Name).Should(Equal("bosh-warden-boshlite-ubuntu-trusty-go_agent"))
+						Ω(sl[0].Version).Should(Equal("3126"))
+						Ω(sl[0].OS).Should(Equal("ubuntu-trusty"))
+					})
+				})
+			})
+
+			Describe("given a call to a bosh with no stemcells available", func() {
+				var sl []DeployedStemcell
+				var err error
+				BeforeEach(func() {
+					doer := new(enamlboshfakes.FakeHttpClientDoer)
+					body, _ := os.Open("fixtures/stemcell_not_exists.json")
+					doer.DoReturns(&http.Response{
+						Body: body,
+					}, nil)
+					sl, err = boshclient.GetStemcells(doer)
+				})
+
+				Context("when calling GetStemcells on that bosh", func() {
+					It("should return an array containing those stemcells' metadata", func() {
+						Ω(len(sl)).Should(Equal(0))
+					})
+				})
+			})
+		})
+
 		Describe("CheckRemoteStemcell", func() {
 
 			Describe("given a stemcell that has not been uploaded", func() {
@@ -307,7 +350,7 @@ var _ = Describe("given *Client", func() {
 					})
 				})
 
-				Context("when called using a enaml.stemcell configured without a verion", func() {
+				Context("when called using a enaml.stemcell configured without a version", func() {
 					BeforeEach(func() {
 						doer := new(enamlboshfakes.FakeHttpClientDoer)
 						body, _ := os.Open("fixtures/stemcell_exists.json")
