@@ -373,10 +373,12 @@ var _ = Describe("given *Client", func() {
 		Describe("NewCloudConfigRequest", func() {
 			Context("when calling its NewCloudConfigRequest method w/ a valid config file", func() {
 				var req *http.Request
+				var err error
 				BeforeEach(func() {
-					req, _ = boshclient.NewCloudConfigRequest(enaml.CloudConfigManifest{})
+					req, err = boshclient.NewCloudConfigRequest(enaml.CloudConfigManifest{})
 				})
 				It("then we should be able to generate a basic auth request", func() {
+					Ω(err).ShouldNot(HaveOccurred())
 					u, p, ok := req.BasicAuth()
 					Ω(u).Should(Equal(userControl))
 					Ω(p).Should(Equal(passControl))
