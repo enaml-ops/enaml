@@ -9,7 +9,6 @@ import (
 
 	"github.com/enaml-ops/enaml"
 	. "github.com/enaml-ops/enaml/enamlbosh"
-	"github.com/enaml-ops/enaml/enamlbosh/enamlboshfakes"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	"github.com/onsi/gomega/ghttp"
@@ -59,13 +58,13 @@ var _ = Describe("given *Client", func() {
 							))
 					})
 					It("should return task info when called with a valid task ID", func() {
-						task, err := boshclient.GetTask(controlTask.ID, new(enamlboshfakes.FakeHttpClientDoer))
+						task, err := boshclient.GetTask(controlTask.ID)
 						Ω(err).ShouldNot(HaveOccurred())
 						Ω(task).Should(Equal(controlTask))
 					})
 
 					It("should return an error when called WITHOUT a valid task ID", func() {
-						_, err := boshclient.GetTask(0, new(enamlboshfakes.FakeHttpClientDoer))
+						_, err := boshclient.GetTask(0)
 						Ω(err).Should(HaveOccurred())
 					})
 				})
@@ -84,7 +83,7 @@ var _ = Describe("given *Client", func() {
 						bt, err := boshclient.PostRemoteRelease(enaml.Release{
 							URL:  "https://bosh.io/d/github.com/cloudfoundry/cf-release?v=237",
 							SHA1: "8996122278b03b6ba21ec673812d2075c37f1097",
-						}, new(enamlboshfakes.FakeHttpClientDoer))
+						})
 						Ω(err).ShouldNot(HaveOccurred())
 						Ω(bt).ShouldNot(BeNil())
 					})
@@ -99,7 +98,7 @@ var _ = Describe("given *Client", func() {
 							))
 					})
 					It("then it should return an error as we only currently support remote release", func() {
-						_, err := boshclient.PostRemoteRelease(enaml.Release{}, new(enamlboshfakes.FakeHttpClientDoer))
+						_, err := boshclient.PostRemoteRelease(enaml.Release{})
 						Ω(err).Should(HaveOccurred())
 					})
 				})
@@ -119,7 +118,7 @@ var _ = Describe("given *Client", func() {
 						bt, err := boshclient.PostRemoteStemcell(enaml.Stemcell{
 							URL:  "https://bosh.io/d/stemcells/bosh-aws-xen-hvm-ubuntu-trusty-go_agent?v=3232.4",
 							SHA1: "a57ef43974387441b4e8f79e8bb74834",
-						}, new(enamlboshfakes.FakeHttpClientDoer))
+						})
 						Ω(err).ShouldNot(HaveOccurred())
 						Ω(bt).ShouldNot(BeNil())
 					})
@@ -134,7 +133,7 @@ var _ = Describe("given *Client", func() {
 							))
 					})
 					It("then it should return an error as we only currently support remote stemcells", func() {
-						_, err := boshclient.PostRemoteStemcell(enaml.Stemcell{}, new(enamlboshfakes.FakeHttpClientDoer))
+						_, err := boshclient.PostRemoteStemcell(enaml.Stemcell{})
 						Ω(err).Should(HaveOccurred())
 					})
 				})
@@ -151,7 +150,7 @@ var _ = Describe("given *Client", func() {
 					})
 
 					It("then it should return valid task info for the targetted bosh", func() {
-						bt, err := boshclient.PostDeployment(enaml.DeploymentManifest{}, new(enamlboshfakes.FakeHttpClientDoer))
+						bt, err := boshclient.PostDeployment(enaml.DeploymentManifest{})
 						Ω(err).ShouldNot(HaveOccurred())
 						Ω(bt).Should(Equal(controlTask))
 					})
@@ -168,7 +167,7 @@ var _ = Describe("given *Client", func() {
 					})
 
 					It("then we should be given a valid cloudconfigmanifest", func() {
-						ccm, err := boshclient.GetCloudConfig(new(enamlboshfakes.FakeHttpClientDoer))
+						ccm, err := boshclient.GetCloudConfig()
 						Ω(err).ShouldNot(HaveOccurred())
 						Ω(len(ccm.AZs)).Should(Equal(1))
 						Ω(len(ccm.VMTypes)).Should(Equal(2))
@@ -190,7 +189,7 @@ var _ = Describe("given *Client", func() {
 								ghttp.VerifyBasicAuth(userControl, passControl),
 								ghttp.RespondWith(http.StatusOK, body),
 							))
-						bi, err = boshclient.GetInfo(new(enamlboshfakes.FakeHttpClientDoer))
+						bi, err = boshclient.GetInfo()
 					})
 
 					It("then it should return valid info for the targetted bosh", func() {
@@ -243,7 +242,7 @@ var _ = Describe("given *Client", func() {
 
 					Context("when calling GetStemcells on that bosh", func() {
 						It("should return an array containing those stemcells' metadata", func() {
-							sl, err := boshclient.GetStemcells(new(enamlboshfakes.FakeHttpClientDoer))
+							sl, err := boshclient.GetStemcells()
 							Ω(len(sl)).Should(Equal(1))
 							Ω(err).ShouldNot(HaveOccurred())
 							Ω(sl[0].Name).Should(Equal("bosh-warden-boshlite-ubuntu-trusty-go_agent"))
@@ -264,7 +263,7 @@ var _ = Describe("given *Client", func() {
 
 					Context("when calling GetStemcells on that bosh", func() {
 						It("should return an empty array", func() {
-							sl, err := boshclient.GetStemcells(new(enamlboshfakes.FakeHttpClientDoer))
+							sl, err := boshclient.GetStemcells()
 							Ω(sl).Should(BeEmpty())
 							Ω(err).ShouldNot(HaveOccurred())
 						})
@@ -287,12 +286,11 @@ var _ = Describe("given *Client", func() {
 						})
 
 						It("then it should return a false and a no errors", func() {
-							doer := new(enamlboshfakes.FakeHttpClientDoer)
 							se, err = boshclient.CheckRemoteStemcell(enaml.Stemcell{
 								Name:    "bosh-warden-boshlite-ubuntu-trusty-go_agent",
 								OS:      "ubuntu-trusty",
 								Version: "3126",
-							}, doer)
+							})
 							Ω(err).ShouldNot(HaveOccurred())
 							Ω(se).Should(BeFalse())
 						})
@@ -315,12 +313,11 @@ var _ = Describe("given *Client", func() {
 						})
 
 						It("then it should return a false and a no errors", func() {
-							doer := new(enamlboshfakes.FakeHttpClientDoer)
 							se, err = boshclient.CheckRemoteStemcell(enaml.Stemcell{
 								Name:    "no-matching-name",
 								OS:      "no-matching-os",
 								Version: "no-version",
-							}, doer)
+							})
 							Ω(err).ShouldNot(HaveOccurred())
 							Ω(se).Should(BeFalse())
 						})
@@ -345,40 +342,36 @@ var _ = Describe("given *Client", func() {
 						})
 
 						It("then it should return a true and no errors (when called with name, os, and version)", func() {
-							doer := new(enamlboshfakes.FakeHttpClientDoer)
 							se, err := boshclient.CheckRemoteStemcell(enaml.Stemcell{
 								Name:    "bosh-warden-boshlite-ubuntu-trusty-go_agent",
 								OS:      "ubuntu-trusty",
 								Version: "3126",
-							}, doer)
+							})
 							Ω(err).ShouldNot(HaveOccurred())
 							Ω(se).Should(BeTrue())
 						})
 						It("then it should return true and no errors (when called with name and version only)", func() {
-							doer := new(enamlboshfakes.FakeHttpClientDoer)
 							se, err := boshclient.CheckRemoteStemcell(enaml.Stemcell{
 								Name:    "bosh-warden-boshlite-ubuntu-trusty-go_agent",
 								Version: "3126",
-							}, doer)
+							})
 							Ω(err).ShouldNot(HaveOccurred())
 							Ω(se).Should(BeTrue())
 						})
 						It("then it should return true and no errors (when called with OS and version only)", func() {
-							doer := new(enamlboshfakes.FakeHttpClientDoer)
 							se, err := boshclient.CheckRemoteStemcell(enaml.Stemcell{
 								OS:      "ubuntu-trusty",
 								Version: "3126",
-							}, doer)
+							})
 							Ω(err).ShouldNot(HaveOccurred())
 							Ω(se).Should(BeTrue())
 						})
 
 						It("then it should return an error (when called without a version)", func() {
-							doer := new(enamlboshfakes.FakeHttpClientDoer)
 							se, err := boshclient.CheckRemoteStemcell(enaml.Stemcell{
 								Name: "bosh-warden-boshlite-ubuntu-trusty-go_agent",
 								OS:   "ubuntu-trusty",
-							}, doer)
+							})
 							Ω(err).Should(HaveOccurred())
 							Ω(se).Should(BeFalse())
 						})

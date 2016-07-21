@@ -47,7 +47,7 @@ func (s *Client) NewCloudConfigRequest(cloudconfig enaml.CloudConfigManifest) (*
 	return req, nil
 }
 
-func (s *Client) GetTask(taskID int, httpClient HttpClientDoer) (BoshTask, error) {
+func (s *Client) GetTask(taskID int) (BoshTask, error) {
 	req, err := s.newRequest("GET", s.buildBoshURL("/tasks/"+strconv.Itoa(taskID)), nil)
 	if err != nil {
 		return BoshTask{}, err
@@ -73,7 +73,7 @@ func (s *Client) GetTask(taskID int, httpClient HttpClientDoer) (BoshTask, error
 	return bt, nil
 }
 
-func (s *Client) PostRemoteRelease(rls enaml.Release, httpClient HttpClientDoer) (BoshTask, error) {
+func (s *Client) PostRemoteRelease(rls enaml.Release) (BoshTask, error) {
 	if rls.URL == "" || rls.SHA1 == "" {
 		return BoshTask{}, fmt.Errorf("url or sha not set. these are required for remote stemcells URL: %s , SHA: %s", rls.URL, rls.SHA1)
 	}
@@ -103,7 +103,7 @@ func (s *Client) PostRemoteRelease(rls enaml.Release, httpClient HttpClientDoer)
 	return bt, err
 }
 
-func (s *Client) GetStemcells(httpClient HttpClientDoer) ([]DeployedStemcell, error) {
+func (s *Client) GetStemcells() ([]DeployedStemcell, error) {
 	req, err := s.newRequest("GET", s.buildBoshURL("/stemcells"), nil)
 	if err != nil {
 		return nil, err
@@ -120,12 +120,12 @@ func (s *Client) GetStemcells(httpClient HttpClientDoer) ([]DeployedStemcell, er
 	return stemcells, err
 }
 
-func (s *Client) CheckRemoteStemcell(sc enaml.Stemcell, httpClient HttpClientDoer) (exists bool, err error) {
+func (s *Client) CheckRemoteStemcell(sc enaml.Stemcell) (exists bool, err error) {
 	if (sc.Name == "" && sc.OS == "") || sc.Version == "" {
 		return false, fmt.Errorf("name or version not set. these are required to check for remote stemcells Name: %s , Version: %s", sc.Name, sc.Version)
 	}
 
-	stemcells, err := s.GetStemcells(httpClient)
+	stemcells, err := s.GetStemcells()
 	if err != nil {
 		return false, err
 	}
@@ -138,7 +138,7 @@ func (s *Client) CheckRemoteStemcell(sc enaml.Stemcell, httpClient HttpClientDoe
 	return false, nil
 }
 
-func (s *Client) PostRemoteStemcell(sc enaml.Stemcell, httpClient HttpClientDoer) (BoshTask, error) {
+func (s *Client) PostRemoteStemcell(sc enaml.Stemcell) (BoshTask, error) {
 	if sc.URL == "" || sc.SHA1 == "" {
 		return BoshTask{}, fmt.Errorf("url or sha not set. these are required for remote stemcells URL: %s , SHA: %s", sc.URL, sc.SHA1)
 	}
@@ -168,7 +168,7 @@ func (s *Client) PostRemoteStemcell(sc enaml.Stemcell, httpClient HttpClientDoer
 	return bt, err
 }
 
-func (s *Client) PostDeployment(deploymentManifest enaml.DeploymentManifest, httpClient HttpClientDoer) (BoshTask, error) {
+func (s *Client) PostDeployment(deploymentManifest enaml.DeploymentManifest) (BoshTask, error) {
 	reqBody := bytes.NewReader(deploymentManifest.Bytes())
 	req, err := s.newRequest("POST", s.buildBoshURL("/deployments"), reqBody)
 	if err != nil {
@@ -188,7 +188,7 @@ func (s *Client) PostDeployment(deploymentManifest enaml.DeploymentManifest, htt
 	return bt, err
 }
 
-func (s *Client) GetCloudConfig(httpClient HttpClientDoer) (*enaml.CloudConfigManifest, error) {
+func (s *Client) GetCloudConfig() (*enaml.CloudConfigManifest, error) {
 	req, err := s.newRequest("GET", s.buildBoshURL("/cloud_configs?limit=1"), nil)
 	if err != nil {
 		return nil, err
@@ -208,7 +208,7 @@ func (s *Client) GetCloudConfig(httpClient HttpClientDoer) (*enaml.CloudConfigMa
 	return enaml.NewCloudConfigManifest([]byte(cc[0].Properties)), nil
 }
 
-func (s *Client) GetInfo(httpClient HttpClientDoer) (*BoshInfo, error) {
+func (s *Client) GetInfo() (*BoshInfo, error) {
 	req, err := s.newRequest("GET", s.buildBoshURL("/info"), nil)
 	if err != nil {
 		return nil, err

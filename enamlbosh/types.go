@@ -20,11 +20,6 @@ type Client struct {
 	token *oauth2.Token
 }
 
-// HttpClientDoer - interface for a http.Client.Doer
-type HttpClientDoer interface {
-	Do(req *http.Request) (resp *http.Response, err error)
-}
-
 func transport(insecureSkipVerify bool) *http.Transport {
 	return &http.Transport{
 		TLSClientConfig: &tls.Config{InsecureSkipVerify: insecureSkipVerify},
