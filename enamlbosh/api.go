@@ -53,7 +53,7 @@ func (s *Client) GetTask(taskID int, httpClient HttpClientDoer) (BoshTask, error
 		return BoshTask{}, err
 	}
 	req.Header.Set("content-type", "text/yaml")
-	res, err := httpClient.Do(req)
+	res, err := s.http.Do(req)
 	if err != nil {
 		return BoshTask{}, err
 	}
@@ -90,7 +90,7 @@ func (s *Client) PostRemoteRelease(rls enaml.Release, httpClient HttpClientDoer)
 	}
 
 	req.Header.Set("content-type", "application/json")
-	res, err := httpClient.Do(req)
+	res, err := s.http.Do(req)
 	if err != nil {
 		return BoshTask{}, err
 	}
@@ -109,7 +109,7 @@ func (s *Client) GetStemcells(httpClient HttpClientDoer) ([]DeployedStemcell, er
 		return nil, err
 	}
 	req.Header.Set("content-type", "application/json")
-	res, err := httpClient.Do(req)
+	res, err := s.http.Do(req)
 	if err != nil {
 		return nil, err
 	}
@@ -155,7 +155,7 @@ func (s *Client) PostRemoteStemcell(sc enaml.Stemcell, httpClient HttpClientDoer
 	}
 
 	req.Header.Set("content-type", "application/json")
-	res, err := httpClient.Do(req)
+	res, err := s.http.Do(req)
 	if err != nil {
 		return BoshTask{}, err
 	}
@@ -176,7 +176,7 @@ func (s *Client) PostDeployment(deploymentManifest enaml.DeploymentManifest, htt
 	}
 
 	req.Header.Set("content-type", "text/yaml")
-	res, err := httpClient.Do(req)
+	res, err := s.http.Do(req)
 	if err != nil {
 		return BoshTask{}, err
 	}
@@ -194,7 +194,7 @@ func (s *Client) GetCloudConfig(httpClient HttpClientDoer) (*enaml.CloudConfigMa
 		return nil, err
 	}
 	req.Header.Set("content-type", "text/yaml")
-	res, err := httpClient.Do(req)
+	res, err := s.http.Do(req)
 	if err != nil {
 		return nil, err
 	}
@@ -214,7 +214,7 @@ func (s *Client) GetInfo(httpClient HttpClientDoer) (*BoshInfo, error) {
 		return nil, err
 	}
 
-	res, err := httpClient.Do(req)
+	res, err := s.http.Do(req)
 	if err != nil {
 		return nil, err
 	}
