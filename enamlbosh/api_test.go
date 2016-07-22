@@ -440,15 +440,24 @@ var _ = Describe("given *Client", func() {
 				})
 			})
 
-			Describe("NewCloudConfigRequest", func() {
+			Describe("PushCloudConfig", func() {
 				Context("when called with a valid config file", func() {
-					It("then we should be able to generate a basic auth request", func() {
-						req, err := boshclient.NewCloudConfigRequest(enaml.CloudConfigManifest{})
+					BeforeEach(func() {
+						server.AppendHandlers(
+							ghttp.CombineHandlers(
+								ghttp.VerifyBasicAuth(userControl, passControl),
+								ghttp.RespondWithJSONEncoded(http.StatusOK, struct{}{}),
+							))
+					})
+					It("then it should post the cloud config", func() {
+						ccm := &enaml.CloudConfigManifest{}
+						bytes, err := ccm.Bytes()
 						Ω(err).ShouldNot(HaveOccurred())
-						u, p, ok := req.BasicAuth()
-						Ω(u).Should(Equal(userControl))
-						Ω(p).Should(Equal(passControl))
-						Ω(ok).Should(BeTrue())
+						err = boshclient.PushCloudConfig(bytes)
+						Ω(err).ShouldNot(HaveOccurred())
+
+						Ω(len(server.ReceivedRequests())).Should(Equal(1))
+						Ω(server.ReceivedRequests()[0].Method).Should(Equal("POST"))
 					})
 				})
 			})

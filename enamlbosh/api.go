@@ -33,7 +33,7 @@ func setAuth(c *Client, r *http.Request) {
 	}
 }
 
-func (s *Client) NewCloudConfigRequest(cloudconfig enaml.CloudConfigManifest) (*http.Request, error) {
+func (s *Client) newCloudConfigRequest(cloudconfig enaml.CloudConfigManifest) (*http.Request, error) {
 	b, err := cloudconfig.Bytes()
 	if err != nil {
 		return nil, err
@@ -45,6 +45,28 @@ func (s *Client) NewCloudConfigRequest(cloudconfig enaml.CloudConfigManifest) (*
 	}
 	req.Header.Set("content-type", "text/yaml")
 	return req, nil
+}
+
+// PushCloudConfig uploads a cloud config to bosh.
+func (s *Client) PushCloudConfig(manifest []byte) error {
+	ccm := enaml.NewCloudConfigManifest(manifest)
+	req, err := s.newCloudConfigRequest(*ccm)
+	if err != nil {
+		return nil
+	}
+	res, err := s.http.Do(req)
+	if err != nil {
+		return err
+	}
+	defer res.Body.Close()
+	if res.StatusCode >= 400 {
+		body, err := ioutil.ReadAll(res.Body)
+		if err != nil {
+			return err
+		}
+		return fmt.Errorf("%s error pushing cloud config to BOSH: %s", res.Status, string(body))
+	}
+	return nil
 }
 
 func (s *Client) GetTask(taskID int) (BoshTask, error) {
