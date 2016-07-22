@@ -174,20 +174,20 @@ type Update struct {
 }
 
 type Job struct {
-	Name               string        `yaml:"name"`
-	Templates          []Template    `yaml:"templates,flow"`
-	Lifecycle          string        `yaml:"lifeycle,omitempty"`
-	PersistentDisk     string        `yaml:"persistent_disk,omitempty"`
-	PersistentDiskPool string        `yaml:"persistent_disk_pool,omitempty"`
-	Properties         []interface{} `yaml:"properties,omitempty"`
-	ResourcePool       string        `yaml:"resource_pool"`
-	Update             Update        `yaml:"update,omitempty"`
-	Instances          int           `yaml:"instances"`
-	Networks           []Network     `yaml:"networks"`
+	Name               string     `yaml:"name"`
+	Templates          []Template `yaml:"templates,flow"`
+	Lifecycle          string     `yaml:"lifeycle,omitempty"`
+	PersistentDisk     string     `yaml:"persistent_disk,omitempty"`
+	PersistentDiskPool string     `yaml:"persistent_disk_pool,omitempty"`
+	Properties         Properties `yaml:"properties,omitempty"`
+	ResourcePool       string     `yaml:"resource_pool"`
+	Update             Update     `yaml:"update,omitempty"`
+	Instances          int        `yaml:"instances"`
+	Networks           []Network  `yaml:"networks"`
 }
 
-func (s *Job) AddProperty(prop interface{}) {
-	s.Properties = append(s.Properties, prop)
+func (s *Job) AddProperty(propName string, prop interface{}) {
+	s.Properties[propName] = prop
 }
 
 func (s *Job) AddTemplate(t Template) (err error) {
