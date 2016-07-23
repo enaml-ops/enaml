@@ -27,14 +27,13 @@ func transport(insecureSkipVerify bool) *http.Transport {
 }
 
 // NewClientBasic creates a bosh client configured for basic auth.
-// It can be configured to ignore SSL warnings by setting sslIgnore to true.
-func NewClientBasic(user, pass, host string, port int, sslIgnore bool) *Client {
+func NewClientBasic(user, pass, host string, port int) *Client {
 	c := &Client{
 		user: user,
 		pass: pass,
 		host: host,
 		port: port,
-		http: &http.Client{Transport: transport(sslIgnore)},
+		http: &http.Client{Transport: transport(true)},
 	}
 	c.http.CheckRedirect = func(req *http.Request, via []*http.Request) error {
 		req.URL, _ = url.Parse(req.URL.Scheme + "://" + via[0].URL.Host + req.URL.Path)
@@ -50,8 +49,8 @@ func NewClientBasic(user, pass, host string, port int, sslIgnore bool) *Client {
 // The user and pass arguments are the ops manager credentials.
 // The id and secret arguments are the client ID and client secret for UAA.
 // The host and port arguments are for the bosh director.
-func NewClientUAA(user, pass, id, secret, host string, port int, uaaURL string, sslIgnore bool) (*Client, error) {
-	c := NewClientBasic(user, pass, host, port, sslIgnore)
+func NewClientUAA(user, pass, id, secret, host string, port int, uaaURL string) (*Client, error) {
+	c := NewClientBasic(user, pass, host, port)
 	cfg := &oauth2.Config{
 		ClientID:     id,
 		ClientSecret: secret,

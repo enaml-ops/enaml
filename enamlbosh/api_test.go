@@ -67,8 +67,7 @@ var _ = Describe("given *Client", func() {
 				host, port, _ := net.SplitHostPort(u.Host)
 				host = u.Scheme + "://" + host
 				portInt, _ := strconv.Atoi(port)
-				const skipSSLVerify = true
-				boshclient, err = NewClientUAA(userControl, passControl, idControl, secretControl, host, portInt, server.URL(), skipSSLVerify)
+				boshclient, err = NewClientUAA(userControl, passControl, idControl, secretControl, host, portInt, server.URL())
 			})
 
 			It("should have returned a non-nil client and no error", func() {
@@ -99,8 +98,7 @@ var _ = Describe("given *Client", func() {
 			host, port, _ := net.SplitHostPort(u.Host)
 			host = u.Scheme + "://" + host
 			portInt, _ := strconv.Atoi(port)
-			const skipSSLVerify = true
-			boshclient = NewClientBasic(userControl, passControl, host, portInt, skipSSLVerify)
+			boshclient = NewClientBasic(userControl, passControl, host, portInt)
 		})
 
 		AfterEach(func() {
