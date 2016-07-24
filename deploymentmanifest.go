@@ -96,15 +96,11 @@ func (s *DeploymentManifest) AddStemcellByOS(os, alias string) {
 // AddRemoteStemcell adds a remote stemcell to the manifest.
 // The URL should not contain version information.
 func (s *DeploymentManifest) AddRemoteStemcell(os, alias, ver, url, sha1 string) {
-	versionedURL := ""
-	if url != "" && ver != "" {
-		versionedURL = url + "?v=" + ver
-	}
 	s.Stemcells = append(s.Stemcells, Stemcell{
 		OS:      os,
 		Alias:   alias,
 		Version: ver,
-		URL:     versionedURL,
+		URL:     url,
 		SHA1:    sha1,
 	})
 }
