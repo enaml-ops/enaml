@@ -44,13 +44,9 @@ func (s *DeploymentManifest) AddRelease(r Release) (err error) {
 //AddRemoteRelease - adds a remote release to the manifest. Url should not
 //contain version information
 func (s *DeploymentManifest) AddRemoteRelease(releaseName, ver, url, sha1 string) (err error) {
-	versionedURL := ""
-	if url != "" && ver != "" {
-		versionedURL = url + "?v=" + ver
-	}
 	s.Releases = append(s.Releases, Release{
 		Name:    releaseName,
-		URL:     versionedURL,
+		URL:     url,
 		SHA1:    sha1,
 		Version: ver,
 	})
