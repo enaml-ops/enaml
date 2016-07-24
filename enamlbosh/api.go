@@ -33,7 +33,7 @@ func setAuth(c *Client, r *http.Request) {
 	}
 }
 
-func (s *Client) newCloudConfigRequest(cloudconfig enaml.CloudConfigManifest) (*http.Request, error) {
+func (s *Client) NewCloudConfigRequest(cloudconfig enaml.CloudConfigManifest) (*http.Request, error) {
 	b, err := cloudconfig.Bytes()
 	if err != nil {
 		return nil, err
@@ -50,7 +50,7 @@ func (s *Client) newCloudConfigRequest(cloudconfig enaml.CloudConfigManifest) (*
 // PushCloudConfig uploads a cloud config to bosh.
 func (s *Client) PushCloudConfig(manifest []byte) error {
 	ccm := enaml.NewCloudConfigManifest(manifest)
-	req, err := s.newCloudConfigRequest(*ccm)
+	req, err := s.NewCloudConfigRequest(*ccm)
 	if err != nil {
 		return err
 	}

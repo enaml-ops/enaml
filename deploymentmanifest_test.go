@@ -77,7 +77,7 @@ var _ = Describe("DeploymentManifest", func() {
 				Ω(dm.Stemcells[0].Name).Should(BeEmpty())
 
 				Ω(dm.Stemcells[0].Alias).Should(Equal(controlAlias))
-				Ω(dm.Stemcells[0].URL).Should(Equal(controlURL + "?v=" + controlVer))
+				Ω(dm.Stemcells[0].URL).Should(Equal(controlURL))
 				Ω(dm.Stemcells[0].SHA1).Should(Equal(controlSHA))
 				Ω(dm.Stemcells[0].Version).Should(Equal(controlVer))
 			})
@@ -97,7 +97,7 @@ var _ = Describe("DeploymentManifest", func() {
 			})
 			It("then it should properly add a remote release record", func() {
 				Ω(dm.Releases[0].Name).Should(Equal(controlName))
-				Ω(dm.Releases[0].URL).Should(Equal(controlURL + "?v=" + controlVer))
+				Ω(dm.Releases[0].URL).Should(Equal(controlURL))
 				Ω(dm.Releases[0].SHA1).Should(Equal(controlSHA))
 				Ω(dm.Releases[0].Version).Should(Equal(controlVer))
 			})
