@@ -52,7 +52,7 @@ func (s *Client) PushCloudConfig(manifest []byte) error {
 	ccm := enaml.NewCloudConfigManifest(manifest)
 	req, err := s.newCloudConfigRequest(*ccm)
 	if err != nil {
-		return nil
+		return err
 	}
 	res, err := s.http.Do(req)
 	if err != nil {
