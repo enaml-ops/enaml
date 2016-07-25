@@ -2,16 +2,94 @@ package enamlbosh
 
 import (
 	"bytes"
+	"crypto/tls"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"io/ioutil"
 	"net/http"
+	"net/url"
+	"os"
 	"strconv"
+
+	"golang.org/x/net/context"
+	"golang.org/x/oauth2"
+	"golang.org/x/oauth2/clientcredentials"
 
 	"github.com/enaml-ops/enaml"
 	"github.com/xchapter7x/lo"
 )
+
+// NewClient creates a new bosh client.  It queries bosh's /info endpoint
+// to determine if user authentication should be done via UAA or basic auth.
+func NewClient(user, pass, host string, port int, sslIgnore bool) (*Client, error) {
+	c := &Client{
+		user: user,
+		pass: pass,
+		host: host,
+		port: port,
+		http: &http.Client{Transport: transport(sslIgnore)},
+	}
+	c.http.CheckRedirect = func(req *http.Request, via []*http.Request) error {
+		req.URL, _ = url.Parse(req.URL.Scheme + "://" + via[0].URL.Host + req.URL.Path)
+		setAuth(c, req)
+		return nil
+	}
+
+	info, err := c.GetInfo()
+	if err != nil {
+		return nil, err
+	}
+
+	authType, ok := info.UserAuthentication["type"].(string)
+	if !ok {
+		return nil, fmt.Errorf("unexpected user auth in response: %#v", info)
+	}
+
+	switch authType {
+	case "basic":
+		return c, nil
+	case "uaa":
+		opt, ok := info.UserAuthentication["options"].(map[string]interface{})
+		if !ok {
+			return nil, errors.New("missing UAA options in response")
+		}
+		uaaURL, ok := opt["url"].(string)
+		if !ok {
+			return nil, errors.New("couln't get UAA URL")
+		}
+		err = c.getToken(uaaURL + "/oauth/token")
+		if err != nil {
+			return nil, err
+		}
+		return c, nil
+	default:
+		return nil, errors.New("unknown user auth type: " + authType)
+	}
+}
+
+func (c *Client) getToken(tokURL string) error {
+	cfg := &clientcredentials.Config{
+		TokenURL:     tokURL,
+		ClientID:     c.user,
+		ClientSecret: c.pass,
+	}
+
+	// make sure we use our HTTP client for getting the token,
+	// not http.DefaultClient
+	ctx := context.WithValue(context.Background(), oauth2.HTTPClient, c.http)
+
+	tok, err := cfg.Token(ctx)
+	c.token = tok
+	return err
+}
+
+func transport(insecureSkipVerify bool) *http.Transport {
+	return &http.Transport{
+		TLSClientConfig: &tls.Config{InsecureSkipVerify: insecureSkipVerify},
+	}
+}
 
 // newRequest is like http.NewRequest, with the exception that it will add
 // basic auth headers if the client is configured for basic auth.
@@ -216,6 +294,8 @@ func (s *Client) GetCloudConfig() (*enaml.CloudConfigManifest, error) {
 		return nil, err
 	}
 	req.Header.Set("content-type", "text/yaml")
+	req.Header.Write(os.Stdout)
+
 	res, err := s.http.Do(req)
 	if err != nil {
 		return nil, err
@@ -223,7 +303,8 @@ func (s *Client) GetCloudConfig() (*enaml.CloudConfigManifest, error) {
 	defer res.Body.Close()
 
 	var cc []CloudConfigResponseBody
-	err = json.NewDecoder(res.Body).Decode(&cc)
+	err = json.NewDecoder(io.TeeReader(res.Body, os.Stdout)).Decode(&cc)
+	//err = json.NewDecoder(res.Body).Decode(&cc)
 	if err != nil {
 		return nil, err
 	}
@@ -241,7 +322,8 @@ func (s *Client) GetInfo() (*BoshInfo, error) {
 		return nil, err
 	}
 	var bi BoshInfo
-	err = json.NewDecoder(res.Body).Decode(&bi)
+	err = json.NewDecoder(io.TeeReader(res.Body, os.Stdout)).Decode(&bi)
+	//err = json.NewDecoder(res.Body).Decode(&bi)
 	if err != nil {
 		return nil, err
 	}

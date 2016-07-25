@@ -1,6 +1,7 @@
 package enamlbosh_test
 
 import (
+	"fmt"
 	"io/ioutil"
 	"net"
 	"net/http"
@@ -23,6 +24,9 @@ const tokenResponse = `{
   "jti":"foo"
 }`
 
+const basicAuthBoshInfo = `{"name":"enaml-bosh","uuid":"31631ff9-ac41-4eba-a944-04c820633e7f","version":"1.3232.2.0 (00000000)","user":null,"cpi":"aws_cpi","user_authentication":{"type":"basic","options":{}},"features":{"dns":{"status":false,"extras":{"domain_name":null}},"compiled_package_cache":{"status":false,"extras":{"provider":null}},"snapshots":{"status":false}}}`
+const uaaBoshInfo = `{"name":"enaml-bosh","uuid":"9604f9ae-70bf-4c13-8d4d-69ff7f7f091b","version":"1.3232.2.0 (00000000)","user":null,"cpi":"aws_cpi","user_authentication":{"type":"uaa","options":{"url":"%s"}},"features":{"dns":{"status":false,"extras":{"domain_name":null}},"compiled_package_cache":{"status":false,"extras":{"provider":null}},"snapshots":{"status":false}}}`
+
 var _ = Describe("given *Client", func() {
 	var boshclient *Client
 	var server *ghttp.Server
@@ -40,9 +44,6 @@ var _ = Describe("given *Client", func() {
 	)
 
 	Describe("UAA tests", func() {
-		const idControl = "clientid"
-		const secretControl = "clientsecret"
-
 		BeforeEach(func() {
 			server = ghttp.NewTLSServer()
 		})
@@ -53,6 +54,10 @@ var _ = Describe("given *Client", func() {
 
 			BeforeEach(func() {
 				server.AppendHandlers(
+					ghttp.CombineHandlers(
+						ghttp.VerifyRequest("GET", "/info"),
+						ghttp.RespondWith(http.StatusOK, fmt.Sprintf(uaaBoshInfo, server.URL())),
+					),
 					ghttp.CombineHandlers(
 						ghttp.VerifyRequest("POST", "/oauth/token"),
 						ghttp.RespondWith(http.StatusOK, tokenResponse, http.Header{
@@ -67,7 +72,7 @@ var _ = Describe("given *Client", func() {
 				host, port, _ := net.SplitHostPort(u.Host)
 				host = u.Scheme + "://" + host
 				portInt, _ := strconv.Atoi(port)
-				boshclient, err = NewClientUAA(userControl, passControl, idControl, secretControl, host, portInt, server.URL(), true)
+				boshclient, err = NewClient(userControl, passControl, host, portInt, true)
 			})
 
 			It("should have returned a non-nil client and no error", func() {
@@ -93,12 +98,18 @@ var _ = Describe("given *Client", func() {
 	Describe("basic auth tests", func() {
 		BeforeEach(func() {
 			server = ghttp.NewTLSServer()
+			server.AppendHandlers(
+				ghttp.CombineHandlers(
+					ghttp.VerifyRequest("GET", "/info"),
+					ghttp.RespondWith(http.StatusOK, basicAuthBoshInfo),
+				),
+			)
 
 			u, _ := url.Parse(server.URL())
 			host, port, _ := net.SplitHostPort(u.Host)
 			host = u.Scheme + "://" + host
 			portInt, _ := strconv.Atoi(port)
-			boshclient = NewClientBasic(userControl, passControl, host, portInt, true)
+			boshclient, _ = NewClient(userControl, passControl, host, portInt, true)
 		})
 
 		AfterEach(func() {
@@ -114,7 +125,8 @@ var _ = Describe("given *Client", func() {
 							ghttp.CombineHandlers(
 								ghttp.VerifyBasicAuth(userControl, passControl),
 								ghttp.RespondWithJSONEncoded(http.StatusOK, controlTask),
-							))
+							),
+						)
 					})
 					It("should return task info when called with a valid task ID", func() {
 						task, err := boshclient.GetTask(controlTask.ID)
@@ -454,8 +466,9 @@ var _ = Describe("given *Client", func() {
 						err = boshclient.PushCloudConfig(bytes)
 						Ω(err).ShouldNot(HaveOccurred())
 
-						Ω(len(server.ReceivedRequests())).Should(Equal(1))
-						Ω(server.ReceivedRequests()[0].Method).Should(Equal("POST"))
+						Ω(len(server.ReceivedRequests())).Should(Equal(2))
+						lastReq := server.ReceivedRequests()[len(server.ReceivedRequests())-1]
+						Ω(lastReq.Method).Should(Equal("POST"))
 					})
 				})
 			})
