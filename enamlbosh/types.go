@@ -1,10 +1,6 @@
 package enamlbosh
 
-import (
-	"net/http"
-
-	"golang.org/x/oauth2"
-)
+import "net/http"
 
 // Client provides an interface to the bosh director.
 type Client struct {
@@ -13,7 +9,7 @@ type Client struct {
 	host  string
 	port  int
 	http  *http.Client
-	token *oauth2.Token
+	token string
 }
 
 // BoshInfo contains data about a bosh.
@@ -40,6 +36,10 @@ type BoshTask struct {
 	Timestamp   int
 	Result      string
 	User        string
+}
+
+type Token struct {
+	Token string `json:"access_token"`
 }
 
 // DeployedStemcell is the response for stemcells that have already been deployed.

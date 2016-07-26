@@ -13,11 +13,8 @@ import (
 	"os"
 	"strconv"
 
-	"golang.org/x/net/context"
-	"golang.org/x/oauth2"
-	"golang.org/x/oauth2/clientcredentials"
-
 	"github.com/enaml-ops/enaml"
+	"github.com/op/go-logging"
 	"github.com/xchapter7x/lo"
 )
 
@@ -70,18 +67,26 @@ func NewClient(user, pass, host string, port int, sslIgnore bool) (*Client, erro
 }
 
 func (c *Client) getToken(tokURL string) error {
-	cfg := &clientcredentials.Config{
-		TokenURL:     tokURL,
-		ClientID:     c.user,
-		ClientSecret: c.pass,
+
+	reqBytes := []byte(fmt.Sprintf("grant_type=password&username=%s&password=%s", c.user, c.pass))
+	fmt.Println(string(reqBytes))
+	reqBody := bytes.NewReader(reqBytes)
+
+	req, err := http.NewRequest("POST", tokURL, reqBody)
+	if err != nil {
+		return err
 	}
+	req.SetBasicAuth("bosh_cli", "")
+	req.Header.Set("content-type", "application/x-www-form-urlencoded")
+	res, err := c.http.Do(req)
+	if err != nil {
+		return err
+	}
+	defer res.Body.Close()
 
-	// make sure we use our HTTP client for getting the token,
-	// not http.DefaultClient
-	ctx := context.WithValue(context.Background(), oauth2.HTTPClient, c.http)
-
-	tok, err := cfg.Token(ctx)
-	c.token = tok
+	var token Token
+	err = json.NewDecoder(io.TeeReader(res.Body, os.Stdout)).Decode(&token)
+	c.token = token.Token
 	return err
 }
 
@@ -104,10 +109,10 @@ func (s *Client) newRequest(method, url string, body io.Reader) (*http.Request, 
 }
 
 func setAuth(c *Client, r *http.Request) {
-	if c.token == nil {
+	if c.token == "" {
 		r.SetBasicAuth(c.user, c.pass)
 	} else {
-		c.token.SetAuthHeader(r)
+		r.Header.Add("Authorization", "Bearer "+c.token)
 	}
 }
 
@@ -306,9 +311,18 @@ func (s *Client) GetCloudConfig() (*enaml.CloudConfigManifest, error) {
 	err = json.NewDecoder(io.TeeReader(res.Body, os.Stdout)).Decode(&cc)
 	//err = json.NewDecoder(res.Body).Decode(&cc)
 	if err != nil {
+		if lo.G.IsEnabledFor(logging.DEBUG) {
+			var p []byte
+			res.Body.Read(p)
+			lo.G.Debug(string(p))
+		}
 		return nil, err
 	}
-	return enaml.NewCloudConfigManifest([]byte(cc[0].Properties)), nil
+	if len(cc) > 0 {
+		return enaml.NewCloudConfigManifest([]byte(cc[0].Properties)), nil
+	} else {
+		return &enaml.CloudConfigManifest{}, nil
+	}
 }
 
 func (s *Client) GetInfo() (*BoshInfo, error) {
