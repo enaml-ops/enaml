@@ -308,13 +308,11 @@ func (s *Client) GetCloudConfig() (*enaml.CloudConfigManifest, error) {
 	defer res.Body.Close()
 
 	var cc []CloudConfigResponseBody
-	err = json.NewDecoder(io.TeeReader(res.Body, os.Stdout)).Decode(&cc)
-	//err = json.NewDecoder(res.Body).Decode(&cc)
+	var buf bytes.Buffer
+	err = json.NewDecoder(io.TeeReader(res.Body, &buf)).Decode(&cc)
 	if err != nil {
 		if lo.G.IsEnabledFor(logging.DEBUG) {
-			var p []byte
-			res.Body.Read(p)
-			lo.G.Debug(string(p))
+			lo.G.Debug(string(buf.Bytes()))
 		}
 		return nil, err
 	}
