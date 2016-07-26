@@ -10,9 +10,10 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/url"
-	"os"
 	"strconv"
-	"strings"
+
+	"golang.org/x/net/context"
+	"golang.org/x/oauth2"
 
 	"github.com/enaml-ops/enaml"
 	"github.com/op/go-logging"
@@ -68,28 +69,22 @@ func NewClient(user, pass, host string, port int, sslIgnore bool) (*Client, erro
 }
 
 func (c *Client) getToken(tokURL string) error {
-	v := url.Values{}
-	v["grant_type"] = []string{"password"}
-	v["username"] = []string{c.user}
-	v["password"] = []string{c.pass}
-	reqBody := strings.NewReader(v.Encode())
-
-	req, err := http.NewRequest("POST", tokURL, reqBody)
+	cfg := oauth2.Config{
+		ClientID:     "bosh_cli",
+		ClientSecret: "",
+		Endpoint: oauth2.Endpoint{
+			TokenURL: tokURL,
+		},
+	}
+	// make sure we use our HTTP client for getting the token,
+	// not http.DefausltClient
+	ctx := context.WithValue(context.Background(), oauth2.HTTPClient, c.http)
+	tok, err := cfg.PasswordCredentialsToken(ctx, c.user, c.pass)
 	if err != nil {
 		return err
 	}
-	req.SetBasicAuth("bosh_cli", "")
-	req.Header.Set("content-type", "application/x-www-form-urlencoded")
-	res, err := c.http.Do(req)
-	if err != nil {
-		return err
-	}
-	defer res.Body.Close()
-
-	var token Token
-	err = json.NewDecoder(io.TeeReader(res.Body, os.Stdout)).Decode(&token)
-	c.token = token.Token
-	return err
+	c.token = tok
+	return nil
 }
 
 func transport(insecureSkipVerify bool) *http.Transport {
@@ -111,10 +106,10 @@ func (s *Client) newRequest(method, url string, body io.Reader) (*http.Request, 
 }
 
 func setAuth(c *Client, r *http.Request) {
-	if c.token == "" {
+	if c.token == nil {
 		r.SetBasicAuth(c.user, c.pass)
 	} else {
-		r.Header.Add("Authorization", "Bearer "+c.token)
+		c.token.SetAuthHeader(r)
 	}
 }
 
@@ -301,7 +296,6 @@ func (s *Client) GetCloudConfig() (*enaml.CloudConfigManifest, error) {
 		return nil, err
 	}
 	req.Header.Set("content-type", "text/yaml")
-	req.Header.Write(os.Stdout)
 
 	res, err := s.http.Do(req)
 	if err != nil {
@@ -336,8 +330,7 @@ func (s *Client) GetInfo() (*BoshInfo, error) {
 		return nil, err
 	}
 	var bi BoshInfo
-	err = json.NewDecoder(io.TeeReader(res.Body, os.Stdout)).Decode(&bi)
-	//err = json.NewDecoder(res.Body).Decode(&bi)
+	err = json.NewDecoder(res.Body).Decode(&bi)
 	if err != nil {
 		return nil, err
 	}

@@ -1,6 +1,10 @@
 package enamlbosh
 
-import "net/http"
+import (
+	"net/http"
+
+	"golang.org/x/oauth2"
+)
 
 // Client provides an interface to the bosh director.
 type Client struct {
@@ -9,7 +13,7 @@ type Client struct {
 	host  string
 	port  int
 	http  *http.Client
-	token string
+	token *oauth2.Token
 }
 
 // BoshInfo contains data about a bosh.
