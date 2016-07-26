@@ -9,7 +9,7 @@ import (
 	. "github.com/onsi/gomega"
 )
 
-var _ = XDescribe("given bosh api", func() {
+var _ = FDescribe("given bosh api", func() {
 	testClient("admin", "admin", "https://ec2-52-41-100-248.us-west-2.compute.amazonaws.com", 25555, true)
 	testClient("admin", "eadxz7dh1d4e3bhgx518", "https://ec2-52-40-154-174.us-west-2.compute.amazonaws.com", 25555, true)
 })

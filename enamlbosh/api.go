@@ -12,6 +12,7 @@ import (
 	"net/url"
 	"os"
 	"strconv"
+	"strings"
 
 	"github.com/enaml-ops/enaml"
 	"github.com/op/go-logging"
@@ -67,10 +68,11 @@ func NewClient(user, pass, host string, port int, sslIgnore bool) (*Client, erro
 }
 
 func (c *Client) getToken(tokURL string) error {
-
-	reqBytes := []byte(fmt.Sprintf("grant_type=password&username=%s&password=%s", c.user, c.pass))
-	fmt.Println(string(reqBytes))
-	reqBody := bytes.NewReader(reqBytes)
+	v := url.Values{}
+	v["grant_type"] = []string{"password"}
+	v["username"] = []string{c.user}
+	v["password"] = []string{c.pass}
+	reqBody := strings.NewReader(v.Encode())
 
 	req, err := http.NewRequest("POST", tokURL, reqBody)
 	if err != nil {
