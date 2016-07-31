@@ -9,20 +9,75 @@
 
 ### Sample
 
-**below is a repo showing how one might leverage the enaml primatives and
-helpers**
 
-[ENAML - CONCOURSE](https://github.com/enaml-ops/enaml-concourse-sample)
-
-
-### how to use enaml as a cli
+### how to use the enaml core to develop OMG product plugins
 
 Download the latest binary release for your OS from: https://github.com/enaml-ops/enaml/releases/latest
 
+*create golang structs for job properties from a release*
+
 ```bash
-# create golang structs for job properties from a release
-$ enaml generate https://bosh.io/d/github.com/concourse/concourse?v=1.1.0
+
+# user @ MacBook-Pro in ~/stuff/sample [00:00:00]
+$ wget https://github.com/enaml-ops/enaml/releases/download/v0.0.11/enaml
+
+
+# user @ MacBook-Pro in ~/stuff/sample [00:00:00]
+$ #target the bosh release you with to enamlize
+$ enaml generate https://bosh.io/d/github.com/cf-platform-eng/docker-boshrelease\?v\=27
+Could not find release in local cache. Downloading now.
+136929594/136929594
+completed generating release job structs for  https://bosh.io/d/github.com/cf-platform-eng/docker-boshrelease?v=27
+
+# user @ MacBook-Pro in ~/stuff/sample [00:00:00]
+$ ls
+enaml-gen
+
+# user @ MacBook-Pro in ~/stuff/sample [00:00:00]
+$ #golang packages have been generated for all job properties in the give release version
+$ ls enaml-gen/
+broker-deregistrar      cf-containers-broker    docker                  swarm_agent
+broker-registrar        containers              fetch-containers-images swarm_manager
 ```
+
+*use the generated structs in your plugin*
+
+```go
+package main
+
+import (
+	"github.com/enaml-ops/pluginlib/pcli"
+	"github.com/enaml-ops/pluginlib/product"
+	"github.com/enaml-ops/stuff/sample/enaml-gen/docker"
+)
+
+func main() {
+	product.Run(&MyProduct{
+		DockerRef: new(docker.Docker),
+	})
+}
+
+type MyProduct struct{
+	DockerRef docker.Docker
+}
+
+func (s *MyProduct) GetProduct(args []string, cloudconfig []byte) []byte {
+	return []byte("")
+}
+
+func (s *MyProduct) GetFlags() (flags []pcli.Flag) {
+	return
+}
+
+func (s *MyProduct) GetMeta() product.Meta {
+	return product.Meta{
+		Name: "myfakeproduct",
+	}
+}
+```
+
+
+
 
 ### maybe you've got a manifest but dont know how to maintain it (ie. key/cert/pass rotation, or automated component scaling, etc)
 ```go
