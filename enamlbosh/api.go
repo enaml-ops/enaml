@@ -16,7 +16,6 @@ import (
 	"golang.org/x/oauth2"
 
 	"github.com/enaml-ops/enaml"
-	"github.com/op/go-logging"
 	"github.com/xchapter7x/lo"
 )
 
@@ -307,9 +306,7 @@ func (s *Client) GetCloudConfig() (*enaml.CloudConfigManifest, error) {
 	var buf bytes.Buffer
 	err = json.NewDecoder(io.TeeReader(res.Body, &buf)).Decode(&cc)
 	if err != nil {
-		if lo.G.IsEnabledFor(logging.DEBUG) {
-			lo.G.Debug(string(buf.Bytes()))
-		}
+		lo.G.Debug(string(buf.Bytes()))
 		return nil, err
 	}
 	if len(cc) > 0 {
