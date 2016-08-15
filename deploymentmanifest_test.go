@@ -2,6 +2,7 @@ package enaml_test
 
 import (
 	"io/ioutil"
+	"os"
 
 	. "github.com/enaml-ops/enaml"
 	. "github.com/onsi/ginkgo"
@@ -15,6 +16,22 @@ var _ = Describe("DeploymentManifest", func() {
 			It("then it should initialize the manifest object with the given bytes", func() {
 				b, _ := ioutil.ReadFile("./fixtures/concourse.yml")
 				dm := NewDeploymentManifest(b)
+				Ω(dm.Name).Should(Equal("concourse"))
+				Ω(dm.DirectorUUID).Should(Equal("REPLACE_ME"))
+				Ω(len(dm.Releases)).Should(Equal(2))
+				Ω(len(dm.Stemcells)).Should(Equal(1))
+				Ω(len(dm.InstanceGroups)).Should(Equal(3))
+				Ω(dm.Update).ShouldNot(BeNil())
+			})
+		})
+	})
+
+	Describe("given a NewDeploymentManifestFromFile", func() {
+		Context("when called with a []byte representation of the cloud config manifest", func() {
+			It("then it should initialize the manifest object with the given bytes", func() {
+				f, err := os.Open("./fixtures/concourse.yml")
+				Ω(err).ShouldNot(HaveOccurred())
+				dm := NewDeploymentManifestFromFile(f)
 				Ω(dm.Name).Should(Equal("concourse"))
 				Ω(dm.DirectorUUID).Should(Equal("REPLACE_ME"))
 				Ω(len(dm.Releases)).Should(Equal(2))

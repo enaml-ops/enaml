@@ -1,6 +1,9 @@
 package enaml
 
 import (
+	"io/ioutil"
+	"os"
+
 	"github.com/xchapter7x/lo"
 	"gopkg.in/yaml.v2"
 )
@@ -13,6 +16,19 @@ func (s *DeploymentManifest) Bytes() (b []byte) {
 		b = nil
 	}
 	return
+}
+
+//NewDeploymentManifestFromFile - will read any implementor of os.File and
+//initialize a deployment manifest from its bytes.
+//this can be used to read a file or os.Stdin
+func NewDeploymentManifestFromFile(f *os.File) *DeploymentManifest {
+	var b []byte
+	fi, _ := f.Stat()
+
+	if fi.Size() > 0 {
+		b, _ = ioutil.ReadAll(f)
+	}
+	return NewDeploymentManifest(b)
 }
 
 //NewDeploymentManifest - deployment manifest constructor
