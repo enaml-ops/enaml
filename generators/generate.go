@@ -28,24 +28,36 @@ func Generate(packagename string, fileBytes []byte, outputDir string) {
 				var structname = v.StructName(i, packagename, properties)
 				var typeName = v.TypeName(i, properties)
 				elementName := v.Slice[i]
+				attributeName := FormatName(elementName)
 
 				if _, ok := objects[structname]; !ok {
 					objects[structname] = make(map[string]ObjectField)
 				}
 
-				lo.G.Debug("Adding", elementName, "to", structname, "with type", typeName)
-				objects[structname][v.Slice[i]] = ObjectField{
-					ElementName:       FormatName(elementName),
-					ElementType:       typeName,
-					ElementAnnotation: "`yaml:\"" + elementName + ",omitempty\"`",
-					Meta:              v.Yaml,
+				if previousElement, ok := objects[structname][attributeName]; !ok {
+					lo.G.Debug("Adding", attributeName, "to", structname, "with type", typeName)
+					objects[structname][attributeName] = ObjectField{
+						ElementName:       attributeName,
+						ElementType:       typeName,
+						ElementAnnotation: createElementAnnotation(elementName),
+						Meta:              v.Yaml,
+					}
+				} else {
+					if previousElement.ElementAnnotation != createElementAnnotation(elementName) {
+						lo.G.Warning("******** Recommended creating custom yaml marshaller on", structname, "for", attributeName, " ********")
+						previousElement.ElementAnnotation = "`yaml:\"-\"`"
+						objects[structname][attributeName] = previousElement
+					}
 				}
-
 			}
 		}
 	}
 	structs := generateStructs(objects, packagename)
 	writeStructsToDisk(structs, outputDir)
+}
+
+func createElementAnnotation(elementName string) string {
+	return fmt.Sprintf("`yaml:\"%s,omitempty\"`", elementName)
 }
 
 func writeStructsToDisk(structs []jobStructTemplate, outputDir string) {

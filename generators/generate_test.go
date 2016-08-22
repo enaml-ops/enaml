@@ -15,6 +15,7 @@ import (
 )
 
 var _ = Describe("generate", func() {
+	testJobGeneration("./fixtures/gorouter-job-duplicates.MF", "gorouter", 11, []string{"clients.go", "gorouter.go", "gorouterjob.go", "logrotate.go", "metron.go", "nats.go", "router.go", "routingapi.go", "ssl.go", "status.go", "uaa.go"})
 	testJobGeneration("./fixtures/atc-job.MF", "atc", 8, []string{"atcjob.go", "container.go", "githubauth.go", "postgresql.go", "retention.go", "riemann.go", "role.go", "yeller.go"})
 	testJobGeneration("./fixtures/haproxy-job.MF", "haproxy", 6, []string{"appssh.go", "cc.go", "haproxy.go", "haproxyjob.go", "router.go", "servers.go"})
 	testJobGeneration("./fixtures/gorouter-job.MF", "gorouter", 11, []string{"clients.go", "gorouter.go", "gorouterjob.go", "logrotate.go", "metron.go", "nats.go", "router.go", "routingapi.go", "ssl.go", "status.go", "uaa.go"})
