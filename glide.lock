@@ -1,71 +1,76 @@
-hash: 86fbf7c9ae6969a4625b4eac143253c15a83e614d7de59b104ae2bd8bf3f0a94
-updated: 2016-07-21T10:45:46.165492701-06:00
+hash: ad087eb219f2b9ff91fb841f140245a9abb4bb2c6b068091250711871685c112
+updated: 2016-09-09T10:25:08.276972018-06:00
 imports:
-- name: github.com/codegangsta/cli
-  version: 75b97d09d9f5792ff997e249a330a3ca28f8b537
 - name: github.com/golang/protobuf
-  version: 7cc19b78d562895b13596ddce7aafb59dd789318
+  version: 1f49d83d9aa00e6ce4fc8258c71cc7786aec968a
   subpackages:
   - proto
 - name: github.com/kr/pretty
-  version: add1dbc86daf0f983cd4a48ceb39deb95c729b67
+  version: cfb55aafdaf3ec08f0db22699ab822c50091b1c4
 - name: github.com/kr/text
-  version: bb797dc4fb8320488f47bf11de07a733d7233e1f
+  version: 7cafcd837844e784b526369c9bce262804aebc60
 - name: github.com/mitchellh/ioprogress
   version: 8163955264568045f462ae7e2d6d07b2001fc997
 - name: github.com/onsi/ginkgo
-  version: 2c2e9bb47b4e44067024f29339588cac8b34dd12
+  version: 7b6efc7d7b052568b49ac02d3141c9d7a5a494a4
   subpackages:
   - config
   - internal/codelocation
+  - internal/containernode
   - internal/failer
+  - internal/leafnodes
   - internal/remote
+  - internal/spec
+  - internal/specrunner
   - internal/suite
   - internal/testingtproxy
   - internal/writer
   - reporters
   - reporters/stenographer
   - types
-  - internal/containernode
-  - internal/leafnodes
-  - internal/spec
-  - internal/specrunner
 - name: github.com/onsi/gomega
-  version: 7ce781ea776b2fd506491011353bded2e40c8467
+  version: b48c9a8b2644326d0a44eaaacc8d83e35174a05d
   subpackages:
+  - format
+  - ghttp
   - internal/assertion
   - internal/asyncassertion
+  - internal/oraclematcher
   - internal/testingtsupport
   - matchers
-  - types
-  - internal/oraclematcher
-  - format
   - matchers/support/goraph/bipartitegraph
   - matchers/support/goraph/edge
   - matchers/support/goraph/node
   - matchers/support/goraph/util
+  - types
 - name: github.com/op/go-logging
   version: 970db520ece77730c7e4724c61121037378659d9
+- name: github.com/urfave/cli
+  version: a14d7d367bc02b1f57d88de97926727f2d936387
 - name: github.com/xchapter7x/lo
-  version: aa2602d0e8e8647f0ce7b53109b37040941915aa
+  version: e33b245fc7a8186582208abc2458c2691bff681c
 - name: golang.org/x/net
-  version: 4d38db76854b199960801a1734443fd02870d7e1
+  version: 9bc2a3340c92c17a20edcd0080e93851ed58f5d5
   subpackages:
   - context
 - name: golang.org/x/oauth2
-  version: 12e1e986157ec46fb273824565d9937bd4235105
+  version: 4d549c893be7d4011bab739cc585d091a7188d27
   subpackages:
   - internal
 - name: google.golang.org/appengine
-  version: 267c27e7492265b84fc6719503b14a1e17975d79
+  version: 4f7eeb5305a4ba1966344836ba4af9996b7b4e05
   subpackages:
-  - urlfetch
   - internal
-  - internal/urlfetch
   - internal/base
   - internal/datastore
   - internal/log
   - internal/remote_api
+  - internal/urlfetch
+  - urlfetch
 - name: gopkg.in/yaml.v2
-  version: a83829b6f1293c91addabc89d0571c246397bbf4
-testImports: []
+  version: e4d366fc3c7938e2958e662b4258c7a89e1f0e3e
+testImports:
+- name: golang.org/x/sys
+  version: 30de6d19a3bd89a5f38ae4028e23aaa5582648af
+  subpackages:
+  - unix

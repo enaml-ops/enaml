@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/codegangsta/cli"
+	"github.com/urfave/cli"
 	"github.com/enaml-ops/enaml/generators"
 	"github.com/enaml-ops/enaml/pull"
 	"github.com/enaml-ops/enaml/run"
