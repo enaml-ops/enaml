@@ -3,8 +3,8 @@ import:
 - package: github.com/onsi/ginkgo
 - package: github.com/onsi/gomega
 - package: gopkg.in/yaml.v2
-- package: github.com/urfave/cli
-  version: c723b19a84af34d905773672ffa1b8ead802e505
+- package: gopkg.in/urfave/cli.v2
+  version: c72728f42438425ffcd487986936357e17ebba3f
 - package: github.com/mitchellh/ioprogress
 - package: github.com/kr/pretty
 - package: github.com/kr/text

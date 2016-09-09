@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/urfave/cli"
+	"gopkg.in/urfave/cli.v2"
 	"github.com/enaml-ops/enaml/generators"
 	"github.com/enaml-ops/enaml/pull"
 	"github.com/enaml-ops/enaml/run"
@@ -38,24 +38,24 @@ var (
 )
 
 func main() {
-	app := cli.NewApp()
+	app := (&cli.App{})
 	app.Name = "enaml"
 	app.Usage = "Because (EN)ough with the y(AML) already"
-	app.Authors = []cli.Author{
-		cli.Author{
+	app.Authors = []*cli.Author{
+		&cli.Author{
 			Name: "John Calabrese",
 		},
-		cli.Author{
+		&cli.Author{
 			Name:  "Caleb Washburn",
 			Email: "caleb.washburn@me.com",
 		},
-		cli.Author{
+		&cli.Author{
 			Name:  "Shawn Neal",
 			Email: "sneal@sneal.net",
 		},
 	}
 	app.Version = Version
-	app.Commands = []cli.Command{
+	app.Commands = []*cli.Command{
 		{
 			Name:      "generate",
 			Usage:     "Generate golang structs for a given release",
@@ -72,13 +72,13 @@ func main() {
 			Usage:     "Show changes between two releases",
 			ArgsUsage: "<release1URL> <release2URL>",
 			Flags: []cli.Flag{
-				cli.StringFlag{
-					Name:  "job, j",
+				&cli.StringFlag{
+					Name:  "job", Aliases: []string{"j"},
 					Usage: "Focus the command to a specific named `JOB`",
 				},
 			},
 			Action: func(c *cli.Context) (err error) {
-				d := run.NewDiffCmd(releaseRepo, c.Args()[0], c.Args()[1])
+				d := run.NewDiffCmd(releaseRepo, c.Args().Get(0), c.Args().Get(1))
 				if len(c.String("job")) > 0 {
 					err = d.Job(c.String("job"), os.Stdout)
 				} else {
@@ -93,7 +93,7 @@ func main() {
 			Usage:     "Show details about the release",
 			ArgsUsage: "<releaseURL>",
 			Action: func(c *cli.Context) (err error) {
-				s := run.NewShowCmd(releaseRepo, c.Args()[0])
+				s := run.NewShowCmd(releaseRepo, c.Args().Get(0))
 				err = s.All(os.Stdout)
 				ifErrorDisplayAndExit(err)
 				return
