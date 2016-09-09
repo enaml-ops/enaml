@@ -1,5 +1,5 @@
-hash: ad087eb219f2b9ff91fb841f140245a9abb4bb2c6b068091250711871685c112
-updated: 2016-09-09T10:25:08.276972018-06:00
+hash: d671abfa03ae2f32c81e232864e442606bdfe59a58815367ebeb470e27546227
+updated: 2016-09-09T10:50:33.490141943-06:00
 imports:
 - name: github.com/golang/protobuf
   version: 1f49d83d9aa00e6ce4fc8258c71cc7786aec968a
@@ -46,7 +46,7 @@ imports:
 - name: github.com/op/go-logging
   version: 970db520ece77730c7e4724c61121037378659d9
 - name: github.com/urfave/cli
-  version: a14d7d367bc02b1f57d88de97926727f2d936387
+  version: c723b19a84af34d905773672ffa1b8ead802e505
 - name: github.com/xchapter7x/lo
   version: e33b245fc7a8186582208abc2458c2691bff681c
 - name: golang.org/x/net
