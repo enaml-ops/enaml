@@ -34,7 +34,10 @@ func NewClient(user, pass, host string, port int, sslIgnore bool) (*Client, erro
 		setAuth(c, req)
 		return nil
 	}
+	return c.refetchToken()
+}
 
+func (c *Client) refetchToken() (*Client, error) {
 	info, err := c.GetInfo()
 	if err != nil {
 		return nil, err
