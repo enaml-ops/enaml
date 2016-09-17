@@ -6,5 +6,5 @@ const (
 	StatusCancelled  = "cancelled"
 	StatusCancelling = "cancelling"
 	StatusDone       = "done"
-	StatusError      = "errored"
+	StatusError      = "error"
 )
