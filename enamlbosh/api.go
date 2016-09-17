@@ -11,6 +11,7 @@ import (
 	"net/http"
 	"net/url"
 	"strconv"
+	"time"
 
 	"golang.org/x/net/context"
 	"golang.org/x/oauth2"
@@ -34,10 +35,10 @@ func NewClient(user, pass, host string, port int, sslIgnore bool) (*Client, erro
 		setAuth(c, req)
 		return nil
 	}
-	return c.refetchToken()
+	return c.setClientToken()
 }
 
-func (c *Client) refetchToken() (*Client, error) {
+func (c *Client) setClientToken() (*Client, error) {
 	info, err := c.GetInfo()
 	if err != nil {
 		return nil, err
@@ -151,13 +152,28 @@ func (s *Client) PushCloudConfig(manifest []byte) error {
 	return nil
 }
 
+func (s *Client) httpDoAndRetry(req *http.Request, retry int) (res *http.Response, err error) {
+	ticker := time.Tick(time.Second)
+
+	for i := 0; i < retry; i++ {
+		if res, err = s.http.Do(req); res.StatusCode >= 400 {
+			lo.G.Infof("request to bosh returned status %v. retrying...", res.StatusCode)
+			<-ticker
+			s.setClientToken()
+		} else {
+			break
+		}
+	}
+	return res, err
+}
+
 func (s *Client) GetTask(taskID int) (BoshTask, error) {
 	req, err := s.newRequest("GET", s.buildBoshURL("/tasks/"+strconv.Itoa(taskID)), nil)
 	if err != nil {
 		return BoshTask{}, err
 	}
 	req.Header.Set("content-type", "text/yaml")
-	res, err := s.http.Do(req)
+	res, err := s.httpDoAndRetry(req, DefaultHTTPRetry)
 	if err != nil {
 		return BoshTask{}, err
 	}

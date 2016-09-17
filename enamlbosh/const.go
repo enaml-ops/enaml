@@ -8,3 +8,7 @@ const (
 	StatusDone       = "done"
 	StatusError      = "error"
 )
+
+const (
+	DefaultHTTPRetry = 3
+)
