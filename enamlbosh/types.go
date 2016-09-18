@@ -8,12 +8,13 @@ import (
 
 // Client provides an interface to the bosh director.
 type Client struct {
-	user  string
-	pass  string
-	host  string
-	port  int
-	http  *http.Client
-	token *oauth2.Token
+	user      string
+	pass      string
+	host      string
+	port      int
+	sslIgnore bool
+	http      *http.Client
+	token     *oauth2.Token
 }
 
 // BoshInfo contains data about a bosh.

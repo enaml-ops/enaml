@@ -11,7 +11,6 @@ import (
 	"net/http"
 	"net/url"
 	"strconv"
-	"time"
 
 	"golang.org/x/net/context"
 	"golang.org/x/oauth2"
@@ -24,11 +23,12 @@ import (
 // to determine if user authentication should be done via UAA or basic auth.
 func NewClient(user, pass, host string, port int, sslIgnore bool) (*Client, error) {
 	c := &Client{
-		user: user,
-		pass: pass,
-		host: host,
-		port: port,
-		http: &http.Client{Transport: transport(sslIgnore)},
+		user:      user,
+		pass:      pass,
+		host:      host,
+		port:      port,
+		sslIgnore: sslIgnore,
+		http:      &http.Client{Transport: transport(sslIgnore)},
 	}
 	c.http.CheckRedirect = func(req *http.Request, via []*http.Request) error {
 		req.URL, _ = url.Parse(req.URL.Scheme + "://" + via[0].URL.Host + req.URL.Path)
@@ -87,6 +87,12 @@ func (c *Client) getToken(tokURL string) error {
 		return err
 	}
 	c.token = tok
+	c.http = cfg.Client(ctx, tok)
+	c.http.CheckRedirect = func(req *http.Request, via []*http.Request) error {
+		req.URL, _ = url.Parse(req.URL.Scheme + "://" + via[0].URL.Host + req.URL.Path)
+		setAuth(c, req)
+		return nil
+	}
 	return nil
 }
 
@@ -152,28 +158,13 @@ func (s *Client) PushCloudConfig(manifest []byte) error {
 	return nil
 }
 
-func (s *Client) httpDoAndRetry(req *http.Request, retry int) (res *http.Response, err error) {
-	ticker := time.Tick(time.Second)
-
-	for i := 0; i < retry; i++ {
-		if res, err = s.http.Do(req); res.StatusCode >= 400 {
-			lo.G.Infof("request to bosh returned status %v. retrying...", res.StatusCode)
-			<-ticker
-			s.setClientToken()
-		} else {
-			break
-		}
-	}
-	return res, err
-}
-
 func (s *Client) GetTask(taskID int) (BoshTask, error) {
 	req, err := s.newRequest("GET", s.buildBoshURL("/tasks/"+strconv.Itoa(taskID)), nil)
 	if err != nil {
 		return BoshTask{}, err
 	}
 	req.Header.Set("content-type", "text/yaml")
-	res, err := s.httpDoAndRetry(req, DefaultHTTPRetry)
+	res, err := s.http.Do(req)
 	if err != nil {
 		return BoshTask{}, err
 	}
