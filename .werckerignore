@@ -1,0 +1,5 @@
+# ignore enaml .cache directories
+**/.cache/
+
+# ignore vendor directory
+vendor/
