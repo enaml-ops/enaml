@@ -126,6 +126,11 @@ func (s *Subnet) AddReserved(rsv string) (err error) {
 	return
 }
 
+func (s *Subnet) AddStatic(stc string) (err error) {
+	s.Static = append(s.Static, stc)
+	return
+}
+
 type ResourcePool struct {
 	Name            string                 `yaml:"name"`
 	Network         string                 `yaml:"network"`
