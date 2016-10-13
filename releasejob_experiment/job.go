@@ -58,7 +58,7 @@ func BuildJob(jobMeta BoshJobMeta, dest string) error {
 	if err != nil {
 		return err
 	}
-	err = writeSpecFile(specFile, jobMeta.Name)
+	err = writeSpecFile(specFile, jobMeta.Name, jobMeta.JobProperties, jobMeta.Packages)
 	return err
 }
 

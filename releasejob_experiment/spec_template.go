@@ -25,43 +25,29 @@ import (
 
 type spec struct {
 	ProcessName string
+	Properties  []JobProperty
+	Packages    []string
 }
 
-func writeSpecFile(f io.Writer, processname string) error {
+func writeSpecFile(f io.Writer, processname string, properties []JobProperty, packages []string) error {
 	specTemplate := `---
 name: {{.ProcessName}} 
 
 templates:
   {{.ProcessName}}_ctl.erb: bin/{{.ProcessName}}_ctl
 
-packages:
-- gemfire
-- jdk8
-- gemfire-utils
-- jq
+packages:{{ range $key, $value := .Packages }}
+- {{ $value }}{{ end }}
 
-properties:
-  external_dependencies.router.system_domain:
-    description: "System domain"
-  gemfire.locator.addresses:
-    description: "List of GemFire Locator addresses of the form X.X.X.X"
-  gemfire.locator.port:
-    description: "Port the Locator will listen on"
-    default: "55221"
-  gemfire.locator.rest_port:
-    description: "Port the Locator will listen on for REST API"
-    default: "8080"
-  gemfire.locator.vm_memory:
-    description: "RAM allocated to the locator VM in MB"
-  gemfire.cluster_topology.number_of_locators:
-    description: "Current topology"
-    default: "2"
-  gemfire.cluster_topology.min_number_of_locators:
-    description: "min number of locators which should be present"
-    default: "2"
+properties:{{ range $key, $value := .Properties }}
+	{{ $value.Name }}:
+		description:{{ $value.Description }}
+		{{if $value.Default}}default: {{$value.Default}}{{ end }}{{end}}
 `
 	s := spec{
 		ProcessName: processname,
+		Properties:  properties,
+		Packages:    packages,
 	}
 	tmpl, err := template.New("monit-file-create").Parse(specTemplate)
 

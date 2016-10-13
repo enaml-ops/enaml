@@ -26,11 +26,28 @@ var _ = Describe("release job", func() {
 					jobRunner := NewJobRunner([]string{"alksdf", "build", controlTargetDir})
 					boshJobFake := new(FakeBoshJob)
 					boshJobFake.MetaReturns(BoshJobMeta{
-						Version:       "0.0.0",
-						Name:          "fake-locator",
-						Packages:      []string{""},
-						JobProperties: []JobProperty{},
-						PIDFile:       tmpfile.Name(),
+						Version:  "0.0.0",
+						Name:     "fake-locator",
+						Packages: []string{"jq", "gemfire", "something", "else"},
+						JobProperties: []JobProperty{
+							JobProperty{
+								Name:        "external_dependencies.router.system_domain",
+								Description: "System domain",
+								EnvVar:      "EXTERNAL_DEPENDENCIES_ROUTER_SYSTEM_DOMAIN",
+							},
+							JobProperty{
+								Name:        "gemfire.locator.addresses",
+								Description: "List of GemFire Locator addresses of the form X.X.X.X",
+								EnvVar:      "GEMFIRE_LOCATOR_ADDRESSES",
+							},
+							JobProperty{
+								Name:        "gemfire.locator.port",
+								Description: "Port the Locator will listen on",
+								EnvVar:      "GEMFIRE_LOCATOR_PORT",
+								Default:     "55221",
+							},
+						},
+						PIDFile: tmpfile.Name(),
 					})
 					err = jobRunner.Run(boshJobFake)
 					Ω(err).ShouldNot(HaveOccurred(), "we should be able to call run successfully without error")
