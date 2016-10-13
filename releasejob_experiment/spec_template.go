@@ -20,7 +20,7 @@ package releasejob_experiment
 import (
 	"io"
 
-	"github.com/alecthomas/template"
+	"text/template"
 )
 
 type spec struct {
