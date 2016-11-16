@@ -38,6 +38,7 @@ type InstanceGroup struct {
 	Jobs               []InstanceJob `yaml:"jobs"`
 	Update             Update        `yaml:"update,omitempty"`
 	Lifecycle          string        `yaml:"lifecycle,omitempty"`
+	VMExtensions       []string      `yaml:"vm_extensions,omitempty"`
 }
 
 type InstanceJob struct {
