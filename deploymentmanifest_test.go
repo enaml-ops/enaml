@@ -4,6 +4,8 @@ import (
 	"io/ioutil"
 	"os"
 
+	yaml "gopkg.in/yaml.v2"
+
 	. "github.com/enaml-ops/enaml"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
@@ -118,6 +120,54 @@ var _ = Describe("DeploymentManifest", func() {
 				Ω(dm.Releases[0].SHA1).Should(Equal(controlSHA))
 				Ω(dm.Releases[0].Version).Should(Equal(controlVer))
 			})
+		})
+	})
+
+	Describe("given manifest tags", func() {
+		var dm *DeploymentManifest
+
+		BeforeEach(func() {
+			dm = new(DeploymentManifest)
+		})
+
+		It("has no tags by default", func() {
+			Ω(dm.Tags).Should(BeEmpty())
+			Ω(dm.Tag("foo")).Should(BeEmpty())
+		})
+
+		It("can add tags", func() {
+			dm.AddTag("foo", "bar")
+			Ω(dm.Tags).Should(HaveLen(1))
+			Ω(dm.Tags).Should(HaveKeyWithValue("foo", "bar"))
+		})
+
+		It("can overwrite tags", func() {
+			dm.AddTag("foo", "bar")
+			dm.AddTag("foo", "baz")
+			Ω(dm.Tags).Should(HaveLen(1))
+			Ω(dm.Tags).Should(HaveKeyWithValue("foo", "baz"))
+		})
+
+		It("can remove tags", func() {
+			dm.AddTag("foo", "bar")
+			Ω(dm.Tags).Should(HaveLen(1))
+			dm.RemoveTag("foo")
+			Ω(dm.Tags).Should(BeEmpty())
+			Ω(dm.Tag("foo")).Should(BeEmpty())
+		})
+
+		It("can retrieve tags", func() {
+			dm.AddTag("foo", "bar")
+			Ω(dm.Tag("foo")).Should(Equal("bar"))
+			Ω(dm.Tag("baz")).Should(BeEmpty())
+		})
+
+		It("marshals to the correct YAML", func() {
+			dm.AddTag("foo", "bar")
+			dm.AddTag("baz", "quux")
+			b, err := yaml.Marshal(dm.Tags)
+			Ω(err).ShouldNot(HaveOccurred())
+			Ω(b).Should(MatchYAML(`{foo: bar, baz: quux}`))
 		})
 	})
 

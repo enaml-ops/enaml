@@ -22,6 +22,7 @@ type DeploymentManifest struct {
 	Jobs           []Job               `yaml:"jobs,omitempty"`
 	Properties     Properties          `yaml:"properties,omitempty"`
 	CloudProvider  *CloudProvider      `yaml:"cloud_provider,omitempty"`
+	Tags           map[string]string   `yaml:"tags,omitempty"`
 }
 
 type InstanceGroup struct {

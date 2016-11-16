@@ -174,3 +174,28 @@ func (s *DeploymentManifest) SetCloudProvider(c CloudProvider) (err error) {
 	s.CloudProvider = &c
 	return
 }
+
+// Tag gets the tag value for a specified key.
+func (s *DeploymentManifest) Tag(key string) string {
+	if s.Tags == nil {
+		return ""
+	}
+	return s.Tags[key]
+}
+
+// AddTag adds a key-value pair to be sent to the CPI for VM tagging.
+// This feature is available in bosh release v258+.
+// https://bosh.io/docs/manifest-v2.html#tags
+func (s *DeploymentManifest) AddTag(key, value string) {
+	if s.Tags == nil {
+		s.Tags = make(map[string]string)
+	}
+	s.Tags[key] = value
+}
+
+// RemoveTag removes the tag with the specified key.
+func (s *DeploymentManifest) RemoveTag(key string) {
+	if s.Tags != nil {
+		delete(s.Tags, key)
+	}
+}
