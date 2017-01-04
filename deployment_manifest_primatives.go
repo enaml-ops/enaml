@@ -49,7 +49,6 @@ type InstanceJob struct {
 
 type DeploymentNetwork interface {
 }
-
 type Release struct {
 	Name    string `yaml:"name"`
 	Version string `yaml:"version,omitempty"`

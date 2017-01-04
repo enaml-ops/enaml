@@ -1,18 +1,28 @@
-hash: 1eeed69657dbca3d75437f20f0ddfc854aa47d51dc2a4b855099152be124be0e
-updated: 2016-09-09T11:36:20.227991153-06:00
+hash: d77895be25d7a966562740758615cffb5c60abeaaa6901f73a9c1a473250daa9
+updated: 2017-01-04T16:57:37.904190499-05:00
 imports:
+- name: github.com/bmizerany/pat
+  version: c068ca2f0aacee5ac3681d68e4d0a003b7d1fd2c
+- name: github.com/concourse/atc
+  version: 6085c91ef07ca0596bdf791a2801aaa84e467d8c
 - name: github.com/golang/protobuf
-  version: 1f49d83d9aa00e6ce4fc8258c71cc7786aec968a
+  version: 8ee79997227bf9b34611aee7946ae64735e6fd93
   subpackages:
   - proto
+- name: github.com/hashicorp/errwrap
+  version: 7554cd9344cec97297fa6649b055a8c98c2a1e55
+- name: github.com/hashicorp/go-multierror
+  version: ed905158d87462226a13fe39ddf685ea65f1c11f
 - name: github.com/kr/pretty
   version: cfb55aafdaf3ec08f0db22699ab822c50091b1c4
 - name: github.com/kr/text
   version: 7cafcd837844e784b526369c9bce262804aebc60
 - name: github.com/mitchellh/ioprogress
   version: 8163955264568045f462ae7e2d6d07b2001fc997
+- name: github.com/mitchellh/mapstructure
+  version: bfdb1a85537d60bc7e954e600c250219ea497417
 - name: github.com/onsi/ginkgo
-  version: 7b6efc7d7b052568b49ac02d3141c9d7a5a494a4
+  version: 462326b1628e124b23f42e87a8f2750e3c4e2d24
   subpackages:
   - config
   - internal/codelocation
@@ -29,13 +39,12 @@ imports:
   - reporters/stenographer
   - types
 - name: github.com/onsi/gomega
-  version: b48c9a8b2644326d0a44eaaacc8d83e35174a05d
+  version: a78ae492d53aad5a7a232d0d0462c14c400e3ee7
   subpackages:
   - format
   - ghttp
   - internal/assertion
   - internal/asyncassertion
-  - internal/oraclematcher
   - internal/testingtsupport
   - matchers
   - matchers/support/goraph/bipartitegraph
@@ -45,20 +54,20 @@ imports:
   - types
 - name: github.com/op/go-logging
   version: 970db520ece77730c7e4724c61121037378659d9
-- name: github.com/urfave/cli
-  version: c72728f42438425ffcd487986936357e17ebba3f
+- name: github.com/tedsuo/rata
+  version: 0649c23705dfb45a9693b668c4fc1c0666f485d9
 - name: github.com/xchapter7x/lo
   version: e33b245fc7a8186582208abc2458c2691bff681c
 - name: golang.org/x/net
-  version: 9bc2a3340c92c17a20edcd0080e93851ed58f5d5
+  version: 07b51741c1d6423d4a6abab1c49940ec09cb1aaf
   subpackages:
   - context
 - name: golang.org/x/oauth2
-  version: 4d549c893be7d4011bab739cc585d091a7188d27
+  version: 314dd2c0bf3ebd592ec0d20847d27e79d0dbe8dd
   subpackages:
   - internal
 - name: google.golang.org/appengine
-  version: 4f7eeb5305a4ba1966344836ba4af9996b7b4e05
+  version: 08a149cfaee099e6ce4be01c0113a78c85ee1dee
   subpackages:
   - internal
   - internal/base
@@ -70,9 +79,5 @@ imports:
 - name: gopkg.in/urfave/cli.v2
   version: c72728f42438425ffcd487986936357e17ebba3f
 - name: gopkg.in/yaml.v2
-  version: e4d366fc3c7938e2958e662b4258c7a89e1f0e3e
-testImports:
-- name: golang.org/x/sys
-  version: 30de6d19a3bd89a5f38ae4028e23aaa5582648af
-  subpackages:
-  - unix
+  version: a5b47d31c556af34a302ce5d659e6fea44d90de0
+testImports: []
