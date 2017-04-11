@@ -38,6 +38,10 @@ func NewClient(user, pass, host string, port int, sslIgnore bool) (*Client, erro
 	return c.setClientToken()
 }
 
+func (c *Client) HTTPClient() *http.Client {
+	return c.http
+}
+
 func (c *Client) setClientToken() (*Client, error) {
 	info, err := c.GetInfo()
 	if err != nil {
@@ -102,9 +106,9 @@ func transport(insecureSkipVerify bool) *http.Transport {
 	}
 }
 
-// newRequest is like http.NewRequest, with the exception that it will add
+// NewRequest is like http.NewRequest, with the exception that it will add
 // basic auth headers if the client is configured for basic auth.
-func (s *Client) newRequest(method, url string, body io.Reader) (*http.Request, error) {
+func (s *Client) NewRequest(method, url string, body io.Reader) (*http.Request, error) {
 	req, err := http.NewRequest(method, url, body)
 	if err != nil {
 		return nil, err
@@ -128,7 +132,7 @@ func (s *Client) newCloudConfigRequest(cloudconfig enaml.CloudConfigManifest) (*
 		return nil, err
 	}
 	body := bytes.NewReader(b)
-	req, err := s.newRequest("POST", s.buildBoshURL("/cloud_configs"), body)
+	req, err := s.NewRequest("POST", s.buildBoshURL("/cloud_configs"), body)
 	if err != nil {
 		return nil, err
 	}
@@ -159,7 +163,7 @@ func (s *Client) PushCloudConfig(manifest []byte) error {
 }
 
 func (s *Client) GetTask(taskID int) (BoshTask, error) {
-	req, err := s.newRequest("GET", s.buildBoshURL("/tasks/"+strconv.Itoa(taskID)), nil)
+	req, err := s.NewRequest("GET", s.buildBoshURL("/tasks/"+strconv.Itoa(taskID)), nil)
 	if err != nil {
 		return BoshTask{}, err
 	}
@@ -195,7 +199,7 @@ func (s *Client) PostRemoteRelease(rls enaml.Release) (BoshTask, error) {
 	reqBytes, _ := json.Marshal(reqMap)
 	reqBody := bytes.NewReader(reqBytes)
 
-	req, err := s.newRequest("POST", s.buildBoshURL("/releases"), reqBody)
+	req, err := s.NewRequest("POST", s.buildBoshURL("/releases"), reqBody)
 	if err != nil {
 		return BoshTask{}, err
 	}
@@ -215,7 +219,7 @@ func (s *Client) PostRemoteRelease(rls enaml.Release) (BoshTask, error) {
 }
 
 func (s *Client) GetStemcells() ([]DeployedStemcell, error) {
-	req, err := s.newRequest("GET", s.buildBoshURL("/stemcells"), nil)
+	req, err := s.NewRequest("GET", s.buildBoshURL("/stemcells"), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -260,7 +264,7 @@ func (s *Client) PostRemoteStemcell(sc enaml.Stemcell) (BoshTask, error) {
 	reqBytes, _ := json.Marshal(reqMap)
 	reqBody := bytes.NewReader(reqBytes)
 
-	req, err := s.newRequest("POST", s.buildBoshURL("/stemcells"), reqBody)
+	req, err := s.NewRequest("POST", s.buildBoshURL("/stemcells"), reqBody)
 	if err != nil {
 		return BoshTask{}, err
 	}
@@ -281,7 +285,7 @@ func (s *Client) PostRemoteStemcell(sc enaml.Stemcell) (BoshTask, error) {
 
 func (s *Client) PostDeployment(deploymentManifest enaml.DeploymentManifest) (BoshTask, error) {
 	reqBody := bytes.NewReader(deploymentManifest.Bytes())
-	req, err := s.newRequest("POST", s.buildBoshURL("/deployments"), reqBody)
+	req, err := s.NewRequest("POST", s.buildBoshURL("/deployments"), reqBody)
 	if err != nil {
 		return BoshTask{}, err
 	}
@@ -300,7 +304,7 @@ func (s *Client) PostDeployment(deploymentManifest enaml.DeploymentManifest) (Bo
 }
 
 func (s *Client) GetCloudConfig() (*enaml.CloudConfigManifest, error) {
-	req, err := s.newRequest("GET", s.buildBoshURL("/cloud_configs?limit=1"), nil)
+	req, err := s.NewRequest("GET", s.buildBoshURL("/cloud_configs?limit=1"), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -327,7 +331,7 @@ func (s *Client) GetCloudConfig() (*enaml.CloudConfigManifest, error) {
 }
 
 func (s *Client) GetInfo() (*BoshInfo, error) {
-	req, err := s.newRequest("GET", s.buildBoshURL("/info"), nil)
+	req, err := s.NewRequest("GET", s.buildBoshURL("/info"), nil)
 	if err != nil {
 		return nil, err
 	}
