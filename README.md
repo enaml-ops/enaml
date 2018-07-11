@@ -30,7 +30,7 @@ completed generating release job structs for  https://bosh.io/d/github.com/cf-pl
 **WARNING:** You may see a warning similar to the following:
 > 2016/08/22 17:01:16 W0822 17:01:16.225166 3622 generate.go:47] ******** Recommended creating custom yaml marshaller on GorouterJob for RoutingApi  ********
 
-This is warning is letting you know that by default, the `RoutingApi` field in the generated `GorouterJob` struct will not be marshalled.
+This warning is letting you know that by default, the `RoutingApi` field in the generated `GorouterJob` struct will not be marshalled.
 The most common reason for this is that the code generator combined multiple YAML objects into a single struct.
 When this happens, you'll want to create a custom marshaller.
 
@@ -135,7 +135,7 @@ func (s *MyProduct) GetMeta() product.Meta {
 
 
 
-### maybe you've got a manifest but dont know how to maintain it (ie. key/cert/pass rotation, or automated component scaling, etc)
+### maybe you've got a manifest but don't know how to maintain it (ie. key/cert/pass rotation, or automated component scaling, etc)
 ```go
 package main
 
